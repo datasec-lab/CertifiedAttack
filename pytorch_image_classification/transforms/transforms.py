@@ -75,7 +75,9 @@ class ToTensor:
             return self._to_tensor(data)
 
     @staticmethod
-    def _to_tensor(data: np.ndarray) -> torch.Tensor:
+    def _to_tensor(data) -> torch.Tensor:
+        if isinstance(data, PIL.Image.Image):
+            data = np.array(data)
         if len(data.shape) == 3:
             return torch.from_numpy(data.transpose(2, 0, 1).astype(np.float32))
         else:

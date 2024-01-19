@@ -1,15 +1,16 @@
 device: cuda
 dataset:
   name: CIFAR10
+  normalize: False
 model:
   type: cifar
-  name: pyramidnet
+  name: vgg
   init_mode: kaiming_fan_out
-  pyramidnet:
-    depth: 272
-    initial_channels: 16
-    block_type: bottleneck
-    alpha: 200
+  vgg:
+    n_channels: [64, 128, 256, 512, 512]
+    n_layers: [2, 2, 3, 3, 3]
+    use_bn: True
+  normalize_layer: True
 train:
   seed: 0
   precision: O0
@@ -20,13 +21,14 @@ train:
   momentum: 0.9
   nesterov: True
   weight_decay: 1e-4
-  output_dir: experiments/cifar10/pyramidnet/exp00
+  output_dir: experiments/test
   log_period: 100
   checkpoint_period: 100
   val_ratio: 0.0
   use_test_as_val: True
   use_tensorboard: True
   distributed: False
+  use_apex: False
   dataloader:
     num_workers: 2
     drop_last: True
@@ -38,9 +40,9 @@ validation:
     drop_last: False
     pin_memory: False
 scheduler:
-  epochs: 300
+  epochs: 160
   type: multistep
-  milestones: [150, 225]
+  milestones: [80, 120]
   lr_decay: 0.1
 augmentation:
   use_random_crop: True

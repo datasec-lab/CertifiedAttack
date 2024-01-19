@@ -4,10 +4,6 @@ import argparse
 import pathlib
 import time
 
-try:
-    import apex
-except ImportError:
-    pass
 import numpy as np
 import torch
 import torch.nn as nn
@@ -152,20 +148,11 @@ def train(epoch, config, model, optimizer, scheduler, loss_func, train_loader,
 
             loss = loss_func(output_chunk, target_chunk)
             losses.append(loss)
-            if config.device != 'cpu' and config.train.use_apex:
-                with apex.amp.scale_loss(loss, optimizer) as scaled_loss:
-                    scaled_loss.backward()
-            else:
-                loss.backward()
+            loss.backward()
         outputs = torch.cat(outputs)
 
         if config.train.gradient_clip > 0:
-            if config.device != 'cpu' and config.train.use_apex:
-                torch.nn.utils.clip_grad_norm_(
-                    apex.amp.master_params(optimizer),
-                    config.train.gradient_clip)
-            else:
-                torch.nn.utils.clip_grad_norm_(model.parameters(),
+            torch.nn.utils.clip_grad_norm_(model.parameters(),
                                                config.train.gradient_clip)
         if config.train.subdivision > 1:
             for param in model.parameters():
@@ -370,9 +357,6 @@ def main():
     logger.info(f'#params: {n_params}')
 
     optimizer = create_optimizer(config, model)
-    if config.device != 'cpu' and config.train.use_apex:
-        model, optimizer = apex.amp.initialize(
-            model, optimizer, opt_level=config.train.precision)
     model = apply_data_parallel_wrapper(config, model)
 
     scheduler = create_scheduler(config,

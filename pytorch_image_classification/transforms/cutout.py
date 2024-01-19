@@ -1,6 +1,6 @@
 import numpy as np
 import yacs.config
-
+import PIL.Image
 
 class Cutout:
     def __init__(self, config: yacs.config.CfgNode):
@@ -14,6 +14,8 @@ class Cutout:
         self.offset = 1 if aug_config.mask_size % 2 == 0 else 0
 
     def __call__(self, image: np.ndarray) -> np.ndarray:
+        if isinstance(image, PIL.Image.Image):
+            image = np.array(image)
         image = np.asarray(image).copy()
 
         if np.random.random() > self.p:
@@ -49,4 +51,6 @@ class DualCutout:
         self.cutout = Cutout(config)
 
     def __call__(self, image: np.ndarray) -> np.ndarray:
+        if isinstance(image, PIL.Image.Image):
+            image = np.array(image)
         return np.hstack([self.cutout(image), self.cutout(image)])

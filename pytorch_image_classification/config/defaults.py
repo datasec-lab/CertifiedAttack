@@ -14,6 +14,7 @@ config.dataset.dataset_dir = ''
 config.dataset.image_size = 32
 config.dataset.n_channels = 3
 config.dataset.n_classes = 10
+config.dataset.normalize = False
 
 config.model = ConfigNode()
 # options: 'cifar', 'imagenet'
@@ -21,6 +22,7 @@ config.model = ConfigNode()
 config.model.type = 'cifar'
 config.model.name = 'resnet_preact'
 config.model.init_mode = 'kaiming_fan_out'
+config.model.normalize_layer = True
 
 config.model.vgg = ConfigNode()
 config.model.vgg.n_channels = [64, 128, 256, 512, 512]
@@ -90,7 +92,7 @@ config.model.se_resnet_preact.preact_stage = [True, True, True]
 config.train = ConfigNode()
 config.train.checkpoint = ''
 config.train.resume = False
-config.train.use_apex = True
+config.train.use_apex = False
 # optimization level for NVIDIA apex
 # O0 = fp32
 # O1 = mixed precision

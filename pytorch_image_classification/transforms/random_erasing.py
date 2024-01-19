@@ -1,6 +1,6 @@
 import numpy as np
 import yacs.config
-
+import PIL.Image
 
 class RandomErasing:
     def __init__(self, config: yacs.config.CfgNode):
@@ -12,6 +12,8 @@ class RandomErasing:
         self.rh = 1. / aug_config.min_aspect_ratio
 
     def __call__(self, image: np.ndarray) -> np.ndarray:
+        if isinstance(image, PIL.Image.Image):
+            image = np.array(image)
         image = np.asarray(image).copy()
 
         if np.random.random() > self.p:

@@ -3,28 +3,33 @@ dataset:
   name: CIFAR10
 model:
   type: cifar
-  name: shake_shake
+  name: resnet_preact
   init_mode: kaiming_fan_out
-  shake_shake:
-    depth: 26
-    initial_channels: 96
+  resnet_preact:
+    depth: 110
+    initial_channels: 16
+    block_type: basic
+    remove_first_relu: False
+    add_last_bn: False
+    preact_stage: [True, True, True]
 train:
   seed: 0
   precision: O0
   batch_size: 128
   subdivision: 1
   optimizer: sgd
-  base_lr: 0.2
+  base_lr: 0.1
   momentum: 0.9
   nesterov: True
   weight_decay: 1e-4
-  output_dir: experiments/cifar10/shake_shake/exp00
+  output_dir: experiments/cifar10/resnet_preact/exp00
   log_period: 100
   checkpoint_period: 100
   val_ratio: 0.0
   use_test_as_val: True
   use_tensorboard: True
   distributed: False
+  use_apex: False
   dataloader:
     num_workers: 2
     drop_last: True
@@ -36,9 +41,10 @@ validation:
     drop_last: False
     pin_memory: False
 scheduler:
-  epochs: 1800
-  type: cosine
-  lr_min_factor: 0.
+  epochs: 160
+  type: multistep
+  milestones: [80, 120]
+  lr_decay: 0.1
 augmentation:
   use_random_crop: True
   use_random_horizontal_flip: True
@@ -59,6 +65,7 @@ tensorboard:
   train_images: False
   val_images: False
   model_params: False
+
 
 
 

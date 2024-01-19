@@ -3,23 +3,22 @@ dataset:
   name: CIFAR10
 model:
   type: cifar
-  name: vgg
+  name: shake_shake
   init_mode: kaiming_fan_out
-  vgg:
-    n_channels: [64, 128, 256, 512, 512]
-    n_layers: [2, 2, 3, 3, 3]
-    use_bn: True
+  shake_shake:
+    depth: 26
+    initial_channels: 96
 train:
   seed: 0
   precision: O0
   batch_size: 128
   subdivision: 1
   optimizer: sgd
-  base_lr: 0.1
+  base_lr: 0.2
   momentum: 0.9
   nesterov: True
   weight_decay: 1e-4
-  output_dir: experiments/cifar10/vgg/exp00
+  output_dir: experiments/cifar10/shake_shake/exp00
   log_period: 100
   checkpoint_period: 100
   val_ratio: 0.0
@@ -38,10 +37,9 @@ validation:
     drop_last: False
     pin_memory: False
 scheduler:
-  epochs: 160
-  type: multistep
-  milestones: [80, 120]
-  lr_decay: 0.1
+  epochs: 1800
+  type: cosine
+  lr_min_factor: 0.
 augmentation:
   use_random_crop: True
   use_random_horizontal_flip: True
@@ -62,5 +60,6 @@ tensorboard:
   train_images: False
   val_images: False
   model_params: False
+
 
 
