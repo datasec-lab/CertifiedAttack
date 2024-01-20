@@ -1,6 +1,7 @@
 device: cuda:3
 dataset:
   name: CIFAR100
+  normalize: False
 model:
   type: cifar
   name: wrn
@@ -10,6 +11,7 @@ model:
     initial_channels: 16
     widening_factor: 10
     drop_rate: 0.0
+  normalize_layer: True
 train:
   seed: 0
   precision: O0

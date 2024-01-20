@@ -1,4 +1,4 @@
-device: cuda
+device: cuda:2
 dataset:
   name: ImageNet
   dataset_dir: ~/datasets/ImageNet

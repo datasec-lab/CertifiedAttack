@@ -40,8 +40,8 @@ def _get_dataset_stats(
         std = np.array([0.3475])
     elif name == 'ImageNet':
         # RGB
-        mean = [0.485, 0.456, 0.406]
-        std = [0.229, 0.224, 0.225]
+        mean = np.array([0.485, 0.456, 0.406])
+        std = np.array([0.229, 0.224, 0.225])
     else:
         raise ValueError()
     return mean, std

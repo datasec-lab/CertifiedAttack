@@ -1,6 +1,7 @@
-device: cuda:0
+device: cuda
 dataset:
   name: CIFAR100
+  normalize: False
 model:
   type: cifar
   name: vgg
@@ -9,6 +10,7 @@ model:
     n_channels: [64, 128, 256, 512, 512]
     n_layers: [2, 2, 3, 3, 3]
     use_bn: True
+  normalize_layer: True
 train:
   seed: 0
   precision: O0

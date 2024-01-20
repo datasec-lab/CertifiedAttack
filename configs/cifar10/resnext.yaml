@@ -1,6 +1,7 @@
 device: cuda:2
 dataset:
   name: CIFAR10
+  normalize: False
 model:
   type: cifar
   name: resnext
@@ -10,6 +11,7 @@ model:
     initial_channels: 64
     cardinality: 8
     base_channels: 64
+  normalize_layer: True
 train:
   seed: 0
   precision: O0

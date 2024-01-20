@@ -1,6 +1,7 @@
 device: cuda:1
 dataset:
   name: CIFAR100
+  normalize: False
 model:
   type: cifar
   name: resnet
@@ -9,6 +10,7 @@ model:
     depth: 110
     initial_channels: 16
     block_type: basic
+  normalize_layer: True
 train:
   seed: 0
   precision: O0

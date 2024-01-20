@@ -21,7 +21,7 @@ train:
   momentum: 0.9
   nesterov: True
   weight_decay: 1e-4
-  output_dir: experiments/test
+  output_dir: experiments/cifar10/vgg/exp00
   log_period: 100
   checkpoint_period: 100
   val_ratio: 0.0

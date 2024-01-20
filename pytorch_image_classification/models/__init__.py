@@ -10,15 +10,17 @@ from typing import *
 
 
 def create_model(config: yacs.config.CfgNode) -> nn.Module:
+    device = torch.device(config.device)
     module = importlib.import_module(
         'pytorch_image_classification.models'
         f'.{config.model.type}.{config.model.name}')
     model = getattr(module, 'Network')(config)
     if config.model.normalize_layer:
         mean, std = _get_dataset_stats(config)
+        mean = torch.from_numpy(mean).float().to(device)
+        std = torch.from_numpy(std).float().to(device)
         normalize_layer=NormalizeLayer(mean,std)
         model=torch.nn.Sequential(normalize_layer, model)
-    device = torch.device(config.device)
     model.to(device)
     return model
 
@@ -45,14 +47,14 @@ class NormalizeLayer(torch.nn.Module):
       layer of the classifier rather than as a part of preprocessing as is typical.
       """
 
-    def __init__(self, means: np.ndarray, sds: np.ndarray):
+    def __init__(self, means: torch.Tensor, sds: torch.Tensor):
         """
         :param means: the channel means
         :param sds: the channel standard deviations
         """
         super(NormalizeLayer, self).__init__()
-        self.means = torch.from_numpy(means).cuda().float()
-        self.sds = torch.from_numpy(sds).cuda().float()
+        self.means = means
+        self.sds = sds
 
     def forward(self, input: torch.tensor):
         (batch_size, num_channels, height, width) = input.shape
