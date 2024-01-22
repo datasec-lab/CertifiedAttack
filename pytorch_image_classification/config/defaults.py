@@ -4,6 +4,94 @@ config = ConfigNode()
 
 config.device = 'cuda'
 # cuDNN
+
+config.attack = ConfigNode()
+config.attack.name='Square'
+config.attack.epsilon=12.75
+config.attack.p = 'inf'
+config.attack.max_loss_queries=10000
+config.attack.ub = 255
+config.attack.lb = 0.0
+config.attack.target= False
+config.attack.target_type="median"
+
+config.attack.NES=ConfigNode()
+config.attack.NES.fd_eta=2.55
+config.attack.NES.lr=2.55
+config.attack.NES.q=15
+
+config.attack.ZOSignSGD=ConfigNode()
+config.attack.ZOSignSGD.fd_eta=2.55
+config.attack.ZOSignSGD.lr=2.55
+config.attack.ZOSignSGD.q=30
+
+config.attack.Bandit=ConfigNode()
+config.attack.Bandit.lr= 2.55
+config.attack.Bandit.fd_eta= 2.55
+config.attack.Bandit.prior_lr= 0.1
+config.attack.Bandit.prior_size= 20
+config.attack.Bandit.data_size=32
+config.attack.Bandit.prior_exploration=0.1
+
+config.attack.Sign=ConfigNode()
+config.attack.Sign.fd_eta=12.75
+
+config.attack.Simple=ConfigNode()
+config.attack.Simple.delta=2.55
+
+config.attack.Parsimonious=ConfigNode()
+config.attack.Parsimonious.EOT=1
+config.attack.Parsimonious.block_size=4
+config.attack.Parsimonious.block_batch_size=64
+
+config.attack.Square=ConfigNode()
+config.attack.Square.p_init=0.05
+
+config.attack.SignOPT=ConfigNode()
+config.attack.SignOPT.alpha=0.2
+config.attack.SignOPT.beta=0.001
+config.attack.SignOPT.svm=False
+config.attack.SignOPT.momentum=0
+config.attack.SignOPT.k=200
+config.attack.SignOPT.sigma=0
+
+config.attack.HSJ=ConfigNode()
+config.attack.HSJ.gamma=1.0
+config.attack.HSJ.stepsize_search="geometric_progression"
+config.attack.HSJ.max_num_evals=10000
+config.attack.HSJ.init_num_evals=100
+config.attack.HSJ.EOT=1
+config.attack.HSJ.sigma=0
+
+config.attack.GeoDA=ConfigNode()
+config.attack.GeoDA.sub_dim=10
+config.attack.GeoDA.tol=0.0001
+config.attack.GeoDA.alpha=0.0002
+config.attack.GeoDA.mu=0.6
+config.attack.GeoDA.search_space="sub"
+config.attack.GeoDA.grad_estimator_batch_size=40
+config.attack.GeoDA.sigma=0
+
+config.attack.Opt=ConfigNode()
+config.attack.Opt.alpha=0.2
+config.attack.Opt.beta=0.001
+
+config.attack.Evolutionary=ConfigNode()
+config.attack.Evolutionary.sub=2
+
+config.attack.SignFlip=ConfigNode()
+config.attack.resize_factor=1.0
+
+config.attack.RayS=ConfigNode()
+
+config.attack.Boundary=ConfigNode()
+config.attack.Boundary.steps=25000
+config.attack.Boundary.spherical_step=0.01
+config.attack.Boundary.source_step=0.01
+config.attack.Boundary.source_step_convergance=1e-7
+config.attack.Boundary.step_adaptation=1.5
+config.attack.Boundary.update_stats_every_k=10
+
 config.cudnn = ConfigNode()
 config.cudnn.benchmark = True
 config.cudnn.deterministic = False
@@ -242,6 +330,7 @@ config.test.batch_size = 256
 config.test.dataloader = ConfigNode()
 config.test.dataloader.num_workers = 2
 config.test.dataloader.pin_memory = False
+
 
 
 def get_default_config():

@@ -68,6 +68,8 @@ def create_cifar_transform(config: yacs.config.CfgNode,
 
         if config.dataset.normalize:
             transforms.append(Normalize(mean, std))
+        else:
+            transforms.append(Normalize(np.array([0,0,0]), np.array([1,1,1]))) # divided by 255
 
         if config.augmentation.use_cutout:
             transforms.append(Cutout(config))
@@ -81,6 +83,8 @@ def create_cifar_transform(config: yacs.config.CfgNode,
         transforms = []
         if config.dataset.normalize:
             transforms.append(Normalize(mean, std))
+        else:
+            transforms.append(Normalize(np.array([0,0,0]), np.array([1,1,1]))) # divided by 255
         transforms.append(ToTensor())
 
     return torchvision.transforms.Compose(transforms)

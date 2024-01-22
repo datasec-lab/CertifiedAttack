@@ -25,6 +25,7 @@ from pytorch_image_classification.utils import (
     get_rank,
 )
 
+from attacks import get_attack
 
 def load_config():
     parser = argparse.ArgumentParser()
@@ -40,7 +41,7 @@ def load_config():
     return config
 
 
-def evaluate(config, model, test_loader, loss_func, logger):
+def evaluate(config, attack, model, test_loader, loss_func, logger):
     device = torch.device(config.device)
 
     model.eval()
@@ -56,8 +57,8 @@ def evaluate(config, model, test_loader, loss_func, logger):
         for data, targets in tqdm.tqdm(test_loader):
             data = data.to(device)
             targets = targets.to(device)
-
-            outputs = model(data)
+            adv_data=attack.run(data,targets,model)
+            outputs = model(adv_data)
             loss = loss_func(outputs, targets)
 
             pred_raw_all.append(outputs.cpu().numpy())
@@ -99,23 +100,26 @@ def main():
     model = create_model(config)
     model = apply_data_parallel_wrapper(config, model)
     checkpointer = Checkpointer(model=model,
-                                save_dir=output_dir,
+                                save_dir=str(output_dir),
                                 save_to_disk=get_rank() == 0)
     checkpointer.load(config.test.checkpoint)
 
     test_loader = create_dataloader(config, is_train=False)
     _, test_loss = create_loss(config)
 
-    preds, probs, labels, loss, acc = evaluate(config, model, test_loader,
-                                               test_loss, logger)
+    attack=get_attack(config)
 
+    preds, probs, labels, loss, acc = evaluate(config, attack, model, test_loader,
+                                               test_loss, logger)
+    print(attack.result())
     output_path = output_dir / f'predictions.npz'
     np.savez(output_path,
              preds=preds,
              probs=probs,
              labels=labels,
              loss=loss,
-             acc=acc)
+             acc=acc,
+             attack_result=attack.result())
 
 
 if __name__ == '__main__':
