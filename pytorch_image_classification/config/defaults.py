@@ -5,39 +5,59 @@ config = ConfigNode()
 config.device = 'cuda'
 # cuDNN
 
+config.defense = ConfigNode()
+config.defense.blacklight=False
+config.defense.sigma=0.0
+config.defense.post_sigma=0.0
+config.defense.TRADES=False
+
 config.attack = ConfigNode()
 config.attack.name='Square'
-config.attack.epsilon=12.75
-config.attack.p = 'inf'
+config.attack.epsilon=8.0
+config.attack.p = 'linf'
 config.attack.max_loss_queries=10000
-config.attack.ub = 255
+config.attack.ub = 255.0
 config.attack.lb = 0.0
 config.attack.target= False
 config.attack.target_type="median"
+config.attack.test_sample=-1
+config.attack.test_sample_seed=42
+
+
+config.attack.CertifiedAttack=ConfigNode()
+config.attack.CertifiedAttack.diffusion=False
+config.attack.CertifiedAttack.pdf="Gaussian"
+config.attack.CertifiedAttack.MonteNum=50
+config.attack.CertifiedAttack.query_batch=50
+config.attack.CertifiedAttack.p=0.9
+config.attack.CertifiedAttack.pdf_args=[-1,0.01]
+config.attack.CertifiedAttack.norm=2
+config.attack.CertifiedAttack.initialization="bin_search"
+config.attack.CertifiedAttack.shifting="geo"
 
 config.attack.NES=ConfigNode()
-config.attack.NES.fd_eta=2.55
-config.attack.NES.lr=2.55
+config.attack.NES.fd_eta=2.0
+config.attack.NES.lr=30.0
 config.attack.NES.q=15
 
 config.attack.ZOSignSGD=ConfigNode()
-config.attack.ZOSignSGD.fd_eta=2.55
-config.attack.ZOSignSGD.lr=2.55
+config.attack.ZOSignSGD.fd_eta=2.0
+config.attack.ZOSignSGD.lr=2.5
 config.attack.ZOSignSGD.q=30
 
 config.attack.Bandit=ConfigNode()
-config.attack.Bandit.lr= 2.55
-config.attack.Bandit.fd_eta= 2.55
+config.attack.Bandit.lr= 30
+config.attack.Bandit.fd_eta= 2.0
 config.attack.Bandit.prior_lr= 0.1
 config.attack.Bandit.prior_size= 20
 config.attack.Bandit.data_size=32
 config.attack.Bandit.prior_exploration=0.1
 
 config.attack.Sign=ConfigNode()
-config.attack.Sign.fd_eta=12.75
+config.attack.Sign.fd_eta=8.0
 
 config.attack.Simple=ConfigNode()
-config.attack.Simple.delta=2.55
+config.attack.Simple.delta=15
 
 config.attack.Parsimonious=ConfigNode()
 config.attack.Parsimonious.EOT=1
@@ -49,28 +69,25 @@ config.attack.Square.p_init=0.05
 
 config.attack.SignOPT=ConfigNode()
 config.attack.SignOPT.alpha=0.2
-config.attack.SignOPT.beta=0.001
+config.attack.SignOPT.beta=0.1
 config.attack.SignOPT.svm=False
 config.attack.SignOPT.momentum=0
 config.attack.SignOPT.k=200
-config.attack.SignOPT.sigma=0
 
 config.attack.HSJ=ConfigNode()
-config.attack.HSJ.gamma=1.0
+config.attack.HSJ.gamma=50
 config.attack.HSJ.stepsize_search="geometric_progression"
 config.attack.HSJ.max_num_evals=10000
 config.attack.HSJ.init_num_evals=100
 config.attack.HSJ.EOT=1
-config.attack.HSJ.sigma=0
 
 config.attack.GeoDA=ConfigNode()
-config.attack.GeoDA.sub_dim=10
+config.attack.GeoDA.sub_dim=30
 config.attack.GeoDA.tol=0.0001
 config.attack.GeoDA.alpha=0.0002
 config.attack.GeoDA.mu=0.6
 config.attack.GeoDA.search_space="sub"
-config.attack.GeoDA.grad_estimator_batch_size=40
-config.attack.GeoDA.sigma=0
+config.attack.GeoDA.grad_estimator_batch_size=256
 
 config.attack.Opt=ConfigNode()
 config.attack.Opt.alpha=0.2
@@ -92,13 +109,21 @@ config.attack.Boundary.source_step_convergance=1e-7
 config.attack.Boundary.step_adaptation=1.5
 config.attack.Boundary.update_stats_every_k=10
 
+config.attack.SparseEvo=ConfigNode()
+config.attack.SparseEvo.n_pix = 4
+config.attack.SparseEvo.pop_size = 10
+config.attack.SparseEvo.cr = 0.5
+config.attack.SparseEvo.mu = 0.04
+config.attack.SparseEvo.seed = 0
+
+
 config.cudnn = ConfigNode()
 config.cudnn.benchmark = True
 config.cudnn.deterministic = False
 
 config.dataset = ConfigNode()
 config.dataset.name = 'CIFAR10'
-config.dataset.dataset_dir = ''
+config.dataset.dataset_dir = '/mnt/data/imagenet'
 config.dataset.image_size = 32
 config.dataset.n_channels = 3
 config.dataset.n_classes = 10
@@ -208,7 +233,7 @@ config.train.output_dir = 'experiments/exp00'
 config.train.log_period = 100
 config.train.checkpoint_period = 10
 
-config.train.use_tensorboard = True
+config.train.use_tensorboard = False
 config.tensorboard = ConfigNode()
 config.tensorboard.train_images = False
 config.tensorboard.val_images = False
@@ -317,8 +342,8 @@ config.augmentation.label_smoothing = ConfigNode()
 config.augmentation.label_smoothing.epsilon = 0.1
 
 config.tta = ConfigNode()
-config.tta.use_resize = False
-config.tta.use_center_crop = False
+config.tta.use_resize = True
+config.tta.use_center_crop = True
 config.tta.resize = 256
 
 # test config

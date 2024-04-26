@@ -4,6 +4,7 @@ Implements handy numerical computational functions
 import numpy as np
 import torch as ch
 from torch.nn.modules import Upsample
+import torch
 
 
 def norm(t):
@@ -137,6 +138,34 @@ def l2_proj_maker(xs, eps):
             else:
                 return orig_xs + (norm_delta <= eps) * delta + (norm_delta > eps) * eps * delta / norm_delta
     return proj
+
+
+
+# def l2_proj_maker(xs, eps):
+#     """
+#     Makes an L2 projection function such that new points
+#     are projected within the eps L2-balls centered around xs.
+#     This version handles batch processing correctly.
+#
+#     :param xs: Original points as a PyTorch tensor.
+#     :param eps: Radius of the L2-balls.
+#     :return: A projection function.
+#     """
+#     orig_xs = xs.clone()
+#
+#     def proj(new_xs):
+#         delta = new_xs - orig_xs
+#         norm_delta = torch.norm(delta.view(delta.size(0), -1), p=2, dim=1, keepdim=True)
+#         # Handle the case of zero norm_delta to avoid division by zero
+#         norm_delta = torch.where(norm_delta > 0, norm_delta, torch.ones_like(norm_delta))
+#         mask = norm_delta <= eps
+#         # Broadcasting to support batch processing
+#         scaled_delta = eps * delta / norm_delta
+#         # Using where to choose between original delta and scaled delta
+#         proj_delta = torch.where(mask.unsqueeze(-1), delta, scaled_delta)
+#         return orig_xs + proj_delta
+#
+#     return proj
 
 
 def linf_proj_maker(xs, eps):

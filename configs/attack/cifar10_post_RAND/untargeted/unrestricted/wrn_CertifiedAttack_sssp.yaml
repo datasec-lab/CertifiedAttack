@@ -1,0 +1,38 @@
+attack:
+  CertifiedAttack:
+    diffusion: false
+    initialization: smt_ssp
+    p: 0.1
+    pdf_args:
+    - -1
+    - 0.025
+  epsilon: 0.0
+  max_loss_queries: 10000
+  name: CertifiedAttack
+  p: unrestricted
+  test_sample: 1000
+dataset:
+  name: CIFAR10
+  normalize: false
+defense:
+  blacklight: false
+  post_sigma: 0.2
+  sigma: 0.0
+device: cuda:0
+model:
+  init_mode: kaiming_fan_out
+  name: wrn
+  normalize_layer: true
+  type: cifar
+  wrn:
+    depth: 28
+    drop_rate: 0.0
+    initial_channels: 16
+    widening_factor: 10
+test:
+  batch_size: 1
+  checkpoint: experiments/cifar10/wrn/exp00/checkpoint_00200.pth
+  dataloader:
+    num_workers: 2
+    pin_memory: false
+  output_dir: experiments/attack/cifar10_post_RAND/untargeted/unrestricted/decision/wrn/CA_sssp/

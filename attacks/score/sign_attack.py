@@ -39,7 +39,8 @@ class SignAttack(ScoreBlackBoxAttack):
     SignHunter
     """
 
-    def __init__(self, max_loss_queries, epsilon, p, fd_eta, lb, ub, batch_size, name,target,target_type,device):
+    def __init__(self, max_loss_queries, epsilon, p, fd_eta, lb, ub, batch_size, name,target,target_type,device,blacklight,sigma,
+                         post_sigma):
         """
         :param max_loss_queries: maximum number of calls allowed to loss oracle per data pt
         :param epsilon: radius of lp-ball of perturbation
@@ -58,7 +59,10 @@ class SignAttack(ScoreBlackBoxAttack):
                          name="Sign",
                          target=target,
                          target_type=target_type,
-                         device=device)
+                         device=device,
+                         blacklight=blacklight,
+                         sigma=sigma,
+                         post_sigma=post_sigma)
 
 
         self.fd_eta = fd_eta

@@ -1,0 +1,40 @@
+attack:
+  epsilon: 25.5
+  max_loss_queries: 10000
+  name: SignFlip
+  p: linf
+  test_sample: 1000
+dataset:
+  name: CIFAR100
+  normalize: false
+defense:
+  blacklight: false
+  post_sigma: 0.2
+  sigma: 0.0
+device: cuda:1
+model:
+  init_mode: kaiming_fan_out
+  name: vgg
+  normalize_layer: true
+  type: cifar
+  vgg:
+    n_channels:
+    - 64
+    - 128
+    - 256
+    - 512
+    - 512
+    n_layers:
+    - 2
+    - 2
+    - 3
+    - 3
+    - 3
+    use_bn: true
+test:
+  batch_size: 1
+  checkpoint: experiments/cifar100/vgg/exp00/checkpoint_00160.pth
+  dataloader:
+    num_workers: 2
+    pin_memory: false
+  output_dir: experiments/attack/cifar100_post_RAND/untargeted/linf/decision/vgg/SignFlip/

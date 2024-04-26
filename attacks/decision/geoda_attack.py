@@ -95,7 +95,8 @@ class GeoDAttack(DecisionBlackBoxAttack):
     """
     GeoDA
     """
-    def __init__(self, epsilon, p, max_queries, sub_dim, tol, alpha, mu, search_space, grad_estimator_batch_size, lb, ub, batch_size, sigma,target,target_type,device):
+    def __init__(self, epsilon, p, max_queries, sub_dim, tol, alpha, mu, search_space, grad_estimator_batch_size, lb, ub, batch_size, sigma,target,target_type,device,blacklight,
+                         post_sigma):
         super().__init__(max_queries = max_queries,
                          epsilon=epsilon,
                          p=p,
@@ -104,7 +105,10 @@ class GeoDAttack(DecisionBlackBoxAttack):
                          batch_size = batch_size,
                          target=target,
                          target_type=target_type,
-                         device=device)
+                         device=device,
+                         blacklight=blacklight,
+                         sigma=sigma,
+                         post_sigma=post_sigma)
         self.sub_dim = sub_dim
         self.tol = tol
         self.alpha = alpha
@@ -143,7 +147,7 @@ class GeoDAttack(DecisionBlackBoxAttack):
         step = 0.02
         perturbed = x0
         
-        while self.predict_label(perturbed) == y0[0]: 
+        while self.predict_label(perturbed) == y0[0] and num_calls<self.max_queries:
             pert = torch.randn(x0.shape).to(self.device)
 
             perturbed = x0 + num_calls*step* pert

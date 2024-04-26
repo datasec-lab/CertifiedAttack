@@ -1,0 +1,91 @@
+attack:
+  epsilon: 1275.0
+  max_loss_queries: 10000
+  name: Simple
+  p: l2
+  target: true
+augmentation:
+  random_crop:
+    fill: 0
+    padding: 4
+    padding_mode: constant
+  random_horizontal_flip:
+    prob: 0.5
+  use_cutmix: false
+  use_cutout: false
+  use_dual_cutout: false
+  use_label_smoothing: false
+  use_mixup: false
+  use_random_crop: true
+  use_random_erasing: false
+  use_random_horizontal_flip: true
+  use_ricap: false
+dataset:
+  name: CIFAR10
+  normalize: false
+device: cuda:1
+model:
+  init_mode: kaiming_fan_out
+  name: vgg
+  normalize_layer: true
+  type: cifar
+  vgg:
+    n_channels:
+    - 64
+    - 128
+    - 256
+    - 512
+    - 512
+    n_layers:
+    - 2
+    - 2
+    - 3
+    - 3
+    - 3
+    use_bn: true
+scheduler:
+  epochs: 160
+  lr_decay: 0.1
+  milestones:
+  - 80
+  - 120
+  type: multistep
+tensorboard:
+  model_params: false
+  train_images: false
+  val_images: false
+test:
+  batch_size: 1
+  checkpoint: experiments/cifar10/vgg/exp00/checkpoint_00160.pth
+  dataloader:
+    num_workers: 2
+    pin_memory: false
+  output_dir: experiments/attack/cifar10_blacklight/targeted/l2/score/Simple/
+train:
+  base_lr: 0.1
+  batch_size: 128
+  checkpoint_period: 100
+  dataloader:
+    drop_last: true
+    num_workers: 2
+    pin_memory: false
+  distributed: false
+  log_period: 100
+  momentum: 0.9
+  nesterov: true
+  optimizer: sgd
+  output_dir: experiments/cifar10/vgg/exp00
+  precision: O0
+  seed: 0
+  subdivision: 1
+  use_apex: false
+  use_tensorboard: true
+  use_test_as_val: true
+  val_ratio: 0.0
+  weight_decay: 1e-4
+validation:
+  batch_size: 256
+  dataloader:
+    drop_last: false
+    num_workers: 2
+    pin_memory: false

@@ -60,6 +60,11 @@ def create_dataloader(
         return train_loader, val_loader
     else:
         dataset = create_dataset(config, is_train)
+        if config.attack.test_sample>0:
+            torch.manual_seed(config.attack.test_sample_seed)
+            indices = torch.randperm(len(dataset)).tolist()[:config.attack.test_sample]
+            dataset = torch.utils.data.Subset(dataset, indices)
+
         if dist.is_available() and dist.is_initialized():
             sampler = torch.utils.data.distributed.DistributedSampler(dataset)
         else:

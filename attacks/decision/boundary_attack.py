@@ -58,7 +58,7 @@ class BoundaryAttack(DecisionBlackBoxAttack):
     """
     Boundary Attack
     """
-    def __init__(self, epsilon, p, max_queries, lb, ub, batch_size, steps, spherical_step, source_step, source_step_convergance, step_adaptation, update_stats_every_k,target,target_type,device):
+    def __init__(self, epsilon, p, max_queries, lb, ub, batch_size, steps, spherical_step, source_step, source_step_convergance, step_adaptation, update_stats_every_k,target,target_type,device,blacklight,sigma,post_sigma):
         super().__init__(max_queries = max_queries,
                          epsilon=epsilon,
                          p=p,
@@ -67,7 +67,10 @@ class BoundaryAttack(DecisionBlackBoxAttack):
                          batch_size = batch_size,
                          target=target,
                          target_type=target_type,
-                         device=device)
+                         device=device,
+                         blacklight=blacklight,
+                         sigma=sigma,
+                         post_sigma=post_sigma)
         self.steps = steps
         self.spherical_step = spherical_step
         self.source_step = source_step
@@ -138,7 +141,7 @@ class BoundaryAttack(DecisionBlackBoxAttack):
         spherical_candidates = originals + directions / distances
 
         # clip
-        min_, max_ = self.lb, self.ub
+        min_, max_ = 0.0, 1.0
         spherical_candidates = spherical_candidates.clamp(min_, max_)
 
         # step towards the original inputs
@@ -177,7 +180,7 @@ class BoundaryAttack(DecisionBlackBoxAttack):
         num_evals = 0
         # Find a misclassified random noise.
         while True:
-                random_noise = t(np.random.uniform(self.lb, self.ub, size = input_xi.shape)).to(self.device)
+                random_noise = t(np.random.uniform(0.0, 1.0, size = input_xi.shape)).to(self.device)
                 success = self.is_adversarial(random_noise, label_or_target)[0]
                 if success:
                         break

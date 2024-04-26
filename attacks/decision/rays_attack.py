@@ -36,7 +36,8 @@ class RaySAttack(DecisionBlackBoxAttack):
     RayS
     """
 
-    def __init__(self, epsilon, p, max_queries, lb, ub, batch_size,target,target_type,device):
+    def __init__(self, epsilon, p, max_queries, lb, ub, batch_size,target,target_type,device,blacklight,sigma,
+                         post_sigma):
         super().__init__(max_queries = max_queries,
                          epsilon=epsilon,
                          p=p,
@@ -45,7 +46,10 @@ class RaySAttack(DecisionBlackBoxAttack):
                          batch_size = batch_size,
                          target=target,
                          target_type=target_type,
-                         device=device)
+                         device=device,
+                         blacklight=blacklight,
+                         sigma=sigma,
+                         post_sigma=post_sigma)
         self.lin_search_rad = 10
         self.pre_set = {1, -1}
 
@@ -63,7 +67,7 @@ class RaySAttack(DecisionBlackBoxAttack):
         if isinstance(d, int):
             d = torch.tensor(d).repeat(len(x)).to(self.device)
         out = x + d.view(len(x), 1, 1, 1) * v.to(self.device)
-        out = torch.clamp(out, self.lb, self.ub)
+        out = torch.clamp(out, 0.0, 1.0)
         return out
 
     def attack_hard_label(self, x, y, target=None):

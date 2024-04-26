@@ -38,7 +38,8 @@ class HSJAttack(DecisionBlackBoxAttack):
     """
     HSJA
     """
-    def __init__(self, epsilon, p, max_queries, gamma, stepsize_search, max_num_evals, init_num_evals, EOT, sigma, lb, ub, batch_size,target,target_type,device):
+    def __init__(self, epsilon, p, max_queries, gamma, stepsize_search, max_num_evals, init_num_evals, EOT, sigma, lb, ub, batch_size,target,target_type,device,blacklight,
+                         post_sigma):
         super().__init__(max_queries = max_queries,
                          epsilon=epsilon,
                          p=p,
@@ -47,7 +48,10 @@ class HSJAttack(DecisionBlackBoxAttack):
                          batch_size = batch_size,
                          target=target,
                          target_type=target_type,
-                         device=device)
+                         device=device,
+                         blacklight=blacklight,
+                         sigma=sigma,
+                         post_sigma=post_sigma)
         self.gamma = gamma
         self.stepsize_search = stepsize_search
         self.max_num_evals = max_num_evals
@@ -86,7 +90,7 @@ class HSJAttack(DecisionBlackBoxAttack):
         for j in np.arange(10000):
                 # Choose delta.
                 if j==1:
-                    delta = 0.1 * (self.ub - self.lb)
+                    delta = 0.1 * (1.0 - 0.0)
                 else:
                     if self.p == '2':
                             delta = np.sqrt(d) * theta * dist_post_update
@@ -107,12 +111,12 @@ class HSJAttack(DecisionBlackBoxAttack):
                 # search step size.
                 if self.stepsize_search == 'geometric_progression':
                         # find step size.
-                        epsilon = self.geometric_progression_for_stepsize(perturbed, label_or_target, 
+                        epsilon = self.geometric_progression_for_stepsize(perturbed, label_or_target,
                                 update, dist, j+1)
 
                         # Update the sample. 
                         perturbed = self.clip_image(perturbed + epsilon * update, 
-                                self.lb, self.ub)
+                                0.0, 1.0)
 
                         # Binary search to return to the boundary. 
                         perturbed, dist_post_update = self.binary_search_batch(input_xi, 
@@ -121,15 +125,20 @@ class HSJAttack(DecisionBlackBoxAttack):
                 elif self.stepsize_search == 'grid_search':
                         # Grid search for stepsize.
                         epsilons = np.logspace(-4, 0, num=20, endpoint = True) * dist
-                        epsilons_shape = [20] + len(input_xi.shape) * [1]
+                        epsilons_shape = [20] + len(input_xi.shape[1:]) * [1]
                         perturbeds = perturbed + epsilons.reshape(epsilons_shape) * update
-                        perturbeds = self.clip_image(perturbeds, self.lb, self.ub)
+                        perturbeds = self.clip_image(perturbeds, 0.0, 1.0)
                         idx_perturbed = self.decision_function(perturbeds, label_or_target)
 
                         if np.sum(idx_perturbed) > 0:
+                                perturbeds=perturbeds[idx_perturbed]
+                                min_dis=float('inf')
                                 # Select the perturbation that yields the minimum distance # after binary search.
-                                perturbed, dist_post_update = self.binary_search_batch(input_xi, 
-                                        perturbeds[idx_perturbed], label_or_target, theta)
+                                for perturbed_ in perturbeds:
+                                    _perturbed, dist_post_update = self.binary_search_batch(input_xi,
+                                            perturbed_[None], label_or_target, theta)
+                                    if dist_post_update<min_dis:
+                                        perturbed=_perturbed
 
                 # compute new distance.
                 dist = self.compute_distance(perturbed, input_xi)
@@ -180,7 +189,7 @@ class HSJAttack(DecisionBlackBoxAttack):
 
         rv = rv / np.sqrt(np.sum(rv ** 2, axis = (1,2,3), keepdims = True))
         perturbed = sample + delta * rv
-        perturbed = self.clip_image(perturbed, self.lb, self.ub)
+        perturbed = self.clip_image(perturbed, 0.0, 1.0)
         rv = (perturbed - sample) / delta
 
         # query the model.
@@ -279,7 +288,7 @@ class HSJAttack(DecisionBlackBoxAttack):
         num_evals = 0
         # Find a misclassified random noise.
         while True:
-                random_noise = np.random.uniform(self.lb, self.ub, size = input_xi.shape)
+                random_noise = np.random.uniform(0.0, 1.0, size = input_xi.shape)
                 success = self.decision_function(random_noise, label_or_target)[0]
                 if success:
                         break

@@ -44,7 +44,8 @@ class BanditAttack(ScoreBlackBoxAttack):
                  epsilon, p,
                  fd_eta, lr,
                  prior_exploration, prior_size, data_size, prior_lr,
-                 lb, ub, batch_size, name,target,target_type,device):
+                 lb, ub, batch_size, name,target,target_type,device,blacklight,sigma,
+                         post_sigma):
         """
         :param max_loss_queries: maximum number of calls allowed to loss oracle per data pt
         :param epsilon: radius of lp-ball of perturbation
@@ -70,7 +71,10 @@ class BanditAttack(ScoreBlackBoxAttack):
                          name = "Bandit",
                          target=target,
                          target_type=target_type,
-                         device=device)
+                         device=device,
+                         blacklight=blacklight,
+                         sigma=sigma,
+                         post_sigma=post_sigma)
         # other algorithmic parameters
         self.fd_eta = fd_eta
         # learning rate

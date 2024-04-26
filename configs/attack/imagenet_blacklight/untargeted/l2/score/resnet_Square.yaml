@@ -1,0 +1,36 @@
+attack:
+  epsilon: 10200.0
+  max_loss_queries: 1000
+  name: Square
+  p: l2
+  test_sample: 1000
+dataset:
+  image_size: 224
+  n_channels: 3
+  n_classes: 1000
+  name: ImageNet
+  normalize: false
+defense:
+  blacklight: true
+  sigma: 0.0
+device: cuda:3
+model:
+  init_mode: kaiming_fan_out
+  name: resnet
+  normalize_layer: true
+  resnet:
+    block_type: basic
+    initial_channels: 64
+    n_blocks:
+    - 2
+    - 2
+    - 2
+    - 2
+  type: imagenet
+test:
+  batch_size: 1
+  checkpoint: experiments/imagenet/resnet18/exp00/checkpoint_00090.pth
+  dataloader:
+    num_workers: 2
+    pin_memory: false
+  output_dir: experiments/attack/imagenet_blacklight/untargeted/l2/score/resnet/Square/

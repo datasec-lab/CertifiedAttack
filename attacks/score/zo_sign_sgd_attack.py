@@ -43,7 +43,8 @@ class ZOSignSGDAttack(ScoreBlackBoxAttack):
     ZOSignSGD Attack
     """
 
-    def __init__(self, max_loss_queries, epsilon, p, fd_eta, lr, q, lb, ub, batch_size, name,target,target_type,device):
+    def __init__(self, max_loss_queries, epsilon, p, fd_eta, lr, q, lb, ub, batch_size, name,target,target_type,device,blacklight,sigma,
+                         post_sigma):
         """
         :param max_loss_queries: maximum number of calls allowed to loss oracle per data pt
         :param epsilon: radius of lp-ball of perturbation
@@ -64,7 +65,10 @@ class ZOSignSGDAttack(ScoreBlackBoxAttack):
                          name = "zosignsgd",
                          target=target,
                          target_type=target_type,
-                         device=device)
+                         device=device,
+                         blacklight=blacklight,
+                         sigma=sigma,
+                         post_sigma=post_sigma)
         self.q = q
         self.fd_eta = fd_eta
         self.lr = lr
@@ -84,7 +88,7 @@ class ZOSignSGDAttack(ScoreBlackBoxAttack):
             gs_t += est_deriv.reshape(-1, *[1] * num_axes) * exp_noise
         # perform the sign step regardless of the lp-ball constraint
         # this is the main difference in the method.
-        new_xs = lp_step(xs_t, gs_t, self.lr, 'inf')
+        new_xs = lp_step(xs_t, gs_t, self.lr, self.p)
         # the number of queries required for forward difference is q (forward sample) + 1 at xs_t
         return new_xs, (self.q + 1) * torch.ones(_shape[0])
 

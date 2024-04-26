@@ -103,6 +103,8 @@ def create_imagenet_transform(config: yacs.config.CfgNode,
             transforms.append(RandomHorizontalFlip(config))
         if config.dataset.normalize:
             transforms.append(Normalize(mean, std))
+        else:
+            transforms.append(Normalize(np.array([0,0,0]), np.array([1,1,1]))) # divided by 255
 
         if config.augmentation.use_cutout:
             transforms.append(Cutout(config))
@@ -120,6 +122,8 @@ def create_imagenet_transform(config: yacs.config.CfgNode,
             transforms.append(CenterCrop(config))
         if config.dataset.normalize:
             transforms.append(Normalize(mean, std))
+        else:
+            transforms.append(Normalize(np.array([0,0,0]), np.array([1,1,1]))) # divided by 255
         transforms.append(ToTensor())
 
     return torchvision.transforms.Compose(transforms)

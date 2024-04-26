@@ -5,6 +5,7 @@ dataset:
   image_size: 224
   n_channels: 3
   n_classes: 1000
+  normalize: False
 model:
   type: imagenet
   name: densenet
@@ -15,6 +16,7 @@ model:
     growth_rate: 32
     drop_rate: 0.0
     compression_rate: 0.5
+  normalize_layer: True
 train:
   resume: False
   seed: 0

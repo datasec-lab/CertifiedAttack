@@ -44,7 +44,7 @@ class EvolutionaryAttack(DecisionBlackBoxAttack):
     """
     Evolutionary Attack
     """
-    def __init__(self, epsilon, p, max_queries, lb, ub, batch_size, sub,target,target_type,device):
+    def __init__(self, epsilon, p, max_queries, lb, ub, batch_size, sub,target,target_type,device,blacklight,sigma,post_sigma):
         super().__init__(max_queries = max_queries,
                          epsilon=epsilon,
                          p=p,
@@ -53,7 +53,10 @@ class EvolutionaryAttack(DecisionBlackBoxAttack):
                          batch_size = batch_size,
                          target=target,
                          target_type=target_type,
-                         device=device)
+                         device=device,
+                         blacklight=blacklight,
+                         sigma=sigma,
+                         post_sigma=post_sigma)
         self.sub = sub
 
     def _config(self):

@@ -1,0 +1,32 @@
+attack:
+  ZOSignSGD:
+    fd_eta: 2.55
+    lr: 20.0
+  epsilon: 1275.0
+  max_loss_queries: 10000
+  name: ZOSignSGD
+  p: l2
+  test_sample: 1000
+dataset:
+  name: CIFAR10
+  normalize: false
+defense:
+  blacklight: false
+  sigma: 0.0
+device: cuda:0
+model:
+  init_mode: kaiming_fan_out
+  name: resnet
+  normalize_layer: true
+  resnet:
+    block_type: basic
+    depth: 110
+    initial_channels: 16
+  type: cifar
+test:
+  batch_size: 1
+  checkpoint: experiments/AT_cifar10/resnet_l2/exp00/checkpoint_00160.pth
+  dataloader:
+    num_workers: 2
+    pin_memory: false
+  output_dir: experiments/attack/cifar10_AT/untargeted/l2/score/resnet/ZOSignSGD/

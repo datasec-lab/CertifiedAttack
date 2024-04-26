@@ -1,0 +1,30 @@
+attack:
+  epsilon: 25.5
+  max_loss_queries: 10000
+  name: RayS
+  p: linf
+  test_sample: 1000
+dataset:
+  name: CIFAR10
+  normalize: false
+defense:
+  blacklight: true
+  sigma: 0.0
+device: cuda:3
+model:
+  init_mode: kaiming_fan_out
+  name: wrn
+  normalize_layer: true
+  type: cifar
+  wrn:
+    depth: 28
+    drop_rate: 0.0
+    initial_channels: 16
+    widening_factor: 10
+test:
+  batch_size: 1
+  checkpoint: experiments/cifar10/wrn/exp00/checkpoint_00200.pth
+  dataloader:
+    num_workers: 2
+    pin_memory: false
+  output_dir: experiments/attack/cifar10_blacklight/untargeted/linf/decision/wrn/RayS/

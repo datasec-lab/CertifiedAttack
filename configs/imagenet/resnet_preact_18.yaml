@@ -5,6 +5,7 @@ dataset:
   image_size: 224
   n_channels: 3
   n_classes: 1000
+  normalize: False
 model:
   type: imagenet
   name: resnet_preact
@@ -16,6 +17,7 @@ model:
     remove_first_relu: False
     add_last_bn: False
     preact_stage: [True, True, True, True]
+  normalize_layer: True
 train:
   resume: False
   seed: 0

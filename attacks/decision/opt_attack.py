@@ -41,7 +41,8 @@ class OptAttack(DecisionBlackBoxAttack):
     Opt Attack
     """
 
-    def __init__(self, epsilon, p, alpha, beta, max_queries, lb, ub,target,target_type,device):
+    def __init__(self, epsilon, p, alpha, beta, max_queries, lb, ub,target,target_type,device,blacklight,sigma,
+                         post_sigma):
         super().__init__(max_queries = max_queries,
                          epsilon=epsilon,
                          p=p,
@@ -49,7 +50,10 @@ class OptAttack(DecisionBlackBoxAttack):
                          ub=ub,
                          target=target,
                          target_type=target_type,
-                         device=device)
+                         device=device,
+                         blacklight=blacklight,
+                         sigma=sigma,
+                         post_sigma=post_sigma)
         self.alpha = alpha
         self.beta = beta
         self.iterations = 1500
@@ -69,6 +73,7 @@ class OptAttack(DecisionBlackBoxAttack):
         """ 
         Attack the original image and return adversarial example
         """
+
 
         x0 = x0.cpu().numpy()
         query_count = 0
@@ -100,6 +105,7 @@ class OptAttack(DecisionBlackBoxAttack):
         g1 = 1.0
         theta, g2 = best_theta, g_theta
         opt_count = 0
+        dist=0
         for i in range(3000):
             gradient = np.zeros(theta.shape)
             q = 10
@@ -182,7 +188,7 @@ class OptAttack(DecisionBlackBoxAttack):
             lbd_lo = lbd
             lbd_hi = lbd*1.01
             nquery += 1
-            while self.predict_label(x0+lbd_hi*theta) == y0:
+            while self.predict_label(x0+lbd_hi*theta) == y0 and nquery<self.max_queries:
                 lbd_hi = lbd_hi*1.01
                 nquery += 1
                 if lbd_hi > 20:
@@ -191,14 +197,14 @@ class OptAttack(DecisionBlackBoxAttack):
             lbd_hi = lbd
             lbd_lo = lbd*0.99
             nquery += 1
-            while self.predict_label(x0+lbd_lo*theta) != y0 :
+            while self.predict_label(x0+lbd_lo*theta) != y0 and nquery<self.max_queries:
                 lbd_lo = lbd_lo*0.99
                 nquery += 1
 
-        while (lbd_hi - lbd_lo) > tol:
+        while (lbd_hi - lbd_lo) > tol and nquery<self.max_queries:
             lbd_mid = (lbd_lo + lbd_hi)/2.0
             nquery += 1
-            if self.predict_label(x0 + lbd_mid*theta) != y0:
+            if self.predict_label(x0 + lbd_mid*theta) != y0 :
                 lbd_hi = lbd_mid
             else:
                 lbd_lo = lbd_mid
@@ -217,7 +223,7 @@ class OptAttack(DecisionBlackBoxAttack):
         lbd_hi = lbd
         lbd_lo = 0.0
 
-        while (lbd_hi - lbd_lo) > 1e-5:
+        while (lbd_hi - lbd_lo) > 1e-5 and nquery<self.max_queries:
             lbd_mid = (lbd_lo + lbd_hi)/2.0
             nquery += 1
             if self.predict_label(x0 + lbd_mid*theta) != y0:

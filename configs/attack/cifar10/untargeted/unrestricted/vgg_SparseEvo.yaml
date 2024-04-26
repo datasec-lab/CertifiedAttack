@@ -1,0 +1,32 @@
+device: cuda:0
+defense:
+  blacklight: False
+  sigma: 0.0
+attack:
+  name: SparseEvo
+  epsilon: 0.0
+  p: unrestricted
+  max_loss_queries: 10000
+  test_sample: 1000
+
+test:
+  checkpoint: 'experiments/cifar10/vgg/exp00/checkpoint_00160.pth'
+  output_dir: 'experiments/attack/cifar10/untargeted/unrestricted/decision/vgg/SparseEvo/'
+  batch_size: 1
+  dataloader:
+    num_workers: 2
+    pin_memory: False
+dataset:
+  name: CIFAR10
+  normalize: False
+model:
+  type: cifar
+  name: vgg
+  init_mode: kaiming_fan_out
+  vgg:
+    n_channels: [64, 128, 256, 512, 512]
+    n_layers: [2, 2, 3, 3, 3]
+    use_bn: True
+  normalize_layer: True
+
+

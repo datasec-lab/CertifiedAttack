@@ -5,6 +5,7 @@ dataset:
   image_size: 224
   n_channels: 3
   n_classes: 1000
+  normalize: False
 model:
   type: imagenet
   name: pyramidnet
@@ -14,6 +15,7 @@ model:
     initial_channels: 64
     block_type: bottleneck
     alpha: 300
+  normalize_layer: True
 train:
   resume: False
   seed: 0

@@ -42,7 +42,8 @@ class SignFlipAttack(DecisionBlackBoxAttack):
     SignFlip
     """
 
-    def __init__(self, epsilon, p, resize_factor, max_queries, lb, ub, batch_size,target,target_type,device):
+    def __init__(self, epsilon, p, resize_factor, max_queries, lb, ub, batch_size,target,target_type,device,blacklight,sigma,
+                         post_sigma):
         super().__init__(max_queries = max_queries,
                          epsilon=epsilon,
                          p=p,
@@ -51,7 +52,10 @@ class SignFlipAttack(DecisionBlackBoxAttack):
                          batch_size = batch_size,
                          target=target,
                          target_type=target_type,
-                         device=device)
+                         device=device,
+                         blacklight=blacklight,
+                         sigma=sigma,
+                         post_sigma=post_sigma)
         self.resize_factor = resize_factor
 
 

@@ -1,0 +1,33 @@
+attack:
+  ZOSignSGD:
+    fd_eta: 2.55
+    lr: 20.0
+  epsilon: 1275.0
+  max_loss_queries: 10000
+  name: ZOSignSGD
+  p: l2
+  test_sample: 1000
+dataset:
+  name: CIFAR100
+  normalize: false
+defense:
+  blacklight: false
+  sigma: 0.02
+device: cuda:0
+model:
+  init_mode: kaiming_fan_out
+  name: wrn
+  normalize_layer: true
+  type: cifar
+  wrn:
+    depth: 28
+    drop_rate: 0.0
+    initial_channels: 16
+    widening_factor: 10
+test:
+  batch_size: 1
+  checkpoint: experiments/cifar100/wrn/exp00/checkpoint_00200.pth
+  dataloader:
+    num_workers: 2
+    pin_memory: false
+  output_dir: experiments/attack/cifar100_RAND/untargeted/l2/score/wrn/ZOSignSGD/

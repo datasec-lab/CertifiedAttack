@@ -1,0 +1,30 @@
+attack:
+  epsilon: 1275.0
+  max_loss_queries: 10000
+  name: GeoDA
+  p: l2
+  test_sample: 1000
+dataset:
+  name: CIFAR100
+  normalize: false
+defense:
+  blacklight: true
+  sigma: 0.0
+device: cuda:3
+model:
+  init_mode: kaiming_fan_out
+  name: resnext
+  normalize_layer: true
+  resnext:
+    base_channels: 64
+    cardinality: 8
+    depth: 29
+    initial_channels: 64
+  type: cifar
+test:
+  batch_size: 1
+  checkpoint: experiments/cifar100/resnext/exp00/checkpoint_00300.pth
+  dataloader:
+    num_workers: 2
+    pin_memory: false
+  output_dir: experiments/attack/cifar100_blacklight/untargeted/l2/decision/resnext/GeoDA/

@@ -24,11 +24,17 @@ import torch
 from torch import Tensor as t
 
 from attacks.utils.compute import l2_proj_maker, linf_proj_maker
+from attacks.certified_attack.probabilistic_fingerprint import *
 import sys
+
+def get_tracker(query, window_size, hash_kept, roundto, step_size, workers):
+    tracker = InputTracker(query, window_size, hash_kept, round=roundto, step_size=step_size, workers=workers)
+    LOGGER.info("Blacklight detector created.")
+    return tracker
 class ScoreBlackBoxAttack(object):
     def __init__(self, max_loss_queries=np.inf,
                  max_extra_queries=np.inf,
-                 epsilon=0.5, p='inf', lb=0., ub=255.,batch_size = 50, name = "nes",target=False,target_type="median",device='cuda'):
+                 epsilon=0.5, p='inf', lb=0., ub=255.,batch_size = 50, name = "nes",target=False,target_type="median",device='cuda',blacklight=True,sigma=0,post_sigma=0):
         """
         :param max_loss_queries: max number of calls to model per data point
         :param max_extra_queries: max number of calls to early stopping extraerion per data point
@@ -52,6 +58,7 @@ class ScoreBlackBoxAttack(object):
         self.lb = lb
         self.ub = ub
         self.name = name
+        self.sigma=sigma
         # the _proj method takes pts and project them into the constraint set:
         # which are
         #  1. epsilon lp-ball around xs
@@ -64,6 +71,34 @@ class ScoreBlackBoxAttack(object):
         self.target=target
         self.target_type=target_type
         self.device=torch.device(device)
+        self.blacklight=blacklight
+        self.blacklight_detection=0
+        self.blacklight_count=0
+        self.blacklight_count_total=0
+        self.blacklight_cover_list=[]
+        self.blacklight_query_to_detect=0
+        self.blacklight_query_to_detect_list=[]
+        self.testnum=0
+        self.distances=[]
+
+        self.post_sigma=post_sigma
+        self.post_noise=0
+
+    def blacklight_detect(self,queries):
+        ####for blacklight
+        threshold = 25
+        id = 0
+        match_list = []
+        for query in queries.detach().cpu().numpy():
+            match_num = self.tracker.add_img(query)
+            match_list.append(match_num)
+            if (match_num > threshold):
+                # LOGGER.info(
+                #     "Image: {}, max match: {}, attack_query: {}".format(id, match_num, match_num > threshold))
+                self.blacklight_count += 1
+                # print("blacklight_success:{}".format(self.blacklight_count))
+            # print(query)
+            id += 1
 
     def result(self):
         """
@@ -88,7 +123,11 @@ class ScoreBlackBoxAttack(object):
             "total_successes": self.total_successes,
             "total_failures": self.total_failures,
             "failure_rate": "NaN" if self.total_successes + self.total_failures == 0 else self.total_failures / (self.total_successes + self.total_failures),
-            "config": self._config()
+            "config": self._config(),
+            "blacklight_detection_rate":  self.blacklight_detection / self.testnum if self.testnum>0 else "NaN",
+            "blacklight_coverage": np.mean(self.blacklight_cover_list),
+            "blacklight_query_to_detect":np.mean(self.blacklight_query_to_detect_list),
+            "distance": np.mean(self.distances)
         }
 
     def _config(self):
@@ -152,12 +191,20 @@ class ScoreBlackBoxAttack(object):
         x_eval = torch.clamp(x_eval, 0, 1)
         # ---------------------#
         # sigma = config["sigma"]
-        sigma = 0
+        sigma = self.sigma
         # ---------------------#
         x_eval = x_eval + sigma * torch.randn_like(x_eval)
         x_eval = torch.clamp(x_eval, 0, 1)
         # _, y_logit = model(x_eval.to(self.device))
         y_logit = self.model(x_eval.to(self.device))
+        y_logit += self.post_sigma*torch.randn_like(y_logit)
+
+        if self.blacklight:  # batch size must be 1 when applying blacklight
+            self.blacklight_detect(x_eval.to(self.device))
+            self.blacklight_count_total += x_eval.shape[0]
+            if self.blacklight_count == 0:
+                self.blacklight_query_to_detect += 1
+
         loss = self.cw_loss(y_logit, self.y_batch, self.target)
         if es:
             y_logit = y_logit.detach()
@@ -178,12 +225,22 @@ class ScoreBlackBoxAttack(object):
         x_eval = torch.clamp(x_eval, 0, 1)
         # ---------------------#
         # sigma = config["sigma"]
-        sigma = 0
+        sigma = self.sigma
         # ---------------------#
-        x_eval = x_eval + sigma * torch.randn_like(x_eval)
+        self.RAND_noise=sigma * torch.randn_like(x_eval)
+        x_eval = x_eval + self.RAND_noise
         x_eval = torch.clamp(x_eval, 0, 1)
         # _, y_logit = model(x_eval.to(self.device))
         y_logit = self.model(x_eval.to(self.device))
+        self.post_noise=self.post_sigma*torch.randn_like(y_logit)
+        y_logit+=self.post_noise
+
+        if self.blacklight:  # batch size must be 1 when applying blacklight
+            self.blacklight_detect(x_eval.to(self.device))
+            self.blacklight_count_total += x_eval.shape[0]
+            if self.blacklight_count == 0:
+                self.blacklight_query_to_detect += 1
+
         y_logit = y_logit.detach()
         correct = torch.argmax(y_logit, axis=1) == self.y_batch
 
@@ -192,8 +249,15 @@ class ScoreBlackBoxAttack(object):
         else:
             return ~correct
 
-    def get_label(self,target_type):
-        _, logit = self.model(torch.FloatTensor(self.x_batch.transpose(0, 3, 1, 2) / 255.).to(self.device))
+    def get_label(self,target_type,x_batch):
+        logit = self.model(torch.FloatTensor(x_batch.transpose(0, 3, 1, 2) / 255.).to(self.device))
+
+        if self.blacklight:  # batch size must be 1 when applying blacklight
+            self.blacklight_detect(torch.FloatTensor(x_batch.transpose(0, 3, 1, 2) / 255.).to(self.device))
+            self.blacklight_count_total += torch.FloatTensor(x_batch.transpose(0, 3, 1, 2) / 255.).to(self.device).shape[0]
+            if self.blacklight_count == 0:
+                self.blacklight_query_to_detect += 1
+
         if target_type == 'random':
             label = torch.randint(low=0, high=logit.shape[1], size=self.y_batch.shape).long().to(self.device)
         elif target_type == 'least_likely':
@@ -216,12 +280,21 @@ class ScoreBlackBoxAttack(object):
                 ith entry is 1 if the ith data point is misclassified
         :return: a dict of logs whose length is the number of iterations
         """
+
+
+        self.testnum+=1
         self.model=model
         x_batch = xs.permute(0, 2, 3, 1).cpu().numpy()*255.0
         y_batch = ys.cpu().numpy()
 
+        if self.blacklight:
+            self.tracker = get_tracker(xs.cpu().numpy(), window_size= 20, hash_kept= 50, roundto= 50, step_size= 1, workers= 5)
+            self.blacklight_count=0
+            self.blacklight_query_to_detect=0
+            self.blacklight_count_total=0
+
         if self.target:
-            self.y_batch = self.get_label(self.target_type)
+            self.y_batch = self.get_label(self.target_type,x_batch)
         else:
             self.y_batch = torch.LongTensor(y_batch).to(self.device)
 
@@ -242,6 +315,9 @@ class ScoreBlackBoxAttack(object):
 
         dones_mask = self.early_stop_crit_fct(xs_t)
         correct_classified_mask = ~dones_mask
+
+        if self.blacklight and torch.all(dones_mask):
+            self.testnum-=1
 
         # list of logs to be returned
         logs_dict = {
@@ -289,7 +365,6 @@ class ScoreBlackBoxAttack(object):
             # replace xs only if not done
             ##updated x here
             xs_t = self.proj_replace(xs_t, sugg_xs_t, (dones_mask.reshape(-1, *[1] * num_axes).float()))
-
             # update number of queries (note this is done before updating dones_mask)
             num_loss_queries += num_loss_queries_per_step.to(self.device) * (~dones_mask)
             num_extra_queries += (~dones_mask)
@@ -312,7 +387,16 @@ class ScoreBlackBoxAttack(object):
                     "successes : ", success_mask.sum().item() / float(success_mask.shape[0]), \
                     "failures : ", ((~dones_mask) * correct_classified_mask).sum().item()  / float(success_mask.shape[0]))
                 sys.stdout.flush()
+
             
+        if self.blacklight:
+            if self.blacklight_count > 0:
+                self.blacklight_cover_list.append(self.blacklight_count/self.blacklight_count_total)
+                self.blacklight_detection += 1
+                self.blacklight_query_to_detect_list.append(self.blacklight_query_to_detect)
+            print('blacklight_detected_sample_rate : ', self.blacklight_detection / self.testnum if self.testnum>0 else None,\
+                'blacklight_coverage: ', np.mean(self.blacklight_cover_list), \
+                  'blacklight_query_to_detect : ', np.mean(self.blacklight_query_to_detect_list))
 
 
         success_mask = dones_mask * correct_classified_mask
@@ -335,7 +419,9 @@ class ScoreBlackBoxAttack(object):
         # set self._proj to None to ensure it is intended use
         self._proj = None
 
-        return xs_t.permute(0, 3, 1, 2) / 255
+        x_adv=xs_t.permute(0, 3, 1, 2) / 255
+        self.distances.append(torch.linalg.norm((x_adv-xs).reshape(x_adv.shape[0]*x_adv.shape[1]*x_adv.shape[2]*x_adv.shape[3]),ord=2).cpu().data)
+        return x_adv+self.sigma * torch.randn_like(x_adv)
 '''
     
 MIT License

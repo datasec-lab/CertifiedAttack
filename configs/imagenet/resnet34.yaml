@@ -5,6 +5,7 @@ dataset:
   image_size: 224
   n_channels: 3
   n_classes: 1000
+  normalize: False
 model:
   type: imagenet
   name: resnet
@@ -13,6 +14,7 @@ model:
     initial_channels: 64
     block_type: basic
     n_blocks: [3, 4, 6, 3]
+  normalize_layer: True
 train:
   resume: False
   seed: 0

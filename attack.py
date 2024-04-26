@@ -58,7 +58,7 @@ def evaluate(config, attack, model, test_loader, loss_func, logger):
             data = data.to(device)
             targets = targets.to(device)
             adv_data=attack.run(data,targets,model)
-            outputs = model(adv_data)
+            outputs = model(adv_data)+attack.post_noise
             loss = loss_func(outputs, targets)
 
             pred_raw_all.append(outputs.cpu().numpy())
@@ -111,7 +111,17 @@ def main():
 
     preds, probs, labels, loss, acc = evaluate(config, attack, model, test_loader,
                                                test_loss, logger)
-    print(attack.result())
+
+    result=attack.result()
+    query=result["average_num_queries"]
+    acc_by_attack=1-result["failure_rate"]
+    blacklight_detection_rate=result["blacklight_detection_rate"]
+    blacklight_coverage=result["blacklight_coverage"]
+    blacklight_query_to_detect=result["blacklight_query_to_detect"]
+    distance=result["distance"]
+
+    print(f"average query: {query}, attack acc: {acc_by_attack}, model acc: {acc}, "
+          f"blacklight_detection_rate: {blacklight_detection_rate}, blacklight_coverage: {blacklight_coverage}, blacklight_query_to_detect: {blacklight_query_to_detect} ")
     output_path = output_dir / f'predictions.npz'
     np.savez(output_path,
              preds=preds,
@@ -119,7 +129,11 @@ def main():
              labels=labels,
              loss=loss,
              acc=acc,
-             attack_result=attack.result())
+             query=query,
+             bl_detect_rate=blacklight_detection_rate,
+             bl_coverage=blacklight_coverage,
+             bl_q2detect=blacklight_query_to_detect,
+             distance=distance)
 
 
 if __name__ == '__main__':

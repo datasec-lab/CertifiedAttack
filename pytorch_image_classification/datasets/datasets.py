@@ -82,6 +82,9 @@ def create_dataset(config: yacs.config.CfgNode,
             dataset_dir / 'train', transform=train_transform)
         val_dataset = torchvision.datasets.ImageFolder(dataset_dir / 'val',
                                                        transform=val_transform)
-        return train_dataset, val_dataset
+        if is_train:
+            return train_dataset, val_dataset
+        else:
+            return val_dataset
     else:
         raise ValueError()

@@ -38,6 +38,8 @@ from pytorch_image_classification.utils import (
     setup_cudnn,
 )
 
+from attacks.trades import trades_loss
+
 global_step = 0
 
 
@@ -146,7 +148,19 @@ def train(epoch, config, model, optimizer, scheduler, loss_func, train_loader,
                 output_chunk = model(data_chunk)
             outputs.append(output_chunk)
 
-            loss = loss_func(output_chunk, target_chunk)
+            if config.defense.TRADES:
+                loss = trades_loss(model=model,
+                                   x_natural=data_chunk,
+                                   y=target_chunk,
+                                   optimizer=optimizer,
+                                   step_size=1/255,
+                                   epsilon=config.attack.epsilon/255,
+                                   perturb_steps=10,
+                                   beta=5,
+                                   distance=config.attack.p)
+
+            else:
+                loss = loss_func(output_chunk, target_chunk)
             losses.append(loss)
             loss.backward()
         outputs = torch.cat(outputs)

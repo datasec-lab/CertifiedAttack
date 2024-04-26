@@ -39,7 +39,8 @@ class SimpleAttack(ScoreBlackBoxAttack):
     Simple Black-Box Attack
     """
 
-    def __init__(self, max_loss_queries, epsilon, p, lb, ub, delta, batch_size, name,target,target_type,device):
+    def __init__(self, max_loss_queries, epsilon, p, lb, ub, delta, batch_size, name,target,target_type,device,blacklight,sigma,
+                         post_sigma):
         """
         :param max_loss_queries: maximum number of calls allowed to loss oracle per data pt
         :param epsilon: radius of lp-ball of perturbation
@@ -58,7 +59,10 @@ class SimpleAttack(ScoreBlackBoxAttack):
                          name = "SimBA",
                          target=target,
                          target_type=target_type,
-                         device=device)
+                         device=device,
+                         blacklight=blacklight,
+                         sigma=sigma,
+                         post_sigma=post_sigma)
                          
         #self.xo_t = None
         self.delta = delta
