@@ -1,0 +1,16 @@
+device: cuda:3
+dataset:
+  name: CIFAR100
+  dataset_dir: ~/.torch/datasets/CIFAR100
+  n_classes: 100
+model:
+  name: wrn
+  init_mode: kaiming_fan_in
+train:
+  weight_decay: 0.0005
+  output_dir: experiments/cifar100/wrn/exp00
+  checkpoint_period: 100
+scheduler:
+  epochs: 200
+  milestones: [60, 120, 160]
+  lr_decay: 0.2

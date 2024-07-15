@@ -1,0 +1,30 @@
+device: cuda:0
+dataset:
+  name: ImageNet
+  dataset_dir: /mnt/data/imagenet
+  image_size: 224
+  n_classes: 1000
+model:
+  type: imagenet
+  name: vgg
+train:
+  batch_size: 256
+  subdivision: 8
+  base_lr: 0.01
+  weight_decay: 0.0005
+  output_dir: experiments/imagenet/vgg16/exp00
+  log_period: 10
+  use_tensorboard: True
+  dataloader:
+    num_workers: 8
+    pin_memory: True
+scheduler:
+  epochs: 90
+  milestones: [30, 60]
+validation:
+  dataloader:
+    num_workers: 8
+    pin_memory: True
+tta:
+  use_resize: True
+  use_center_crop: True

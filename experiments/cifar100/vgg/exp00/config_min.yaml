@@ -1,0 +1,9 @@
+dataset:
+  name: CIFAR100
+  dataset_dir: ~/.torch/datasets/CIFAR100
+  n_classes: 100
+model:
+  name: vgg
+train:
+  output_dir: experiments/cifar100/vgg/exp00
+  checkpoint_period: 100

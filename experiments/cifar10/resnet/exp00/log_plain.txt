@@ -1,0 +1,1711 @@
+[2024-01-20 12:02:31] __main__ INFO: device: cuda:1
+attack:
+  name: Square
+  epsilon: 12.75
+  p: inf
+  max_loss_queries: 10000
+  ub: 1.0
+  lb: 0.0
+  target: False
+  target_type: median
+  NES:
+    fd_eta: 0.006274509803921569
+    lr: 0.006274509803921569
+    q: 15
+  ZOSignSGD:
+    fd_eta: 0.006274509803921569
+    lr: 0.006274509803921569
+    q: 30
+  Bandit:
+    lr: 0.006274509803921569
+    fd_eta: 0.006274509803921569
+    prior_lr: 0.1
+    prior_size: 20
+    data_size: 32
+    prior_exploration: 0.1
+  Sign:
+    fd_eta: 0.03137254901960784
+  Simple:
+    delta: 0.00392156862745098
+  Square:
+    p_init: 0.05
+  SignOPT:
+    alpha: 0.2
+    beta: 0.001
+    svm: False
+    momentum: 0
+    k: 200
+    sigma: 0
+  HSJ:
+    gamma: 1.0
+    stepsize_search: geometric_progression
+    max_num_evals: 10000
+    init_num_evals: 100
+    EOT: 1
+    sigma: 0
+  GeoDA:
+    sub_dim: 10
+    tol: 0.0001
+    alpha: 0.0002
+    mu: 0.6
+    search_space: sub
+    grad_estimator_batch_size: 40
+    sigma: 0
+  Opt:
+    alpha: 0.2
+    beta: 0.001
+  Evolutionary:
+    sub: 2
+  SignFlip:
+    
+  resize_factor: 1.0
+  RayS:
+    
+  Boundary:
+    steps: 25000
+    spherical_step: 0.01
+    source_step: 0.01
+    source_step_convergance: 1e-07
+    step_adaptation: 1.5
+    update_stats_every_k: 10
+cudnn:
+  benchmark: True
+  deterministic: False
+dataset:
+  name: CIFAR10
+  dataset_dir: ~/.torch/datasets/CIFAR10
+  image_size: 32
+  n_channels: 3
+  n_classes: 10
+  normalize: False
+model:
+  type: cifar
+  name: resnet
+  init_mode: kaiming_fan_out
+  normalize_layer: True
+  vgg:
+    n_channels: [64, 128, 256, 512, 512]
+    n_layers: [2, 2, 3, 3, 3]
+    use_bn: True
+  resnet:
+    depth: 110
+    n_blocks: [2, 2, 2, 2]
+    block_type: basic
+    initial_channels: 16
+  resnet_preact:
+    depth: 110
+    n_blocks: [2, 2, 2, 2]
+    block_type: basic
+    initial_channels: 16
+    remove_first_relu: False
+    add_last_bn: False
+    preact_stage: [True, True, True]
+  wrn:
+    depth: 28
+    initial_channels: 16
+    widening_factor: 10
+    drop_rate: 0.0
+  densenet:
+    depth: 100
+    n_blocks: [6, 12, 24, 16]
+    block_type: bottleneck
+    growth_rate: 12
+    drop_rate: 0.0
+    compression_rate: 0.5
+  pyramidnet:
+    depth: 272
+    n_blocks: [3, 24, 36, 3]
+    initial_channels: 16
+    block_type: bottleneck
+    alpha: 200
+  resnext:
+    depth: 29
+    n_blocks: [3, 4, 6, 3]
+    initial_channels: 64
+    cardinality: 8
+    base_channels: 4
+  shake_shake:
+    depth: 26
+    initial_channels: 96
+    shake_forward: True
+    shake_backward: True
+    shake_image: True
+  se_resnet_preact:
+    depth: 110
+    initial_channels: 16
+    se_reduction: 16
+    block_type: basic
+    remove_first_relu: False
+    add_last_bn: False
+    preact_stage: [True, True, True]
+train:
+  checkpoint: ''
+  resume: False
+  use_apex: False
+  precision: O0
+  batch_size: 128
+  subdivision: 1
+  optimizer: sgd
+  base_lr: 0.1
+  momentum: 0.9
+  nesterov: True
+  weight_decay: 0.0001
+  no_weight_decay_on_bn: False
+  gradient_clip: 0.0
+  start_epoch: 0
+  seed: 0
+  val_first: True
+  val_period: 1
+  val_ratio: 0.0
+  use_test_as_val: True
+  output_dir: experiments/cifar10/resnet/exp00
+  log_period: 100
+  checkpoint_period: 100
+  use_tensorboard: True
+  dataloader:
+    num_workers: 2
+    drop_last: True
+    pin_memory: False
+    non_blocking: False
+  distributed: False
+  dist:
+    backend: nccl
+    init_method: env://
+    world_size: -1
+    node_rank: -1
+    local_rank: 0
+    use_sync_bn: False
+tensorboard:
+  train_images: False
+  val_images: False
+  model_params: False
+optim:
+  adam:
+    betas: (0.9, 0.999)
+  lars:
+    eps: 1e-09
+    threshold: 0.01
+  adabound:
+    betas: (0.9, 0.999)
+    final_lr: 0.1
+    gamma: 0.001
+scheduler:
+  epochs: 160
+  warmup:
+    type: none
+    epochs: 0
+    start_factor: 0.001
+    exponent: 4
+  type: multistep
+  milestones: [80, 120]
+  lr_decay: 0.1
+  lr_min_factor: 0.001
+  T0: 10
+  T_mul: 1.0
+validation:
+  batch_size: 256
+  dataloader:
+    num_workers: 2
+    drop_last: False
+    pin_memory: False
+    non_blocking: False
+augmentation:
+  use_random_crop: True
+  use_random_horizontal_flip: True
+  use_cutout: False
+  use_random_erasing: False
+  use_dual_cutout: False
+  use_mixup: False
+  use_ricap: False
+  use_cutmix: False
+  use_label_smoothing: False
+  random_crop:
+    padding: 4
+    fill: 0
+    padding_mode: constant
+  random_horizontal_flip:
+    prob: 0.5
+  cutout:
+    prob: 1.0
+    mask_size: 16
+    cut_inside: False
+    mask_color: 0
+    dual_cutout_alpha: 0.1
+  random_erasing:
+    prob: 0.5
+    area_ratio_range: [0.02, 0.4]
+    min_aspect_ratio: 0.3
+    max_attempt: 20
+  mixup:
+    alpha: 1.0
+  ricap:
+    beta: 0.3
+  cutmix:
+    alpha: 1.0
+  label_smoothing:
+    epsilon: 0.1
+tta:
+  use_resize: False
+  use_center_crop: False
+  resize: 256
+test:
+  checkpoint: ''
+  output_dir: ''
+  batch_size: 256
+  dataloader:
+    num_workers: 2
+    pin_memory: False
+[2024-01-20 12:02:31] __main__ INFO: env_info:
+  pytorch_version: 2.1.2
+  cuda_version: 12.1
+  cudnn_version: 8902
+  num_gpus: 4
+  gpu_name: NVIDIA A100 80GB PCIe
+  gpu_capability: 8.0
+[2024-01-20 12:02:33] __main__ INFO: MACs   : 257.39M
+[2024-01-20 12:02:33] __main__ INFO: #params: 1.73M
+[2024-01-20 12:02:33] __main__ INFO: Val 0
+[2024-01-20 12:02:34] __main__ INFO: Epoch 0 loss 11268119843.6352 acc@1 0.1000 acc@5 0.5000
+[2024-01-20 12:02:34] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:02:34] __main__ INFO: Train 1 0
+[2024-01-20 12:02:39] __main__ INFO: Epoch 1 Step 100/390 lr 0.100000 loss 2.3037 (3.8440) acc@1 0.1016 (0.1055) acc@5 0.5312 (0.5048)
+[2024-01-20 12:02:43] __main__ INFO: Epoch 1 Step 200/390 lr 0.100000 loss 2.3103 (3.0742) acc@1 0.0938 (0.1042) acc@5 0.4609 (0.5062)
+[2024-01-20 12:02:47] __main__ INFO: Epoch 1 Step 300/390 lr 0.100000 loss 2.3046 (2.8171) acc@1 0.0859 (0.1029) acc@5 0.4453 (0.5064)
+[2024-01-20 12:02:51] __main__ INFO: Epoch 1 Step 390/390 lr 0.100000 loss 2.2990 (2.6985) acc@1 0.1094 (0.1033) acc@5 0.4844 (0.5070)
+[2024-01-20 12:02:51] __main__ INFO: Elapsed 16.24
+[2024-01-20 12:02:51] __main__ INFO: Val 1
+[2024-01-20 12:02:51] __main__ INFO: Epoch 1 loss 2.3051 acc@1 0.1002 acc@5 0.5010
+[2024-01-20 12:02:51] __main__ INFO: Elapsed 0.63
+[2024-01-20 12:02:51] __main__ INFO: Train 2 390
+[2024-01-20 12:02:56] __main__ INFO: Epoch 2 Step 100/390 lr 0.100000 loss 2.3012 (2.3016) acc@1 0.0703 (0.1006) acc@5 0.5312 (0.5021)
+[2024-01-20 12:03:01] __main__ INFO: Epoch 2 Step 200/390 lr 0.100000 loss 2.3007 (2.3010) acc@1 0.0547 (0.1037) acc@5 0.4922 (0.5076)
+[2024-01-20 12:03:05] __main__ INFO: Epoch 2 Step 300/390 lr 0.100000 loss 2.2954 (2.3006) acc@1 0.1016 (0.1046) acc@5 0.5391 (0.5093)
+[2024-01-20 12:03:08] __main__ INFO: Epoch 2 Step 390/390 lr 0.100000 loss 2.2953 (2.2993) acc@1 0.1172 (0.1061) acc@5 0.5078 (0.5125)
+[2024-01-20 12:03:08] __main__ INFO: Elapsed 17.18
+[2024-01-20 12:03:08] __main__ INFO: Val 2
+[2024-01-20 12:03:09] __main__ INFO: Epoch 2 loss 2.2930 acc@1 0.1124 acc@5 0.5553
+[2024-01-20 12:03:09] __main__ INFO: Elapsed 0.66
+[2024-01-20 12:03:09] __main__ INFO: Train 3 780
+[2024-01-20 12:03:13] __main__ INFO: Epoch 3 Step 100/390 lr 0.100000 loss 2.1780 (2.2605) acc@1 0.1875 (0.1341) acc@5 0.6484 (0.5941)
+[2024-01-20 12:03:17] __main__ INFO: Epoch 3 Step 200/390 lr 0.100000 loss 2.0360 (2.1994) acc@1 0.2344 (0.1575) acc@5 0.7734 (0.6477)
+[2024-01-20 12:03:21] __main__ INFO: Epoch 3 Step 300/390 lr 0.100000 loss 2.0602 (2.1513) acc@1 0.2266 (0.1783) acc@5 0.8047 (0.6863)
+[2024-01-20 12:03:25] __main__ INFO: Epoch 3 Step 390/390 lr 0.100000 loss 1.8241 (2.1122) acc@1 0.2734 (0.1943) acc@5 0.8750 (0.7126)
+[2024-01-20 12:03:25] __main__ INFO: Elapsed 15.90
+[2024-01-20 12:03:25] __main__ INFO: Val 3
+[2024-01-20 12:03:26] __main__ INFO: Epoch 3 loss 1.9046 acc@1 0.2744 acc@5 0.8216
+[2024-01-20 12:03:26] __main__ INFO: Elapsed 0.63
+[2024-01-20 12:03:26] __main__ INFO: Train 4 1170
+[2024-01-20 12:03:30] __main__ INFO: Epoch 4 Step 100/390 lr 0.100000 loss 1.7486 (1.9147) acc@1 0.3047 (0.2727) acc@5 0.8281 (0.8215)
+[2024-01-20 12:03:34] __main__ INFO: Epoch 4 Step 200/390 lr 0.100000 loss 1.8135 (1.8808) acc@1 0.2734 (0.2846) acc@5 0.8438 (0.8316)
+[2024-01-20 12:03:38] __main__ INFO: Epoch 4 Step 300/390 lr 0.100000 loss 1.8077 (1.8446) acc@1 0.3594 (0.3014) acc@5 0.8438 (0.8402)
+[2024-01-20 12:03:41] __main__ INFO: Epoch 4 Step 390/390 lr 0.100000 loss 1.6612 (1.8123) acc@1 0.3438 (0.3164) acc@5 0.8750 (0.8482)
+[2024-01-20 12:03:41] __main__ INFO: Elapsed 15.78
+[2024-01-20 12:03:41] __main__ INFO: Val 4
+[2024-01-20 12:03:42] __main__ INFO: Epoch 4 loss 1.7731 acc@1 0.3539 acc@5 0.8464
+[2024-01-20 12:03:42] __main__ INFO: Elapsed 0.66
+[2024-01-20 12:03:42] __main__ INFO: Train 5 1560
+[2024-01-20 12:03:46] __main__ INFO: Epoch 5 Step 100/390 lr 0.100000 loss 1.7692 (1.6568) acc@1 0.3906 (0.3873) acc@5 0.8281 (0.8838)
+[2024-01-20 12:03:51] __main__ INFO: Epoch 5 Step 200/390 lr 0.100000 loss 1.5833 (1.6242) acc@1 0.4062 (0.3957) acc@5 0.8984 (0.8933)
+[2024-01-20 12:03:57] __main__ INFO: Epoch 5 Step 300/390 lr 0.100000 loss 1.5899 (1.6107) acc@1 0.3828 (0.4022) acc@5 0.9062 (0.8956)
+[2024-01-20 12:04:03] __main__ INFO: Epoch 5 Step 390/390 lr 0.100000 loss 1.5064 (1.5972) acc@1 0.4297 (0.4087) acc@5 0.9062 (0.8977)
+[2024-01-20 12:04:03] __main__ INFO: Elapsed 20.75
+[2024-01-20 12:04:03] __main__ INFO: Val 5
+[2024-01-20 12:04:04] __main__ INFO: Epoch 5 loss 1.5315 acc@1 0.4426 acc@5 0.9099
+[2024-01-20 12:04:04] __main__ INFO: Elapsed 1.11
+[2024-01-20 12:04:04] __main__ INFO: Train 6 1950
+[2024-01-20 12:04:11] __main__ INFO: Epoch 6 Step 100/390 lr 0.100000 loss 1.4193 (1.5189) acc@1 0.5156 (0.4407) acc@5 0.9062 (0.9121)
+[2024-01-20 12:04:18] __main__ INFO: Epoch 6 Step 200/390 lr 0.100000 loss 1.4564 (1.4937) acc@1 0.4922 (0.4513) acc@5 0.9297 (0.9168)
+[2024-01-20 12:04:24] __main__ INFO: Epoch 6 Step 300/390 lr 0.100000 loss 1.3027 (1.4790) acc@1 0.4844 (0.4573) acc@5 0.9531 (0.9185)
+[2024-01-20 12:04:30] __main__ INFO: Epoch 6 Step 390/390 lr 0.100000 loss 1.4848 (1.4682) acc@1 0.4219 (0.4622) acc@5 0.9609 (0.9199)
+[2024-01-20 12:04:30] __main__ INFO: Elapsed 26.15
+[2024-01-20 12:04:30] __main__ INFO: Val 6
+[2024-01-20 12:04:31] __main__ INFO: Epoch 6 loss 1.4799 acc@1 0.4744 acc@5 0.9110
+[2024-01-20 12:04:31] __main__ INFO: Elapsed 1.15
+[2024-01-20 12:04:31] __main__ INFO: Train 7 2340
+[2024-01-20 12:04:38] __main__ INFO: Epoch 7 Step 100/390 lr 0.100000 loss 1.4842 (1.3915) acc@1 0.4141 (0.4877) acc@5 0.9297 (0.9298)
+[2024-01-20 12:04:45] __main__ INFO: Epoch 7 Step 200/390 lr 0.100000 loss 1.3648 (1.3909) acc@1 0.4766 (0.4884) acc@5 0.9297 (0.9300)
+[2024-01-20 12:04:51] __main__ INFO: Epoch 7 Step 300/390 lr 0.100000 loss 1.4306 (1.3839) acc@1 0.5078 (0.4932) acc@5 0.9297 (0.9313)
+[2024-01-20 12:04:57] __main__ INFO: Epoch 7 Step 390/390 lr 0.100000 loss 1.1144 (1.3703) acc@1 0.6250 (0.4991) acc@5 0.9688 (0.9321)
+[2024-01-20 12:04:57] __main__ INFO: Elapsed 26.02
+[2024-01-20 12:04:57] __main__ INFO: Val 7
+[2024-01-20 12:04:58] __main__ INFO: Epoch 7 loss 1.4997 acc@1 0.4763 acc@5 0.9176
+[2024-01-20 12:04:58] __main__ INFO: Elapsed 1.12
+[2024-01-20 12:04:58] __main__ INFO: Train 8 2730
+[2024-01-20 12:05:05] __main__ INFO: Epoch 8 Step 100/390 lr 0.100000 loss 1.2655 (1.2907) acc@1 0.5391 (0.5384) acc@5 0.9375 (0.9396)
+[2024-01-20 12:05:12] __main__ INFO: Epoch 8 Step 200/390 lr 0.100000 loss 1.3236 (1.2928) acc@1 0.4688 (0.5357) acc@5 0.9453 (0.9411)
+[2024-01-20 12:05:19] __main__ INFO: Epoch 8 Step 300/390 lr 0.100000 loss 1.2978 (1.2828) acc@1 0.5078 (0.5368) acc@5 0.9766 (0.9433)
+[2024-01-20 12:05:25] __main__ INFO: Epoch 8 Step 390/390 lr 0.100000 loss 1.1613 (1.2749) acc@1 0.5391 (0.5399) acc@5 0.9531 (0.9436)
+[2024-01-20 12:05:25] __main__ INFO: Elapsed 26.17
+[2024-01-20 12:05:25] __main__ INFO: Val 8
+[2024-01-20 12:05:26] __main__ INFO: Epoch 8 loss 1.2970 acc@1 0.5347 acc@5 0.9392
+[2024-01-20 12:05:26] __main__ INFO: Elapsed 1.11
+[2024-01-20 12:05:26] __main__ INFO: Train 9 3120
+[2024-01-20 12:05:33] __main__ INFO: Epoch 9 Step 100/390 lr 0.100000 loss 1.3009 (1.2166) acc@1 0.5547 (0.5653) acc@5 0.9453 (0.9473)
+[2024-01-20 12:05:39] __main__ INFO: Epoch 9 Step 200/390 lr 0.100000 loss 1.1719 (1.2057) acc@1 0.5625 (0.5655) acc@5 0.9844 (0.9491)
+[2024-01-20 12:05:46] __main__ INFO: Epoch 9 Step 300/390 lr 0.100000 loss 1.0482 (1.1940) acc@1 0.5625 (0.5710) acc@5 0.9844 (0.9500)
+[2024-01-20 12:05:52] __main__ INFO: Epoch 9 Step 390/390 lr 0.100000 loss 1.2927 (1.1816) acc@1 0.5156 (0.5756) acc@5 0.9375 (0.9507)
+[2024-01-20 12:05:52] __main__ INFO: Elapsed 26.25
+[2024-01-20 12:05:52] __main__ INFO: Val 9
+[2024-01-20 12:05:53] __main__ INFO: Epoch 9 loss 1.4396 acc@1 0.5272 acc@5 0.9124
+[2024-01-20 12:05:53] __main__ INFO: Elapsed 1.11
+[2024-01-20 12:05:53] __main__ INFO: Train 10 3510
+[2024-01-20 12:06:00] __main__ INFO: Epoch 10 Step 100/390 lr 0.100000 loss 1.1078 (1.1109) acc@1 0.6016 (0.6012) acc@5 0.9453 (0.9582)
+[2024-01-20 12:06:07] __main__ INFO: Epoch 10 Step 200/390 lr 0.100000 loss 1.0412 (1.1024) acc@1 0.6406 (0.6041) acc@5 0.9375 (0.9580)
+[2024-01-20 12:06:13] __main__ INFO: Epoch 10 Step 300/390 lr 0.100000 loss 1.0562 (1.0880) acc@1 0.6406 (0.6110) acc@5 0.9688 (0.9588)
+[2024-01-20 12:06:19] __main__ INFO: Epoch 10 Step 390/390 lr 0.100000 loss 0.9731 (1.0787) acc@1 0.6719 (0.6152) acc@5 0.9688 (0.9589)
+[2024-01-20 12:06:19] __main__ INFO: Elapsed 26.04
+[2024-01-20 12:06:19] __main__ INFO: Val 10
+[2024-01-20 12:06:20] __main__ INFO: Epoch 10 loss 1.2584 acc@1 0.5818 acc@5 0.9517
+[2024-01-20 12:06:20] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:06:20] __main__ INFO: Train 11 3900
+[2024-01-20 12:06:27] __main__ INFO: Epoch 11 Step 100/390 lr 0.100000 loss 0.8852 (1.0112) acc@1 0.7031 (0.6441) acc@5 0.9375 (0.9651)
+[2024-01-20 12:06:34] __main__ INFO: Epoch 11 Step 200/390 lr 0.100000 loss 1.0290 (1.0040) acc@1 0.5938 (0.6445) acc@5 0.9844 (0.9661)
+[2024-01-20 12:06:40] __main__ INFO: Epoch 11 Step 300/390 lr 0.100000 loss 1.0201 (0.9871) acc@1 0.6953 (0.6516) acc@5 0.9766 (0.9668)
+[2024-01-20 12:06:46] __main__ INFO: Epoch 11 Step 390/390 lr 0.100000 loss 0.9809 (0.9788) acc@1 0.6328 (0.6542) acc@5 0.9688 (0.9671)
+[2024-01-20 12:06:46] __main__ INFO: Elapsed 26.12
+[2024-01-20 12:06:46] __main__ INFO: Val 11
+[2024-01-20 12:06:47] __main__ INFO: Epoch 11 loss 1.4933 acc@1 0.6278 acc@5 0.9587
+[2024-01-20 12:06:47] __main__ INFO: Elapsed 1.12
+[2024-01-20 12:06:47] __main__ INFO: Train 12 4290
+[2024-01-20 12:06:54] __main__ INFO: Epoch 12 Step 100/390 lr 0.100000 loss 0.9522 (0.9163) acc@1 0.6250 (0.6741) acc@5 0.9922 (0.9725)
+[2024-01-20 12:07:01] __main__ INFO: Epoch 12 Step 200/390 lr 0.100000 loss 0.7738 (0.9076) acc@1 0.7266 (0.6805) acc@5 0.9844 (0.9718)
+[2024-01-20 12:07:08] __main__ INFO: Epoch 12 Step 300/390 lr 0.100000 loss 0.8158 (0.9006) acc@1 0.7344 (0.6832) acc@5 0.9766 (0.9723)
+[2024-01-20 12:07:14] __main__ INFO: Epoch 12 Step 390/390 lr 0.100000 loss 0.8799 (0.8907) acc@1 0.6719 (0.6883) acc@5 0.9609 (0.9727)
+[2024-01-20 12:07:14] __main__ INFO: Elapsed 26.22
+[2024-01-20 12:07:14] __main__ INFO: Val 12
+[2024-01-20 12:07:15] __main__ INFO: Epoch 12 loss 1.0455 acc@1 0.6797 acc@5 0.9727
+[2024-01-20 12:07:15] __main__ INFO: Elapsed 1.11
+[2024-01-20 12:07:15] __main__ INFO: Train 13 4680
+[2024-01-20 12:07:22] __main__ INFO: Epoch 13 Step 100/390 lr 0.100000 loss 0.8333 (0.8282) acc@1 0.6797 (0.7112) acc@5 0.9922 (0.9752)
+[2024-01-20 12:07:29] __main__ INFO: Epoch 13 Step 200/390 lr 0.100000 loss 1.0485 (0.8111) acc@1 0.6484 (0.7161) acc@5 0.9766 (0.9775)
+[2024-01-20 12:07:35] __main__ INFO: Epoch 13 Step 300/390 lr 0.100000 loss 0.8378 (0.8131) acc@1 0.7188 (0.7160) acc@5 0.9688 (0.9774)
+[2024-01-20 12:07:41] __main__ INFO: Epoch 13 Step 390/390 lr 0.100000 loss 1.0443 (0.8112) acc@1 0.6172 (0.7164) acc@5 0.9609 (0.9778)
+[2024-01-20 12:07:41] __main__ INFO: Elapsed 26.20
+[2024-01-20 12:07:41] __main__ INFO: Val 13
+[2024-01-20 12:07:42] __main__ INFO: Epoch 13 loss 0.9226 acc@1 0.7006 acc@5 0.9753
+[2024-01-20 12:07:42] __main__ INFO: Elapsed 1.10
+[2024-01-20 12:07:42] __main__ INFO: Train 14 5070
+[2024-01-20 12:07:49] __main__ INFO: Epoch 14 Step 100/390 lr 0.100000 loss 0.8539 (0.7623) acc@1 0.6719 (0.7341) acc@5 0.9844 (0.9809)
+[2024-01-20 12:07:56] __main__ INFO: Epoch 14 Step 200/390 lr 0.100000 loss 0.6974 (0.7610) acc@1 0.7344 (0.7346) acc@5 0.9766 (0.9800)
+[2024-01-20 12:08:02] __main__ INFO: Epoch 14 Step 300/390 lr 0.100000 loss 0.8248 (0.7555) acc@1 0.7188 (0.7366) acc@5 1.0000 (0.9797)
+[2024-01-20 12:08:08] __main__ INFO: Epoch 14 Step 390/390 lr 0.100000 loss 0.8423 (0.7521) acc@1 0.6875 (0.7370) acc@5 0.9844 (0.9802)
+[2024-01-20 12:08:08] __main__ INFO: Elapsed 26.14
+[2024-01-20 12:08:08] __main__ INFO: Val 14
+[2024-01-20 12:08:09] __main__ INFO: Epoch 14 loss 0.9319 acc@1 0.7166 acc@5 0.9726
+[2024-01-20 12:08:09] __main__ INFO: Elapsed 1.11
+[2024-01-20 12:08:09] __main__ INFO: Train 15 5460
+[2024-01-20 12:08:16] __main__ INFO: Epoch 15 Step 100/390 lr 0.100000 loss 0.5710 (0.7058) acc@1 0.8359 (0.7555) acc@5 0.9922 (0.9833)
+[2024-01-20 12:08:23] __main__ INFO: Epoch 15 Step 200/390 lr 0.100000 loss 0.6507 (0.7127) acc@1 0.7344 (0.7526) acc@5 0.9766 (0.9831)
+[2024-01-20 12:08:29] __main__ INFO: Epoch 15 Step 300/390 lr 0.100000 loss 0.6585 (0.7065) acc@1 0.7578 (0.7541) acc@5 0.9844 (0.9833)
+[2024-01-20 12:08:36] __main__ INFO: Epoch 15 Step 390/390 lr 0.100000 loss 0.7193 (0.7014) acc@1 0.7344 (0.7560) acc@5 0.9844 (0.9835)
+[2024-01-20 12:08:36] __main__ INFO: Elapsed 26.17
+[2024-01-20 12:08:36] __main__ INFO: Val 15
+[2024-01-20 12:08:37] __main__ INFO: Epoch 15 loss 1.0654 acc@1 0.6856 acc@5 0.9761
+[2024-01-20 12:08:37] __main__ INFO: Elapsed 1.14
+[2024-01-20 12:08:37] __main__ INFO: Train 16 5850
+[2024-01-20 12:08:44] __main__ INFO: Epoch 16 Step 100/390 lr 0.100000 loss 0.7185 (0.6621) acc@1 0.7188 (0.7664) acc@5 0.9922 (0.9862)
+[2024-01-20 12:08:50] __main__ INFO: Epoch 16 Step 200/390 lr 0.100000 loss 0.6132 (0.6678) acc@1 0.8047 (0.7670) acc@5 0.9844 (0.9855)
+[2024-01-20 12:08:57] __main__ INFO: Epoch 16 Step 300/390 lr 0.100000 loss 0.6562 (0.6637) acc@1 0.8047 (0.7679) acc@5 0.9844 (0.9854)
+[2024-01-20 12:09:03] __main__ INFO: Epoch 16 Step 390/390 lr 0.100000 loss 0.7197 (0.6658) acc@1 0.7500 (0.7673) acc@5 0.9844 (0.9854)
+[2024-01-20 12:09:03] __main__ INFO: Elapsed 26.21
+[2024-01-20 12:09:03] __main__ INFO: Val 16
+[2024-01-20 12:09:04] __main__ INFO: Epoch 16 loss 0.8544 acc@1 0.7192 acc@5 0.9704
+[2024-01-20 12:09:04] __main__ INFO: Elapsed 1.11
+[2024-01-20 12:09:04] __main__ INFO: Train 17 6240
+[2024-01-20 12:09:11] __main__ INFO: Epoch 17 Step 100/390 lr 0.100000 loss 0.5907 (0.6253) acc@1 0.7578 (0.7808) acc@5 0.9922 (0.9863)
+[2024-01-20 12:09:18] __main__ INFO: Epoch 17 Step 200/390 lr 0.100000 loss 0.7489 (0.6308) acc@1 0.7578 (0.7799) acc@5 0.9766 (0.9863)
+[2024-01-20 12:09:24] __main__ INFO: Epoch 17 Step 300/390 lr 0.100000 loss 0.5693 (0.6312) acc@1 0.7734 (0.7802) acc@5 1.0000 (0.9858)
+[2024-01-20 12:09:30] __main__ INFO: Epoch 17 Step 390/390 lr 0.100000 loss 0.7028 (0.6287) acc@1 0.7500 (0.7811) acc@5 0.9922 (0.9861)
+[2024-01-20 12:09:30] __main__ INFO: Elapsed 25.89
+[2024-01-20 12:09:30] __main__ INFO: Val 17
+[2024-01-20 12:09:31] __main__ INFO: Epoch 17 loss 0.8111 acc@1 0.7335 acc@5 0.9800
+[2024-01-20 12:09:31] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:09:31] __main__ INFO: Train 18 6630
+[2024-01-20 12:09:38] __main__ INFO: Epoch 18 Step 100/390 lr 0.100000 loss 0.5874 (0.5821) acc@1 0.7734 (0.7988) acc@5 0.9844 (0.9888)
+[2024-01-20 12:09:44] __main__ INFO: Epoch 18 Step 200/390 lr 0.100000 loss 0.6527 (0.6174) acc@1 0.7656 (0.7874) acc@5 0.9688 (0.9869)
+[2024-01-20 12:09:51] __main__ INFO: Epoch 18 Step 300/390 lr 0.100000 loss 0.7139 (0.6328) acc@1 0.7578 (0.7813) acc@5 0.9688 (0.9863)
+[2024-01-20 12:09:57] __main__ INFO: Epoch 18 Step 390/390 lr 0.100000 loss 0.4966 (0.6320) acc@1 0.8281 (0.7818) acc@5 1.0000 (0.9863)
+[2024-01-20 12:09:57] __main__ INFO: Elapsed 25.97
+[2024-01-20 12:09:57] __main__ INFO: Val 18
+[2024-01-20 12:09:58] __main__ INFO: Epoch 18 loss 0.6877 acc@1 0.7593 acc@5 0.9865
+[2024-01-20 12:09:58] __main__ INFO: Elapsed 1.12
+[2024-01-20 12:09:58] __main__ INFO: Train 19 7020
+[2024-01-20 12:10:05] __main__ INFO: Epoch 19 Step 100/390 lr 0.100000 loss 0.7016 (0.6201) acc@1 0.7500 (0.7872) acc@5 0.9922 (0.9870)
+[2024-01-20 12:10:12] __main__ INFO: Epoch 19 Step 200/390 lr 0.100000 loss 0.8413 (0.6122) acc@1 0.7031 (0.7882) acc@5 0.9688 (0.9869)
+[2024-01-20 12:10:18] __main__ INFO: Epoch 19 Step 300/390 lr 0.100000 loss 0.6015 (0.6070) acc@1 0.7734 (0.7896) acc@5 0.9766 (0.9873)
+[2024-01-20 12:10:24] __main__ INFO: Epoch 19 Step 390/390 lr 0.100000 loss 0.6384 (0.6025) acc@1 0.7812 (0.7916) acc@5 0.9922 (0.9876)
+[2024-01-20 12:10:24] __main__ INFO: Elapsed 26.13
+[2024-01-20 12:10:24] __main__ INFO: Val 19
+[2024-01-20 12:10:25] __main__ INFO: Epoch 19 loss 0.6763 acc@1 0.7757 acc@5 0.9852
+[2024-01-20 12:10:25] __main__ INFO: Elapsed 1.13
+[2024-01-20 12:10:25] __main__ INFO: Train 20 7410
+[2024-01-20 12:10:32] __main__ INFO: Epoch 20 Step 100/390 lr 0.100000 loss 0.4989 (0.5732) acc@1 0.7969 (0.8019) acc@5 0.9922 (0.9880)
+[2024-01-20 12:10:39] __main__ INFO: Epoch 20 Step 200/390 lr 0.100000 loss 0.5133 (0.5746) acc@1 0.8281 (0.8005) acc@5 0.9922 (0.9884)
+[2024-01-20 12:10:45] __main__ INFO: Epoch 20 Step 300/390 lr 0.100000 loss 0.5161 (0.5687) acc@1 0.7969 (0.8025) acc@5 0.9922 (0.9889)
+[2024-01-20 12:10:51] __main__ INFO: Epoch 20 Step 390/390 lr 0.100000 loss 0.4803 (0.5701) acc@1 0.8125 (0.8016) acc@5 1.0000 (0.9888)
+[2024-01-20 12:10:51] __main__ INFO: Elapsed 26.14
+[2024-01-20 12:10:51] __main__ INFO: Val 20
+[2024-01-20 12:10:53] __main__ INFO: Epoch 20 loss 0.6871 acc@1 0.7646 acc@5 0.9851
+[2024-01-20 12:10:53] __main__ INFO: Elapsed 1.15
+[2024-01-20 12:10:53] __main__ INFO: Train 21 7800
+[2024-01-20 12:10:59] __main__ INFO: Epoch 21 Step 100/390 lr 0.100000 loss 0.4013 (0.5468) acc@1 0.8750 (0.8092) acc@5 1.0000 (0.9903)
+[2024-01-20 12:11:06] __main__ INFO: Epoch 21 Step 200/390 lr 0.100000 loss 0.4956 (0.5574) acc@1 0.8438 (0.8086) acc@5 0.9922 (0.9898)
+[2024-01-20 12:11:13] __main__ INFO: Epoch 21 Step 300/390 lr 0.100000 loss 0.5889 (0.5582) acc@1 0.7969 (0.8080) acc@5 0.9844 (0.9896)
+[2024-01-20 12:11:19] __main__ INFO: Epoch 21 Step 390/390 lr 0.100000 loss 0.5145 (0.5599) acc@1 0.8359 (0.8079) acc@5 0.9844 (0.9896)
+[2024-01-20 12:11:19] __main__ INFO: Elapsed 26.25
+[2024-01-20 12:11:19] __main__ INFO: Val 21
+[2024-01-20 12:11:20] __main__ INFO: Epoch 21 loss 0.6815 acc@1 0.7704 acc@5 0.9865
+[2024-01-20 12:11:20] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:11:20] __main__ INFO: Train 22 8190
+[2024-01-20 12:11:27] __main__ INFO: Epoch 22 Step 100/390 lr 0.100000 loss 0.5350 (0.5271) acc@1 0.7969 (0.8155) acc@5 0.9922 (0.9916)
+[2024-01-20 12:11:34] __main__ INFO: Epoch 22 Step 200/390 lr 0.100000 loss 0.5655 (0.5283) acc@1 0.8047 (0.8182) acc@5 1.0000 (0.9915)
+[2024-01-20 12:11:40] __main__ INFO: Epoch 22 Step 300/390 lr 0.100000 loss 0.5223 (0.5263) acc@1 0.8281 (0.8181) acc@5 0.9922 (0.9913)
+[2024-01-20 12:11:46] __main__ INFO: Epoch 22 Step 390/390 lr 0.100000 loss 0.6279 (0.5297) acc@1 0.7734 (0.8173) acc@5 0.9766 (0.9911)
+[2024-01-20 12:11:46] __main__ INFO: Elapsed 26.08
+[2024-01-20 12:11:46] __main__ INFO: Val 22
+[2024-01-20 12:11:47] __main__ INFO: Epoch 22 loss 0.7054 acc@1 0.7738 acc@5 0.9805
+[2024-01-20 12:11:47] __main__ INFO: Elapsed 1.13
+[2024-01-20 12:11:47] __main__ INFO: Train 23 8580
+[2024-01-20 12:11:54] __main__ INFO: Epoch 23 Step 100/390 lr 0.100000 loss 0.4943 (0.4954) acc@1 0.8438 (0.8284) acc@5 0.9688 (0.9903)
+[2024-01-20 12:12:01] __main__ INFO: Epoch 23 Step 200/390 lr 0.100000 loss 0.4860 (0.5025) acc@1 0.7969 (0.8263) acc@5 1.0000 (0.9906)
+[2024-01-20 12:12:07] __main__ INFO: Epoch 23 Step 300/390 lr 0.100000 loss 0.4841 (0.5057) acc@1 0.8203 (0.8249) acc@5 0.9766 (0.9904)
+[2024-01-20 12:12:13] __main__ INFO: Epoch 23 Step 390/390 lr 0.100000 loss 0.4830 (0.5058) acc@1 0.8125 (0.8240) acc@5 0.9922 (0.9904)
+[2024-01-20 12:12:13] __main__ INFO: Elapsed 26.09
+[2024-01-20 12:12:13] __main__ INFO: Val 23
+[2024-01-20 12:12:14] __main__ INFO: Epoch 23 loss 0.6951 acc@1 0.7780 acc@5 0.9837
+[2024-01-20 12:12:14] __main__ INFO: Elapsed 1.11
+[2024-01-20 12:12:14] __main__ INFO: Train 24 8970
+[2024-01-20 12:12:21] __main__ INFO: Epoch 24 Step 100/390 lr 0.100000 loss 0.4180 (0.4881) acc@1 0.8594 (0.8323) acc@5 0.9844 (0.9914)
+[2024-01-20 12:12:28] __main__ INFO: Epoch 24 Step 200/390 lr 0.100000 loss 0.5067 (0.5020) acc@1 0.8047 (0.8264) acc@5 0.9922 (0.9914)
+[2024-01-20 12:12:34] __main__ INFO: Epoch 24 Step 300/390 lr 0.100000 loss 0.5233 (0.5007) acc@1 0.7969 (0.8266) acc@5 1.0000 (0.9914)
+[2024-01-20 12:12:40] __main__ INFO: Epoch 24 Step 390/390 lr 0.100000 loss 0.4778 (0.4995) acc@1 0.7891 (0.8271) acc@5 1.0000 (0.9915)
+[2024-01-20 12:12:40] __main__ INFO: Elapsed 25.96
+[2024-01-20 12:12:40] __main__ INFO: Val 24
+[2024-01-20 12:12:41] __main__ INFO: Epoch 24 loss 0.6758 acc@1 0.7824 acc@5 0.9795
+[2024-01-20 12:12:41] __main__ INFO: Elapsed 1.12
+[2024-01-20 12:12:41] __main__ INFO: Train 25 9360
+[2024-01-20 12:12:48] __main__ INFO: Epoch 25 Step 100/390 lr 0.100000 loss 0.6021 (0.4565) acc@1 0.8047 (0.8424) acc@5 0.9844 (0.9931)
+[2024-01-20 12:12:55] __main__ INFO: Epoch 25 Step 200/390 lr 0.100000 loss 0.3951 (0.4642) acc@1 0.8516 (0.8380) acc@5 1.0000 (0.9930)
+[2024-01-20 12:13:02] __main__ INFO: Epoch 25 Step 300/390 lr 0.100000 loss 0.4520 (0.4691) acc@1 0.8594 (0.8382) acc@5 0.9922 (0.9924)
+[2024-01-20 12:13:08] __main__ INFO: Epoch 25 Step 390/390 lr 0.100000 loss 0.3103 (0.4728) acc@1 0.9062 (0.8366) acc@5 1.0000 (0.9922)
+[2024-01-20 12:13:08] __main__ INFO: Elapsed 26.27
+[2024-01-20 12:13:08] __main__ INFO: Val 25
+[2024-01-20 12:13:09] __main__ INFO: Epoch 25 loss 0.6457 acc@1 0.7909 acc@5 0.9854
+[2024-01-20 12:13:09] __main__ INFO: Elapsed 1.14
+[2024-01-20 12:13:09] __main__ INFO: Train 26 9750
+[2024-01-20 12:13:16] __main__ INFO: Epoch 26 Step 100/390 lr 0.100000 loss 0.4735 (0.4525) acc@1 0.8359 (0.8444) acc@5 0.9922 (0.9934)
+[2024-01-20 12:13:23] __main__ INFO: Epoch 26 Step 200/390 lr 0.100000 loss 0.4304 (0.4536) acc@1 0.8359 (0.8418) acc@5 0.9922 (0.9936)
+[2024-01-20 12:13:29] __main__ INFO: Epoch 26 Step 300/390 lr 0.100000 loss 0.3597 (0.4547) acc@1 0.8984 (0.8420) acc@5 1.0000 (0.9934)
+[2024-01-20 12:13:35] __main__ INFO: Epoch 26 Step 390/390 lr 0.100000 loss 0.4846 (0.4535) acc@1 0.7969 (0.8421) acc@5 0.9922 (0.9935)
+[2024-01-20 12:13:35] __main__ INFO: Elapsed 26.22
+[2024-01-20 12:13:35] __main__ INFO: Val 26
+[2024-01-20 12:13:36] __main__ INFO: Epoch 26 loss 0.6451 acc@1 0.7967 acc@5 0.9852
+[2024-01-20 12:13:36] __main__ INFO: Elapsed 1.08
+[2024-01-20 12:13:36] __main__ INFO: Train 27 10140
+[2024-01-20 12:13:43] __main__ INFO: Epoch 27 Step 100/390 lr 0.100000 loss 0.3702 (0.4285) acc@1 0.8906 (0.8498) acc@5 1.0000 (0.9930)
+[2024-01-20 12:13:50] __main__ INFO: Epoch 27 Step 200/390 lr 0.100000 loss 0.4816 (0.4347) acc@1 0.8281 (0.8496) acc@5 1.0000 (0.9932)
+[2024-01-20 12:13:56] __main__ INFO: Epoch 27 Step 300/390 lr 0.100000 loss 0.4265 (0.4372) acc@1 0.8750 (0.8490) acc@5 0.9766 (0.9932)
+[2024-01-20 12:14:02] __main__ INFO: Epoch 27 Step 390/390 lr 0.100000 loss 0.3474 (0.4391) acc@1 0.8984 (0.8477) acc@5 0.9844 (0.9932)
+[2024-01-20 12:14:02] __main__ INFO: Elapsed 26.08
+[2024-01-20 12:14:02] __main__ INFO: Val 27
+[2024-01-20 12:14:03] __main__ INFO: Epoch 27 loss 0.6487 acc@1 0.7882 acc@5 0.9866
+[2024-01-20 12:14:03] __main__ INFO: Elapsed 1.15
+[2024-01-20 12:14:03] __main__ INFO: Train 28 10530
+[2024-01-20 12:14:10] __main__ INFO: Epoch 28 Step 100/390 lr 0.100000 loss 0.4265 (0.4128) acc@1 0.8594 (0.8583) acc@5 1.0000 (0.9953)
+[2024-01-20 12:14:17] __main__ INFO: Epoch 28 Step 200/390 lr 0.100000 loss 0.5186 (0.4215) acc@1 0.8594 (0.8539) acc@5 0.9922 (0.9943)
+[2024-01-20 12:14:23] __main__ INFO: Epoch 28 Step 300/390 lr 0.100000 loss 0.6258 (0.4224) acc@1 0.7969 (0.8532) acc@5 0.9844 (0.9942)
+[2024-01-20 12:14:29] __main__ INFO: Epoch 28 Step 390/390 lr 0.100000 loss 0.4687 (0.4234) acc@1 0.8281 (0.8526) acc@5 0.9922 (0.9941)
+[2024-01-20 12:14:29] __main__ INFO: Elapsed 25.96
+[2024-01-20 12:14:29] __main__ INFO: Val 28
+[2024-01-20 12:14:31] __main__ INFO: Epoch 28 loss 0.7374 acc@1 0.7665 acc@5 0.9784
+[2024-01-20 12:14:31] __main__ INFO: Elapsed 1.14
+[2024-01-20 12:14:31] __main__ INFO: Train 29 10920
+[2024-01-20 12:14:37] __main__ INFO: Epoch 29 Step 100/390 lr 0.100000 loss 0.3535 (0.3881) acc@1 0.8594 (0.8666) acc@5 1.0000 (0.9954)
+[2024-01-20 12:14:44] __main__ INFO: Epoch 29 Step 200/390 lr 0.100000 loss 0.4085 (0.4006) acc@1 0.8672 (0.8620) acc@5 0.9844 (0.9946)
+[2024-01-20 12:14:51] __main__ INFO: Epoch 29 Step 300/390 lr 0.100000 loss 0.3777 (0.4101) acc@1 0.8906 (0.8588) acc@5 1.0000 (0.9940)
+[2024-01-20 12:14:56] __main__ INFO: Epoch 29 Step 390/390 lr 0.100000 loss 0.4820 (0.4128) acc@1 0.8594 (0.8571) acc@5 0.9844 (0.9939)
+[2024-01-20 12:14:57] __main__ INFO: Elapsed 25.97
+[2024-01-20 12:14:57] __main__ INFO: Val 29
+[2024-01-20 12:14:58] __main__ INFO: Epoch 29 loss 0.5548 acc@1 0.8158 acc@5 0.9889
+[2024-01-20 12:14:58] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:14:58] __main__ INFO: Train 30 11310
+[2024-01-20 12:15:05] __main__ INFO: Epoch 30 Step 100/390 lr 0.100000 loss 0.4642 (0.4012) acc@1 0.8828 (0.8630) acc@5 0.9844 (0.9948)
+[2024-01-20 12:15:11] __main__ INFO: Epoch 30 Step 200/390 lr 0.100000 loss 0.4239 (0.4071) acc@1 0.8359 (0.8604) acc@5 1.0000 (0.9950)
+[2024-01-20 12:15:18] __main__ INFO: Epoch 30 Step 300/390 lr 0.100000 loss 0.3821 (0.4076) acc@1 0.9141 (0.8604) acc@5 0.9922 (0.9946)
+[2024-01-20 12:15:24] __main__ INFO: Epoch 30 Step 390/390 lr 0.100000 loss 0.4330 (0.4069) acc@1 0.8203 (0.8603) acc@5 1.0000 (0.9946)
+[2024-01-20 12:15:24] __main__ INFO: Elapsed 26.29
+[2024-01-20 12:15:24] __main__ INFO: Val 30
+[2024-01-20 12:15:25] __main__ INFO: Epoch 30 loss 0.5499 acc@1 0.8178 acc@5 0.9917
+[2024-01-20 12:15:25] __main__ INFO: Elapsed 1.11
+[2024-01-20 12:15:25] __main__ INFO: Train 31 11700
+[2024-01-20 12:15:32] __main__ INFO: Epoch 31 Step 100/390 lr 0.100000 loss 0.3623 (0.3765) acc@1 0.8672 (0.8702) acc@5 1.0000 (0.9949)
+[2024-01-20 12:15:39] __main__ INFO: Epoch 31 Step 200/390 lr 0.100000 loss 0.3449 (0.3886) acc@1 0.9062 (0.8650) acc@5 1.0000 (0.9953)
+[2024-01-20 12:15:45] __main__ INFO: Epoch 31 Step 300/390 lr 0.100000 loss 0.2469 (0.3888) acc@1 0.8984 (0.8653) acc@5 1.0000 (0.9955)
+[2024-01-20 12:15:51] __main__ INFO: Epoch 31 Step 390/390 lr 0.100000 loss 0.2660 (0.3905) acc@1 0.8984 (0.8645) acc@5 0.9922 (0.9953)
+[2024-01-20 12:15:51] __main__ INFO: Elapsed 26.06
+[2024-01-20 12:15:51] __main__ INFO: Val 31
+[2024-01-20 12:15:52] __main__ INFO: Epoch 31 loss 0.5025 acc@1 0.8362 acc@5 0.9917
+[2024-01-20 12:15:52] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:15:52] __main__ INFO: Train 32 12090
+[2024-01-20 12:15:59] __main__ INFO: Epoch 32 Step 100/390 lr 0.100000 loss 0.4263 (0.3813) acc@1 0.8594 (0.8652) acc@5 1.0000 (0.9943)
+[2024-01-20 12:16:06] __main__ INFO: Epoch 32 Step 200/390 lr 0.100000 loss 0.4212 (0.3873) acc@1 0.8516 (0.8639) acc@5 1.0000 (0.9948)
+[2024-01-20 12:16:12] __main__ INFO: Epoch 32 Step 300/390 lr 0.100000 loss 0.4456 (0.3843) acc@1 0.8438 (0.8652) acc@5 1.0000 (0.9955)
+[2024-01-20 12:16:18] __main__ INFO: Epoch 32 Step 390/390 lr 0.100000 loss 0.4186 (0.3861) acc@1 0.8828 (0.8650) acc@5 1.0000 (0.9952)
+[2024-01-20 12:16:18] __main__ INFO: Elapsed 26.20
+[2024-01-20 12:16:18] __main__ INFO: Val 32
+[2024-01-20 12:16:19] __main__ INFO: Epoch 32 loss 0.5101 acc@1 0.8319 acc@5 0.9891
+[2024-01-20 12:16:19] __main__ INFO: Elapsed 1.10
+[2024-01-20 12:16:19] __main__ INFO: Train 33 12480
+[2024-01-20 12:16:26] __main__ INFO: Epoch 33 Step 100/390 lr 0.100000 loss 0.3471 (0.3802) acc@1 0.8750 (0.8650) acc@5 1.0000 (0.9950)
+[2024-01-20 12:16:33] __main__ INFO: Epoch 33 Step 200/390 lr 0.100000 loss 0.3658 (0.3775) acc@1 0.8828 (0.8663) acc@5 0.9844 (0.9953)
+[2024-01-20 12:16:40] __main__ INFO: Epoch 33 Step 300/390 lr 0.100000 loss 0.3853 (0.3796) acc@1 0.8672 (0.8651) acc@5 1.0000 (0.9955)
+[2024-01-20 12:16:46] __main__ INFO: Epoch 33 Step 390/390 lr 0.100000 loss 0.4529 (0.3787) acc@1 0.8438 (0.8663) acc@5 0.9766 (0.9955)
+[2024-01-20 12:16:46] __main__ INFO: Elapsed 26.09
+[2024-01-20 12:16:46] __main__ INFO: Val 33
+[2024-01-20 12:16:47] __main__ INFO: Epoch 33 loss 0.5207 acc@1 0.8228 acc@5 0.9931
+[2024-01-20 12:16:47] __main__ INFO: Elapsed 1.14
+[2024-01-20 12:16:47] __main__ INFO: Train 34 12870
+[2024-01-20 12:16:54] __main__ INFO: Epoch 34 Step 100/390 lr 0.100000 loss 0.4066 (0.3629) acc@1 0.8672 (0.8755) acc@5 1.0000 (0.9962)
+[2024-01-20 12:17:00] __main__ INFO: Epoch 34 Step 200/390 lr 0.100000 loss 0.5973 (0.3682) acc@1 0.8359 (0.8736) acc@5 0.9922 (0.9961)
+[2024-01-20 12:17:07] __main__ INFO: Epoch 34 Step 300/390 lr 0.100000 loss 0.4808 (0.3735) acc@1 0.8438 (0.8718) acc@5 0.9766 (0.9957)
+[2024-01-20 12:17:13] __main__ INFO: Epoch 34 Step 390/390 lr 0.100000 loss 0.3161 (0.3740) acc@1 0.8594 (0.8710) acc@5 1.0000 (0.9956)
+[2024-01-20 12:17:13] __main__ INFO: Elapsed 26.13
+[2024-01-20 12:17:13] __main__ INFO: Val 34
+[2024-01-20 12:17:14] __main__ INFO: Epoch 34 loss 0.5603 acc@1 0.8241 acc@5 0.9880
+[2024-01-20 12:17:14] __main__ INFO: Elapsed 1.11
+[2024-01-20 12:17:14] __main__ INFO: Train 35 13260
+[2024-01-20 12:17:21] __main__ INFO: Epoch 35 Step 100/390 lr 0.100000 loss 0.4039 (0.3449) acc@1 0.8438 (0.8794) acc@5 1.0000 (0.9971)
+[2024-01-20 12:17:27] __main__ INFO: Epoch 35 Step 200/390 lr 0.100000 loss 0.3732 (0.3510) acc@1 0.8672 (0.8768) acc@5 1.0000 (0.9966)
+[2024-01-20 12:17:34] __main__ INFO: Epoch 35 Step 300/390 lr 0.100000 loss 0.3352 (0.3538) acc@1 0.8984 (0.8756) acc@5 1.0000 (0.9962)
+[2024-01-20 12:17:40] __main__ INFO: Epoch 35 Step 390/390 lr 0.100000 loss 0.4150 (0.3588) acc@1 0.8828 (0.8742) acc@5 0.9844 (0.9962)
+[2024-01-20 12:17:40] __main__ INFO: Elapsed 25.92
+[2024-01-20 12:17:40] __main__ INFO: Val 35
+[2024-01-20 12:17:41] __main__ INFO: Epoch 35 loss 0.7030 acc@1 0.7820 acc@5 0.9874
+[2024-01-20 12:17:41] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:17:41] __main__ INFO: Train 36 13650
+[2024-01-20 12:17:48] __main__ INFO: Epoch 36 Step 100/390 lr 0.100000 loss 0.3536 (0.3370) acc@1 0.8672 (0.8840) acc@5 1.0000 (0.9958)
+[2024-01-20 12:17:55] __main__ INFO: Epoch 36 Step 200/390 lr 0.100000 loss 0.4663 (0.3508) acc@1 0.8359 (0.8759) acc@5 1.0000 (0.9958)
+[2024-01-20 12:18:01] __main__ INFO: Epoch 36 Step 300/390 lr 0.100000 loss 0.3944 (0.3549) acc@1 0.8438 (0.8750) acc@5 1.0000 (0.9961)
+[2024-01-20 12:18:07] __main__ INFO: Epoch 36 Step 390/390 lr 0.100000 loss 0.4290 (0.3543) acc@1 0.8672 (0.8762) acc@5 0.9922 (0.9961)
+[2024-01-20 12:18:07] __main__ INFO: Elapsed 26.47
+[2024-01-20 12:18:07] __main__ INFO: Val 36
+[2024-01-20 12:18:09] __main__ INFO: Epoch 36 loss 0.5908 acc@1 0.8142 acc@5 0.9867
+[2024-01-20 12:18:09] __main__ INFO: Elapsed 1.14
+[2024-01-20 12:18:09] __main__ INFO: Train 37 14040
+[2024-01-20 12:18:16] __main__ INFO: Epoch 37 Step 100/390 lr 0.100000 loss 0.2890 (0.3519) acc@1 0.8906 (0.8761) acc@5 1.0000 (0.9962)
+[2024-01-20 12:18:22] __main__ INFO: Epoch 37 Step 200/390 lr 0.100000 loss 0.2922 (0.3454) acc@1 0.8984 (0.8779) acc@5 1.0000 (0.9967)
+[2024-01-20 12:18:29] __main__ INFO: Epoch 37 Step 300/390 lr 0.100000 loss 0.3711 (0.3496) acc@1 0.8906 (0.8772) acc@5 0.9844 (0.9961)
+[2024-01-20 12:18:35] __main__ INFO: Epoch 37 Step 390/390 lr 0.100000 loss 0.3513 (0.3457) acc@1 0.9141 (0.8788) acc@5 0.9922 (0.9963)
+[2024-01-20 12:18:35] __main__ INFO: Elapsed 26.25
+[2024-01-20 12:18:35] __main__ INFO: Val 37
+[2024-01-20 12:18:36] __main__ INFO: Epoch 37 loss 0.6472 acc@1 0.7881 acc@5 0.9890
+[2024-01-20 12:18:36] __main__ INFO: Elapsed 1.13
+[2024-01-20 12:18:36] __main__ INFO: Train 38 14430
+[2024-01-20 12:18:43] __main__ INFO: Epoch 38 Step 100/390 lr 0.100000 loss 0.2578 (0.3337) acc@1 0.9141 (0.8841) acc@5 0.9922 (0.9962)
+[2024-01-20 12:18:50] __main__ INFO: Epoch 38 Step 200/390 lr 0.100000 loss 0.3774 (0.3375) acc@1 0.8672 (0.8839) acc@5 0.9922 (0.9964)
+[2024-01-20 12:18:56] __main__ INFO: Epoch 38 Step 300/390 lr 0.100000 loss 0.2832 (0.3414) acc@1 0.8984 (0.8811) acc@5 1.0000 (0.9964)
+[2024-01-20 12:19:02] __main__ INFO: Epoch 38 Step 390/390 lr 0.100000 loss 0.2983 (0.3427) acc@1 0.8984 (0.8807) acc@5 1.0000 (0.9961)
+[2024-01-20 12:19:02] __main__ INFO: Elapsed 25.95
+[2024-01-20 12:19:02] __main__ INFO: Val 38
+[2024-01-20 12:19:03] __main__ INFO: Epoch 38 loss 0.5059 acc@1 0.8360 acc@5 0.9933
+[2024-01-20 12:19:03] __main__ INFO: Elapsed 1.10
+[2024-01-20 12:19:03] __main__ INFO: Train 39 14820
+[2024-01-20 12:19:10] __main__ INFO: Epoch 39 Step 100/390 lr 0.100000 loss 0.2366 (0.3293) acc@1 0.9141 (0.8878) acc@5 1.0000 (0.9962)
+[2024-01-20 12:19:17] __main__ INFO: Epoch 39 Step 200/390 lr 0.100000 loss 0.3682 (0.3209) acc@1 0.8359 (0.8898) acc@5 0.9922 (0.9962)
+[2024-01-20 12:19:23] __main__ INFO: Epoch 39 Step 300/390 lr 0.100000 loss 0.1970 (0.3271) acc@1 0.9531 (0.8880) acc@5 1.0000 (0.9959)
+[2024-01-20 12:19:29] __main__ INFO: Epoch 39 Step 390/390 lr 0.100000 loss 0.3853 (0.3323) acc@1 0.8516 (0.8862) acc@5 1.0000 (0.9959)
+[2024-01-20 12:19:29] __main__ INFO: Elapsed 26.13
+[2024-01-20 12:19:29] __main__ INFO: Val 39
+[2024-01-20 12:19:30] __main__ INFO: Epoch 39 loss 0.5367 acc@1 0.8250 acc@5 0.9906
+[2024-01-20 12:19:30] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:19:30] __main__ INFO: Train 40 15210
+[2024-01-20 12:19:37] __main__ INFO: Epoch 40 Step 100/390 lr 0.100000 loss 0.3049 (0.3110) acc@1 0.8594 (0.8916) acc@5 1.0000 (0.9971)
+[2024-01-20 12:19:44] __main__ INFO: Epoch 40 Step 200/390 lr 0.100000 loss 0.1804 (0.3110) acc@1 0.9453 (0.8921) acc@5 1.0000 (0.9972)
+[2024-01-20 12:19:50] __main__ INFO: Epoch 40 Step 300/390 lr 0.100000 loss 0.3479 (0.3183) acc@1 0.8594 (0.8902) acc@5 1.0000 (0.9968)
+[2024-01-20 12:19:57] __main__ INFO: Epoch 40 Step 390/390 lr 0.100000 loss 0.2314 (0.3229) acc@1 0.9375 (0.8883) acc@5 1.0000 (0.9968)
+[2024-01-20 12:19:57] __main__ INFO: Elapsed 26.29
+[2024-01-20 12:19:57] __main__ INFO: Val 40
+[2024-01-20 12:19:58] __main__ INFO: Epoch 40 loss 0.5516 acc@1 0.8242 acc@5 0.9899
+[2024-01-20 12:19:58] __main__ INFO: Elapsed 1.10
+[2024-01-20 12:19:58] __main__ INFO: Train 41 15600
+[2024-01-20 12:20:05] __main__ INFO: Epoch 41 Step 100/390 lr 0.100000 loss 0.2598 (0.3038) acc@1 0.9062 (0.8945) acc@5 1.0000 (0.9973)
+[2024-01-20 12:20:11] __main__ INFO: Epoch 41 Step 200/390 lr 0.100000 loss 0.2948 (0.3068) acc@1 0.9062 (0.8919) acc@5 0.9922 (0.9971)
+[2024-01-20 12:20:18] __main__ INFO: Epoch 41 Step 300/390 lr 0.100000 loss 0.1740 (0.3142) acc@1 0.9531 (0.8899) acc@5 1.0000 (0.9970)
+[2024-01-20 12:20:24] __main__ INFO: Epoch 41 Step 390/390 lr 0.100000 loss 0.1658 (0.3169) acc@1 0.9688 (0.8890) acc@5 1.0000 (0.9970)
+[2024-01-20 12:20:24] __main__ INFO: Elapsed 26.37
+[2024-01-20 12:20:24] __main__ INFO: Val 41
+[2024-01-20 12:20:25] __main__ INFO: Epoch 41 loss 0.4761 acc@1 0.8448 acc@5 0.9917
+[2024-01-20 12:20:25] __main__ INFO: Elapsed 1.10
+[2024-01-20 12:20:25] __main__ INFO: Train 42 15990
+[2024-01-20 12:20:32] __main__ INFO: Epoch 42 Step 100/390 lr 0.100000 loss 0.3171 (0.2988) acc@1 0.8828 (0.8970) acc@5 1.0000 (0.9972)
+[2024-01-20 12:20:39] __main__ INFO: Epoch 42 Step 200/390 lr 0.100000 loss 0.2806 (0.3057) acc@1 0.9219 (0.8945) acc@5 1.0000 (0.9973)
+[2024-01-20 12:20:45] __main__ INFO: Epoch 42 Step 300/390 lr 0.100000 loss 0.3266 (0.3090) acc@1 0.9062 (0.8927) acc@5 1.0000 (0.9974)
+[2024-01-20 12:20:51] __main__ INFO: Epoch 42 Step 390/390 lr 0.100000 loss 0.3382 (0.3137) acc@1 0.8594 (0.8908) acc@5 0.9922 (0.9971)
+[2024-01-20 12:20:51] __main__ INFO: Elapsed 26.09
+[2024-01-20 12:20:51] __main__ INFO: Val 42
+[2024-01-20 12:20:52] __main__ INFO: Epoch 42 loss 0.5074 acc@1 0.8375 acc@5 0.9903
+[2024-01-20 12:20:52] __main__ INFO: Elapsed 1.13
+[2024-01-20 12:20:52] __main__ INFO: Train 43 16380
+[2024-01-20 12:20:59] __main__ INFO: Epoch 43 Step 100/390 lr 0.100000 loss 0.2561 (0.2956) acc@1 0.9219 (0.8913) acc@5 1.0000 (0.9980)
+[2024-01-20 12:21:06] __main__ INFO: Epoch 43 Step 200/390 lr 0.100000 loss 0.2176 (0.3005) acc@1 0.9141 (0.8921) acc@5 1.0000 (0.9976)
+[2024-01-20 12:21:12] __main__ INFO: Epoch 43 Step 300/390 lr 0.100000 loss 0.2532 (0.3067) acc@1 0.9375 (0.8910) acc@5 1.0000 (0.9973)
+[2024-01-20 12:21:19] __main__ INFO: Epoch 43 Step 390/390 lr 0.100000 loss 0.2085 (0.3062) acc@1 0.9219 (0.8919) acc@5 1.0000 (0.9973)
+[2024-01-20 12:21:19] __main__ INFO: Elapsed 26.31
+[2024-01-20 12:21:19] __main__ INFO: Val 43
+[2024-01-20 12:21:20] __main__ INFO: Epoch 43 loss 0.4404 acc@1 0.8578 acc@5 0.9936
+[2024-01-20 12:21:20] __main__ INFO: Elapsed 1.10
+[2024-01-20 12:21:20] __main__ INFO: Train 44 16770
+[2024-01-20 12:21:27] __main__ INFO: Epoch 44 Step 100/390 lr 0.100000 loss 0.3618 (0.2921) acc@1 0.8984 (0.9005) acc@5 0.9844 (0.9966)
+[2024-01-20 12:21:33] __main__ INFO: Epoch 44 Step 200/390 lr 0.100000 loss 0.3546 (0.2939) acc@1 0.8672 (0.8987) acc@5 1.0000 (0.9964)
+[2024-01-20 12:21:40] __main__ INFO: Epoch 44 Step 300/390 lr 0.100000 loss 0.3283 (0.2955) acc@1 0.8828 (0.8973) acc@5 1.0000 (0.9968)
+[2024-01-20 12:21:46] __main__ INFO: Epoch 44 Step 390/390 lr 0.100000 loss 0.2758 (0.2999) acc@1 0.9219 (0.8956) acc@5 1.0000 (0.9969)
+[2024-01-20 12:21:46] __main__ INFO: Elapsed 26.14
+[2024-01-20 12:21:46] __main__ INFO: Val 44
+[2024-01-20 12:21:47] __main__ INFO: Epoch 44 loss 0.5581 acc@1 0.8205 acc@5 0.9922
+[2024-01-20 12:21:47] __main__ INFO: Elapsed 1.15
+[2024-01-20 12:21:47] __main__ INFO: Train 45 17160
+[2024-01-20 12:21:54] __main__ INFO: Epoch 45 Step 100/390 lr 0.100000 loss 0.3456 (0.2929) acc@1 0.8828 (0.8990) acc@5 1.0000 (0.9971)
+[2024-01-20 12:22:01] __main__ INFO: Epoch 45 Step 200/390 lr 0.100000 loss 0.3599 (0.3013) acc@1 0.8828 (0.8957) acc@5 0.9844 (0.9970)
+[2024-01-20 12:22:07] __main__ INFO: Epoch 45 Step 300/390 lr 0.100000 loss 0.2171 (0.2975) acc@1 0.9219 (0.8974) acc@5 1.0000 (0.9972)
+[2024-01-20 12:22:13] __main__ INFO: Epoch 45 Step 390/390 lr 0.100000 loss 0.3630 (0.2994) acc@1 0.8828 (0.8960) acc@5 1.0000 (0.9973)
+[2024-01-20 12:22:13] __main__ INFO: Elapsed 26.22
+[2024-01-20 12:22:13] __main__ INFO: Val 45
+[2024-01-20 12:22:14] __main__ INFO: Epoch 45 loss 0.4620 acc@1 0.8509 acc@5 0.9926
+[2024-01-20 12:22:14] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:22:14] __main__ INFO: Train 46 17550
+[2024-01-20 12:22:21] __main__ INFO: Epoch 46 Step 100/390 lr 0.100000 loss 0.4315 (0.2837) acc@1 0.8359 (0.9018) acc@5 1.0000 (0.9975)
+[2024-01-20 12:22:28] __main__ INFO: Epoch 46 Step 200/390 lr 0.100000 loss 0.2910 (0.2902) acc@1 0.8906 (0.8989) acc@5 1.0000 (0.9972)
+[2024-01-20 12:22:34] __main__ INFO: Epoch 46 Step 300/390 lr 0.100000 loss 0.3760 (0.2934) acc@1 0.8594 (0.8976) acc@5 1.0000 (0.9973)
+[2024-01-20 12:22:40] __main__ INFO: Epoch 46 Step 390/390 lr 0.100000 loss 0.2715 (0.2923) acc@1 0.9062 (0.8982) acc@5 1.0000 (0.9974)
+[2024-01-20 12:22:40] __main__ INFO: Elapsed 26.07
+[2024-01-20 12:22:40] __main__ INFO: Val 46
+[2024-01-20 12:22:42] __main__ INFO: Epoch 46 loss 0.4772 acc@1 0.8443 acc@5 0.9925
+[2024-01-20 12:22:42] __main__ INFO: Elapsed 1.08
+[2024-01-20 12:22:42] __main__ INFO: Train 47 17940
+[2024-01-20 12:22:48] __main__ INFO: Epoch 47 Step 100/390 lr 0.100000 loss 0.2914 (0.2767) acc@1 0.8750 (0.9012) acc@5 1.0000 (0.9976)
+[2024-01-20 12:22:55] __main__ INFO: Epoch 47 Step 200/390 lr 0.100000 loss 0.3205 (0.2815) acc@1 0.8984 (0.9009) acc@5 1.0000 (0.9973)
+[2024-01-20 12:23:02] __main__ INFO: Epoch 47 Step 300/390 lr 0.100000 loss 0.3462 (0.2844) acc@1 0.9062 (0.9009) acc@5 1.0000 (0.9976)
+[2024-01-20 12:23:08] __main__ INFO: Epoch 47 Step 390/390 lr 0.100000 loss 0.2015 (0.2868) acc@1 0.9297 (0.8994) acc@5 1.0000 (0.9974)
+[2024-01-20 12:23:08] __main__ INFO: Elapsed 26.34
+[2024-01-20 12:23:08] __main__ INFO: Val 47
+[2024-01-20 12:23:09] __main__ INFO: Epoch 47 loss 0.5960 acc@1 0.8208 acc@5 0.9878
+[2024-01-20 12:23:09] __main__ INFO: Elapsed 1.11
+[2024-01-20 12:23:09] __main__ INFO: Train 48 18330
+[2024-01-20 12:23:16] __main__ INFO: Epoch 48 Step 100/390 lr 0.100000 loss 0.2467 (0.2624) acc@1 0.8984 (0.9091) acc@5 1.0000 (0.9972)
+[2024-01-20 12:23:23] __main__ INFO: Epoch 48 Step 200/390 lr 0.100000 loss 0.3614 (0.2655) acc@1 0.8828 (0.9068) acc@5 0.9922 (0.9975)
+[2024-01-20 12:23:29] __main__ INFO: Epoch 48 Step 300/390 lr 0.100000 loss 0.3188 (0.2769) acc@1 0.8828 (0.9034) acc@5 1.0000 (0.9972)
+[2024-01-20 12:23:35] __main__ INFO: Epoch 48 Step 390/390 lr 0.100000 loss 0.3745 (0.2816) acc@1 0.9141 (0.9016) acc@5 0.9766 (0.9969)
+[2024-01-20 12:23:35] __main__ INFO: Elapsed 26.04
+[2024-01-20 12:23:35] __main__ INFO: Val 48
+[2024-01-20 12:23:36] __main__ INFO: Epoch 48 loss 0.5682 acc@1 0.8201 acc@5 0.9914
+[2024-01-20 12:23:36] __main__ INFO: Elapsed 1.11
+[2024-01-20 12:23:36] __main__ INFO: Train 49 18720
+[2024-01-20 12:23:43] __main__ INFO: Epoch 49 Step 100/390 lr 0.100000 loss 0.2428 (0.2683) acc@1 0.8984 (0.9071) acc@5 1.0000 (0.9973)
+[2024-01-20 12:23:50] __main__ INFO: Epoch 49 Step 200/390 lr 0.100000 loss 0.2718 (0.2739) acc@1 0.8906 (0.9045) acc@5 1.0000 (0.9971)
+[2024-01-20 12:23:56] __main__ INFO: Epoch 49 Step 300/390 lr 0.100000 loss 0.2641 (0.2720) acc@1 0.9062 (0.9052) acc@5 1.0000 (0.9972)
+[2024-01-20 12:24:02] __main__ INFO: Epoch 49 Step 390/390 lr 0.100000 loss 0.4319 (0.2770) acc@1 0.8359 (0.9033) acc@5 1.0000 (0.9973)
+[2024-01-20 12:24:02] __main__ INFO: Elapsed 26.08
+[2024-01-20 12:24:02] __main__ INFO: Val 49
+[2024-01-20 12:24:03] __main__ INFO: Epoch 49 loss 0.5037 acc@1 0.8437 acc@5 0.9929
+[2024-01-20 12:24:03] __main__ INFO: Elapsed 1.13
+[2024-01-20 12:24:03] __main__ INFO: Train 50 19110
+[2024-01-20 12:24:10] __main__ INFO: Epoch 50 Step 100/390 lr 0.100000 loss 0.2962 (0.2543) acc@1 0.9062 (0.9122) acc@5 0.9922 (0.9975)
+[2024-01-20 12:24:17] __main__ INFO: Epoch 50 Step 200/390 lr 0.100000 loss 0.2261 (0.2657) acc@1 0.9297 (0.9064) acc@5 1.0000 (0.9976)
+[2024-01-20 12:24:23] __main__ INFO: Epoch 50 Step 300/390 lr 0.100000 loss 0.2282 (0.2694) acc@1 0.8984 (0.9057) acc@5 1.0000 (0.9977)
+[2024-01-20 12:24:29] __main__ INFO: Epoch 50 Step 390/390 lr 0.100000 loss 0.2891 (0.2758) acc@1 0.8906 (0.9034) acc@5 1.0000 (0.9976)
+[2024-01-20 12:24:30] __main__ INFO: Elapsed 26.15
+[2024-01-20 12:24:30] __main__ INFO: Val 50
+[2024-01-20 12:24:31] __main__ INFO: Epoch 50 loss 0.4881 acc@1 0.8431 acc@5 0.9922
+[2024-01-20 12:24:31] __main__ INFO: Elapsed 1.08
+[2024-01-20 12:24:31] __main__ INFO: Train 51 19500
+[2024-01-20 12:24:37] __main__ INFO: Epoch 51 Step 100/390 lr 0.100000 loss 0.2297 (0.2431) acc@1 0.9219 (0.9143) acc@5 1.0000 (0.9984)
+[2024-01-20 12:24:44] __main__ INFO: Epoch 51 Step 200/390 lr 0.100000 loss 0.2976 (0.2582) acc@1 0.8984 (0.9089) acc@5 1.0000 (0.9983)
+[2024-01-20 12:24:51] __main__ INFO: Epoch 51 Step 300/390 lr 0.100000 loss 0.2960 (0.2607) acc@1 0.9219 (0.9079) acc@5 0.9922 (0.9982)
+[2024-01-20 12:24:57] __main__ INFO: Epoch 51 Step 390/390 lr 0.100000 loss 0.2629 (0.2675) acc@1 0.9062 (0.9055) acc@5 0.9922 (0.9977)
+[2024-01-20 12:24:57] __main__ INFO: Elapsed 26.14
+[2024-01-20 12:24:57] __main__ INFO: Val 51
+[2024-01-20 12:24:58] __main__ INFO: Epoch 51 loss 0.5611 acc@1 0.8230 acc@5 0.9938
+[2024-01-20 12:24:58] __main__ INFO: Elapsed 1.13
+[2024-01-20 12:24:58] __main__ INFO: Train 52 19890
+[2024-01-20 12:25:05] __main__ INFO: Epoch 52 Step 100/390 lr 0.100000 loss 0.1706 (0.2722) acc@1 0.9297 (0.9050) acc@5 1.0000 (0.9978)
+[2024-01-20 12:25:11] __main__ INFO: Epoch 52 Step 200/390 lr 0.100000 loss 0.3011 (0.2658) acc@1 0.9062 (0.9071) acc@5 0.9922 (0.9977)
+[2024-01-20 12:25:18] __main__ INFO: Epoch 52 Step 300/390 lr 0.100000 loss 0.3987 (0.2688) acc@1 0.8516 (0.9067) acc@5 0.9922 (0.9976)
+[2024-01-20 12:25:24] __main__ INFO: Epoch 52 Step 390/390 lr 0.100000 loss 0.2226 (0.2710) acc@1 0.9062 (0.9059) acc@5 1.0000 (0.9975)
+[2024-01-20 12:25:24] __main__ INFO: Elapsed 26.17
+[2024-01-20 12:25:24] __main__ INFO: Val 52
+[2024-01-20 12:25:25] __main__ INFO: Epoch 52 loss 0.4394 acc@1 0.8564 acc@5 0.9950
+[2024-01-20 12:25:25] __main__ INFO: Elapsed 1.07
+[2024-01-20 12:25:25] __main__ INFO: Train 53 20280
+[2024-01-20 12:25:32] __main__ INFO: Epoch 53 Step 100/390 lr 0.100000 loss 0.3087 (0.2521) acc@1 0.8828 (0.9134) acc@5 0.9922 (0.9984)
+[2024-01-20 12:25:39] __main__ INFO: Epoch 53 Step 200/390 lr 0.100000 loss 0.2303 (0.2492) acc@1 0.9141 (0.9134) acc@5 1.0000 (0.9985)
+[2024-01-20 12:25:45] __main__ INFO: Epoch 53 Step 300/390 lr 0.100000 loss 0.2750 (0.2546) acc@1 0.8906 (0.9109) acc@5 1.0000 (0.9983)
+[2024-01-20 12:25:51] __main__ INFO: Epoch 53 Step 390/390 lr 0.100000 loss 0.3527 (0.2591) acc@1 0.8594 (0.9094) acc@5 1.0000 (0.9980)
+[2024-01-20 12:25:51] __main__ INFO: Elapsed 25.97
+[2024-01-20 12:25:51] __main__ INFO: Val 53
+[2024-01-20 12:25:52] __main__ INFO: Epoch 53 loss 0.7157 acc@1 0.7890 acc@5 0.9906
+[2024-01-20 12:25:52] __main__ INFO: Elapsed 1.10
+[2024-01-20 12:25:52] __main__ INFO: Train 54 20670
+[2024-01-20 12:25:59] __main__ INFO: Epoch 54 Step 100/390 lr 0.100000 loss 0.3063 (0.2384) acc@1 0.8672 (0.9168) acc@5 0.9922 (0.9977)
+[2024-01-20 12:26:06] __main__ INFO: Epoch 54 Step 200/390 lr 0.100000 loss 0.2074 (0.2474) acc@1 0.9531 (0.9140) acc@5 1.0000 (0.9978)
+[2024-01-20 12:26:12] __main__ INFO: Epoch 54 Step 300/390 lr 0.100000 loss 0.2775 (0.2531) acc@1 0.8906 (0.9119) acc@5 1.0000 (0.9978)
+[2024-01-20 12:26:18] __main__ INFO: Epoch 54 Step 390/390 lr 0.100000 loss 0.2256 (0.2586) acc@1 0.9453 (0.9096) acc@5 0.9922 (0.9979)
+[2024-01-20 12:26:19] __main__ INFO: Elapsed 26.32
+[2024-01-20 12:26:19] __main__ INFO: Val 54
+[2024-01-20 12:26:20] __main__ INFO: Epoch 54 loss 0.4822 acc@1 0.8500 acc@5 0.9927
+[2024-01-20 12:26:20] __main__ INFO: Elapsed 1.07
+[2024-01-20 12:26:20] __main__ INFO: Train 55 21060
+[2024-01-20 12:26:26] __main__ INFO: Epoch 55 Step 100/390 lr 0.100000 loss 0.2989 (0.2530) acc@1 0.8984 (0.9113) acc@5 0.9922 (0.9988)
+[2024-01-20 12:26:33] __main__ INFO: Epoch 55 Step 200/390 lr 0.100000 loss 0.2376 (0.2534) acc@1 0.9609 (0.9113) acc@5 0.9922 (0.9985)
+[2024-01-20 12:26:40] __main__ INFO: Epoch 55 Step 300/390 lr 0.100000 loss 0.2370 (0.2520) acc@1 0.8984 (0.9112) acc@5 1.0000 (0.9983)
+[2024-01-20 12:26:46] __main__ INFO: Epoch 55 Step 390/390 lr 0.100000 loss 0.3330 (0.2515) acc@1 0.8906 (0.9111) acc@5 0.9922 (0.9981)
+[2024-01-20 12:26:46] __main__ INFO: Elapsed 26.27
+[2024-01-20 12:26:46] __main__ INFO: Val 55
+[2024-01-20 12:26:47] __main__ INFO: Epoch 55 loss 0.6702 acc@1 0.8042 acc@5 0.9858
+[2024-01-20 12:26:47] __main__ INFO: Elapsed 1.08
+[2024-01-20 12:26:47] __main__ INFO: Train 56 21450
+[2024-01-20 12:26:54] __main__ INFO: Epoch 56 Step 100/390 lr 0.100000 loss 0.2367 (0.2379) acc@1 0.9141 (0.9155) acc@5 1.0000 (0.9978)
+[2024-01-20 12:27:01] __main__ INFO: Epoch 56 Step 200/390 lr 0.100000 loss 0.1945 (0.2459) acc@1 0.9453 (0.9131) acc@5 1.0000 (0.9976)
+[2024-01-20 12:27:07] __main__ INFO: Epoch 56 Step 300/390 lr 0.100000 loss 0.3719 (0.2501) acc@1 0.8984 (0.9122) acc@5 0.9922 (0.9975)
+[2024-01-20 12:27:13] __main__ INFO: Epoch 56 Step 390/390 lr 0.100000 loss 0.3027 (0.2555) acc@1 0.8984 (0.9111) acc@5 1.0000 (0.9976)
+[2024-01-20 12:27:13] __main__ INFO: Elapsed 26.13
+[2024-01-20 12:27:13] __main__ INFO: Val 56
+[2024-01-20 12:27:14] __main__ INFO: Epoch 56 loss 0.5345 acc@1 0.8293 acc@5 0.9903
+[2024-01-20 12:27:14] __main__ INFO: Elapsed 1.10
+[2024-01-20 12:27:14] __main__ INFO: Train 57 21840
+[2024-01-20 12:27:21] __main__ INFO: Epoch 57 Step 100/390 lr 0.100000 loss 0.3212 (0.2356) acc@1 0.8828 (0.9195) acc@5 1.0000 (0.9988)
+[2024-01-20 12:27:28] __main__ INFO: Epoch 57 Step 200/390 lr 0.100000 loss 0.1693 (0.2394) acc@1 0.9453 (0.9175) acc@5 1.0000 (0.9985)
+[2024-01-20 12:27:34] __main__ INFO: Epoch 57 Step 300/390 lr 0.100000 loss 0.2031 (0.2442) acc@1 0.9297 (0.9158) acc@5 1.0000 (0.9984)
+[2024-01-20 12:27:40] __main__ INFO: Epoch 57 Step 390/390 lr 0.100000 loss 0.2020 (0.2492) acc@1 0.9141 (0.9135) acc@5 1.0000 (0.9984)
+[2024-01-20 12:27:40] __main__ INFO: Elapsed 26.17
+[2024-01-20 12:27:40] __main__ INFO: Val 57
+[2024-01-20 12:27:42] __main__ INFO: Epoch 57 loss 0.4696 acc@1 0.8509 acc@5 0.9952
+[2024-01-20 12:27:42] __main__ INFO: Elapsed 1.13
+[2024-01-20 12:27:42] __main__ INFO: Train 58 22230
+[2024-01-20 12:27:48] __main__ INFO: Epoch 58 Step 100/390 lr 0.100000 loss 0.2757 (0.2361) acc@1 0.9141 (0.9165) acc@5 1.0000 (0.9987)
+[2024-01-20 12:27:55] __main__ INFO: Epoch 58 Step 200/390 lr 0.100000 loss 0.4198 (0.2392) acc@1 0.8750 (0.9163) acc@5 0.9922 (0.9985)
+[2024-01-20 12:28:02] __main__ INFO: Epoch 58 Step 300/390 lr 0.100000 loss 0.1810 (0.2404) acc@1 0.9375 (0.9154) acc@5 1.0000 (0.9985)
+[2024-01-20 12:28:08] __main__ INFO: Epoch 58 Step 390/390 lr 0.100000 loss 0.2922 (0.2443) acc@1 0.8906 (0.9148) acc@5 0.9922 (0.9984)
+[2024-01-20 12:28:08] __main__ INFO: Elapsed 26.14
+[2024-01-20 12:28:08] __main__ INFO: Val 58
+[2024-01-20 12:28:09] __main__ INFO: Epoch 58 loss 0.5051 acc@1 0.8410 acc@5 0.9918
+[2024-01-20 12:28:09] __main__ INFO: Elapsed 1.08
+[2024-01-20 12:28:09] __main__ INFO: Train 59 22620
+[2024-01-20 12:28:16] __main__ INFO: Epoch 59 Step 100/390 lr 0.100000 loss 0.2310 (0.2271) acc@1 0.9219 (0.9210) acc@5 1.0000 (0.9986)
+[2024-01-20 12:28:22] __main__ INFO: Epoch 59 Step 200/390 lr 0.100000 loss 0.2783 (0.2332) acc@1 0.9141 (0.9193) acc@5 1.0000 (0.9982)
+[2024-01-20 12:28:29] __main__ INFO: Epoch 59 Step 300/390 lr 0.100000 loss 0.1650 (0.2368) acc@1 0.9688 (0.9175) acc@5 1.0000 (0.9984)
+[2024-01-20 12:28:35] __main__ INFO: Epoch 59 Step 390/390 lr 0.100000 loss 0.2550 (0.2437) acc@1 0.9062 (0.9152) acc@5 1.0000 (0.9982)
+[2024-01-20 12:28:35] __main__ INFO: Elapsed 26.18
+[2024-01-20 12:28:35] __main__ INFO: Val 59
+[2024-01-20 12:28:36] __main__ INFO: Epoch 59 loss 0.5596 acc@1 0.8320 acc@5 0.9917
+[2024-01-20 12:28:36] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:28:36] __main__ INFO: Train 60 23010
+[2024-01-20 12:28:43] __main__ INFO: Epoch 60 Step 100/390 lr 0.100000 loss 0.1371 (0.2195) acc@1 0.9531 (0.9218) acc@5 1.0000 (0.9986)
+[2024-01-20 12:28:50] __main__ INFO: Epoch 60 Step 200/390 lr 0.100000 loss 0.1497 (0.2300) acc@1 0.9297 (0.9189) acc@5 1.0000 (0.9983)
+[2024-01-20 12:28:56] __main__ INFO: Epoch 60 Step 300/390 lr 0.100000 loss 0.3630 (0.2343) acc@1 0.8750 (0.9173) acc@5 1.0000 (0.9985)
+[2024-01-20 12:29:02] __main__ INFO: Epoch 60 Step 390/390 lr 0.100000 loss 0.3581 (0.2406) acc@1 0.8594 (0.9148) acc@5 1.0000 (0.9982)
+[2024-01-20 12:29:02] __main__ INFO: Elapsed 26.15
+[2024-01-20 12:29:02] __main__ INFO: Val 60
+[2024-01-20 12:29:03] __main__ INFO: Epoch 60 loss 0.4488 acc@1 0.8565 acc@5 0.9938
+[2024-01-20 12:29:03] __main__ INFO: Elapsed 1.07
+[2024-01-20 12:29:03] __main__ INFO: Train 61 23400
+[2024-01-20 12:29:10] __main__ INFO: Epoch 61 Step 100/390 lr 0.100000 loss 0.4078 (0.2188) acc@1 0.8438 (0.9232) acc@5 0.9844 (0.9984)
+[2024-01-20 12:29:17] __main__ INFO: Epoch 61 Step 200/390 lr 0.100000 loss 0.1948 (0.2304) acc@1 0.9219 (0.9188) acc@5 1.0000 (0.9984)
+[2024-01-20 12:29:23] __main__ INFO: Epoch 61 Step 300/390 lr 0.100000 loss 0.2555 (0.2367) acc@1 0.9062 (0.9159) acc@5 1.0000 (0.9985)
+[2024-01-20 12:29:29] __main__ INFO: Epoch 61 Step 390/390 lr 0.100000 loss 0.1681 (0.2414) acc@1 0.9453 (0.9142) acc@5 1.0000 (0.9984)
+[2024-01-20 12:29:29] __main__ INFO: Elapsed 26.06
+[2024-01-20 12:29:29] __main__ INFO: Val 61
+[2024-01-20 12:29:30] __main__ INFO: Epoch 61 loss 0.5453 acc@1 0.8381 acc@5 0.9900
+[2024-01-20 12:29:30] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:29:30] __main__ INFO: Train 62 23790
+[2024-01-20 12:29:37] __main__ INFO: Epoch 62 Step 100/390 lr 0.100000 loss 0.3336 (0.2260) acc@1 0.8906 (0.9206) acc@5 1.0000 (0.9988)
+[2024-01-20 12:29:44] __main__ INFO: Epoch 62 Step 200/390 lr 0.100000 loss 0.1671 (0.2282) acc@1 0.9219 (0.9212) acc@5 1.0000 (0.9987)
+[2024-01-20 12:29:50] __main__ INFO: Epoch 62 Step 300/390 lr 0.100000 loss 0.2975 (0.2336) acc@1 0.9141 (0.9192) acc@5 0.9922 (0.9984)
+[2024-01-20 12:29:56] __main__ INFO: Epoch 62 Step 390/390 lr 0.100000 loss 0.2709 (0.2364) acc@1 0.9141 (0.9178) acc@5 1.0000 (0.9984)
+[2024-01-20 12:29:56] __main__ INFO: Elapsed 26.06
+[2024-01-20 12:29:56] __main__ INFO: Val 62
+[2024-01-20 12:29:58] __main__ INFO: Epoch 62 loss 0.4711 acc@1 0.8590 acc@5 0.9944
+[2024-01-20 12:29:58] __main__ INFO: Elapsed 1.10
+[2024-01-20 12:29:58] __main__ INFO: Train 63 24180
+[2024-01-20 12:30:05] __main__ INFO: Epoch 63 Step 100/390 lr 0.100000 loss 0.3313 (0.2214) acc@1 0.8594 (0.9245) acc@5 0.9922 (0.9985)
+[2024-01-20 12:30:11] __main__ INFO: Epoch 63 Step 200/390 lr 0.100000 loss 0.2318 (0.2271) acc@1 0.9141 (0.9214) acc@5 1.0000 (0.9984)
+[2024-01-20 12:30:18] __main__ INFO: Epoch 63 Step 300/390 lr 0.100000 loss 0.3548 (0.2334) acc@1 0.8984 (0.9183) acc@5 1.0000 (0.9983)
+[2024-01-20 12:30:24] __main__ INFO: Epoch 63 Step 390/390 lr 0.100000 loss 0.1713 (0.2353) acc@1 0.9219 (0.9173) acc@5 1.0000 (0.9984)
+[2024-01-20 12:30:24] __main__ INFO: Elapsed 26.07
+[2024-01-20 12:30:24] __main__ INFO: Val 63
+[2024-01-20 12:30:25] __main__ INFO: Epoch 63 loss 0.5221 acc@1 0.8339 acc@5 0.9922
+[2024-01-20 12:30:25] __main__ INFO: Elapsed 1.12
+[2024-01-20 12:30:25] __main__ INFO: Train 64 24570
+[2024-01-20 12:30:32] __main__ INFO: Epoch 64 Step 100/390 lr 0.100000 loss 0.2016 (0.2232) acc@1 0.9297 (0.9202) acc@5 1.0000 (0.9984)
+[2024-01-20 12:30:38] __main__ INFO: Epoch 64 Step 200/390 lr 0.100000 loss 0.2547 (0.2248) acc@1 0.9141 (0.9211) acc@5 0.9922 (0.9987)
+[2024-01-20 12:30:45] __main__ INFO: Epoch 64 Step 300/390 lr 0.100000 loss 0.2372 (0.2310) acc@1 0.9219 (0.9188) acc@5 1.0000 (0.9984)
+[2024-01-20 12:30:51] __main__ INFO: Epoch 64 Step 390/390 lr 0.100000 loss 0.2277 (0.2330) acc@1 0.9141 (0.9175) acc@5 0.9922 (0.9984)
+[2024-01-20 12:30:51] __main__ INFO: Elapsed 26.28
+[2024-01-20 12:30:51] __main__ INFO: Val 64
+[2024-01-20 12:30:52] __main__ INFO: Epoch 64 loss 0.4439 acc@1 0.8597 acc@5 0.9935
+[2024-01-20 12:30:52] __main__ INFO: Elapsed 1.11
+[2024-01-20 12:30:52] __main__ INFO: Train 65 24960
+[2024-01-20 12:30:59] __main__ INFO: Epoch 65 Step 100/390 lr 0.100000 loss 0.1967 (0.2105) acc@1 0.9375 (0.9254) acc@5 1.0000 (0.9992)
+[2024-01-20 12:31:06] __main__ INFO: Epoch 65 Step 200/390 lr 0.100000 loss 0.1526 (0.2179) acc@1 0.9219 (0.9227) acc@5 1.0000 (0.9991)
+[2024-01-20 12:31:12] __main__ INFO: Epoch 65 Step 300/390 lr 0.100000 loss 0.2155 (0.2263) acc@1 0.9297 (0.9203) acc@5 1.0000 (0.9988)
+[2024-01-20 12:31:18] __main__ INFO: Epoch 65 Step 390/390 lr 0.100000 loss 0.3606 (0.2296) acc@1 0.8672 (0.9193) acc@5 0.9922 (0.9987)
+[2024-01-20 12:31:18] __main__ INFO: Elapsed 26.21
+[2024-01-20 12:31:18] __main__ INFO: Val 65
+[2024-01-20 12:31:19] __main__ INFO: Epoch 65 loss 0.5123 acc@1 0.8499 acc@5 0.9910
+[2024-01-20 12:31:19] __main__ INFO: Elapsed 1.11
+[2024-01-20 12:31:19] __main__ INFO: Train 66 25350
+[2024-01-20 12:31:26] __main__ INFO: Epoch 66 Step 100/390 lr 0.100000 loss 0.1839 (0.2179) acc@1 0.9375 (0.9266) acc@5 1.0000 (0.9986)
+[2024-01-20 12:31:33] __main__ INFO: Epoch 66 Step 200/390 lr 0.100000 loss 0.1170 (0.2181) acc@1 0.9609 (0.9252) acc@5 1.0000 (0.9985)
+[2024-01-20 12:31:39] __main__ INFO: Epoch 66 Step 300/390 lr 0.100000 loss 0.3664 (0.2254) acc@1 0.8594 (0.9211) acc@5 0.9922 (0.9985)
+[2024-01-20 12:31:46] __main__ INFO: Epoch 66 Step 390/390 lr 0.100000 loss 0.2174 (0.2303) acc@1 0.9297 (0.9184) acc@5 0.9922 (0.9985)
+[2024-01-20 12:31:46] __main__ INFO: Elapsed 26.16
+[2024-01-20 12:31:46] __main__ INFO: Val 66
+[2024-01-20 12:31:47] __main__ INFO: Epoch 66 loss 0.4912 acc@1 0.8566 acc@5 0.9928
+[2024-01-20 12:31:47] __main__ INFO: Elapsed 1.12
+[2024-01-20 12:31:47] __main__ INFO: Train 67 25740
+[2024-01-20 12:31:54] __main__ INFO: Epoch 67 Step 100/390 lr 0.100000 loss 0.2316 (0.2244) acc@1 0.9219 (0.9204) acc@5 0.9922 (0.9990)
+[2024-01-20 12:32:00] __main__ INFO: Epoch 67 Step 200/390 lr 0.100000 loss 0.2614 (0.2198) acc@1 0.9375 (0.9226) acc@5 0.9922 (0.9988)
+[2024-01-20 12:32:07] __main__ INFO: Epoch 67 Step 300/390 lr 0.100000 loss 0.1801 (0.2212) acc@1 0.9375 (0.9221) acc@5 1.0000 (0.9987)
+[2024-01-20 12:32:13] __main__ INFO: Epoch 67 Step 390/390 lr 0.100000 loss 0.3033 (0.2230) acc@1 0.9219 (0.9204) acc@5 1.0000 (0.9988)
+[2024-01-20 12:32:13] __main__ INFO: Elapsed 26.08
+[2024-01-20 12:32:13] __main__ INFO: Val 67
+[2024-01-20 12:32:14] __main__ INFO: Epoch 67 loss 0.4511 acc@1 0.8665 acc@5 0.9940
+[2024-01-20 12:32:14] __main__ INFO: Elapsed 1.10
+[2024-01-20 12:32:14] __main__ INFO: Train 68 26130
+[2024-01-20 12:32:21] __main__ INFO: Epoch 68 Step 100/390 lr 0.100000 loss 0.3228 (0.2105) acc@1 0.8906 (0.9289) acc@5 1.0000 (0.9985)
+[2024-01-20 12:32:28] __main__ INFO: Epoch 68 Step 200/390 lr 0.100000 loss 0.1608 (0.2151) acc@1 0.9219 (0.9258) acc@5 1.0000 (0.9985)
+[2024-01-20 12:32:34] __main__ INFO: Epoch 68 Step 300/390 lr 0.100000 loss 0.1408 (0.2213) acc@1 0.9609 (0.9233) acc@5 1.0000 (0.9983)
+[2024-01-20 12:32:40] __main__ INFO: Epoch 68 Step 390/390 lr 0.100000 loss 0.2876 (0.2247) acc@1 0.9062 (0.9220) acc@5 0.9922 (0.9983)
+[2024-01-20 12:32:40] __main__ INFO: Elapsed 26.23
+[2024-01-20 12:32:40] __main__ INFO: Val 68
+[2024-01-20 12:32:41] __main__ INFO: Epoch 68 loss 0.4627 acc@1 0.8554 acc@5 0.9934
+[2024-01-20 12:32:41] __main__ INFO: Elapsed 1.12
+[2024-01-20 12:32:41] __main__ INFO: Train 69 26520
+[2024-01-20 12:32:48] __main__ INFO: Epoch 69 Step 100/390 lr 0.100000 loss 0.1619 (0.2130) acc@1 0.9297 (0.9245) acc@5 1.0000 (0.9987)
+[2024-01-20 12:32:55] __main__ INFO: Epoch 69 Step 200/390 lr 0.100000 loss 0.2639 (0.2165) acc@1 0.9062 (0.9237) acc@5 1.0000 (0.9988)
+[2024-01-20 12:33:01] __main__ INFO: Epoch 69 Step 300/390 lr 0.100000 loss 0.2074 (0.2177) acc@1 0.9297 (0.9232) acc@5 1.0000 (0.9986)
+[2024-01-20 12:33:07] __main__ INFO: Epoch 69 Step 390/390 lr 0.100000 loss 0.2294 (0.2220) acc@1 0.8984 (0.9217) acc@5 0.9922 (0.9986)
+[2024-01-20 12:33:07] __main__ INFO: Elapsed 26.17
+[2024-01-20 12:33:07] __main__ INFO: Val 69
+[2024-01-20 12:33:09] __main__ INFO: Epoch 69 loss 0.4157 acc@1 0.8681 acc@5 0.9945
+[2024-01-20 12:33:09] __main__ INFO: Elapsed 1.08
+[2024-01-20 12:33:09] __main__ INFO: Train 70 26910
+[2024-01-20 12:33:15] __main__ INFO: Epoch 70 Step 100/390 lr 0.100000 loss 0.2341 (0.1929) acc@1 0.9375 (0.9320) acc@5 0.9922 (0.9987)
+[2024-01-20 12:33:22] __main__ INFO: Epoch 70 Step 200/390 lr 0.100000 loss 0.1728 (0.2072) acc@1 0.9297 (0.9264) acc@5 1.0000 (0.9987)
+[2024-01-20 12:33:29] __main__ INFO: Epoch 70 Step 300/390 lr 0.100000 loss 0.3341 (0.2142) acc@1 0.8984 (0.9242) acc@5 1.0000 (0.9985)
+[2024-01-20 12:33:35] __main__ INFO: Epoch 70 Step 390/390 lr 0.100000 loss 0.1823 (0.2192) acc@1 0.9297 (0.9225) acc@5 1.0000 (0.9986)
+[2024-01-20 12:33:35] __main__ INFO: Elapsed 26.12
+[2024-01-20 12:33:35] __main__ INFO: Val 70
+[2024-01-20 12:33:36] __main__ INFO: Epoch 70 loss 0.4781 acc@1 0.8557 acc@5 0.9934
+[2024-01-20 12:33:36] __main__ INFO: Elapsed 1.10
+[2024-01-20 12:33:36] __main__ INFO: Train 71 27300
+[2024-01-20 12:33:43] __main__ INFO: Epoch 71 Step 100/390 lr 0.100000 loss 0.2175 (0.2046) acc@1 0.9297 (0.9290) acc@5 1.0000 (0.9988)
+[2024-01-20 12:33:49] __main__ INFO: Epoch 71 Step 200/390 lr 0.100000 loss 0.2647 (0.2061) acc@1 0.9062 (0.9300) acc@5 1.0000 (0.9988)
+[2024-01-20 12:33:56] __main__ INFO: Epoch 71 Step 300/390 lr 0.100000 loss 0.1998 (0.2116) acc@1 0.8984 (0.9269) acc@5 1.0000 (0.9988)
+[2024-01-20 12:34:02] __main__ INFO: Epoch 71 Step 390/390 lr 0.100000 loss 0.2170 (0.2189) acc@1 0.9453 (0.9239) acc@5 1.0000 (0.9988)
+[2024-01-20 12:34:02] __main__ INFO: Elapsed 25.98
+[2024-01-20 12:34:02] __main__ INFO: Val 71
+[2024-01-20 12:34:03] __main__ INFO: Epoch 71 loss 0.4504 acc@1 0.8543 acc@5 0.9937
+[2024-01-20 12:34:03] __main__ INFO: Elapsed 1.07
+[2024-01-20 12:34:03] __main__ INFO: Train 72 27690
+[2024-01-20 12:34:10] __main__ INFO: Epoch 72 Step 100/390 lr 0.100000 loss 0.2333 (0.2000) acc@1 0.9062 (0.9288) acc@5 1.0000 (0.9991)
+[2024-01-20 12:34:16] __main__ INFO: Epoch 72 Step 200/390 lr 0.100000 loss 0.2347 (0.2114) acc@1 0.9141 (0.9238) acc@5 1.0000 (0.9989)
+[2024-01-20 12:34:23] __main__ INFO: Epoch 72 Step 300/390 lr 0.100000 loss 0.1845 (0.2153) acc@1 0.9453 (0.9235) acc@5 1.0000 (0.9987)
+[2024-01-20 12:34:29] __main__ INFO: Epoch 72 Step 390/390 lr 0.100000 loss 0.1769 (0.2151) acc@1 0.9375 (0.9241) acc@5 1.0000 (0.9987)
+[2024-01-20 12:34:29] __main__ INFO: Elapsed 26.12
+[2024-01-20 12:34:29] __main__ INFO: Val 72
+[2024-01-20 12:34:30] __main__ INFO: Epoch 72 loss 0.4702 acc@1 0.8554 acc@5 0.9925
+[2024-01-20 12:34:30] __main__ INFO: Elapsed 1.10
+[2024-01-20 12:34:30] __main__ INFO: Train 73 28080
+[2024-01-20 12:34:37] __main__ INFO: Epoch 73 Step 100/390 lr 0.100000 loss 0.3045 (0.2013) acc@1 0.9062 (0.9295) acc@5 0.9922 (0.9988)
+[2024-01-20 12:34:44] __main__ INFO: Epoch 73 Step 200/390 lr 0.100000 loss 0.1239 (0.2050) acc@1 0.9453 (0.9278) acc@5 1.0000 (0.9989)
+[2024-01-20 12:34:50] __main__ INFO: Epoch 73 Step 300/390 lr 0.100000 loss 0.1963 (0.2118) acc@1 0.9297 (0.9252) acc@5 1.0000 (0.9988)
+[2024-01-20 12:34:56] __main__ INFO: Epoch 73 Step 390/390 lr 0.100000 loss 0.3484 (0.2140) acc@1 0.8906 (0.9248) acc@5 0.9922 (0.9987)
+[2024-01-20 12:34:56] __main__ INFO: Elapsed 26.09
+[2024-01-20 12:34:56] __main__ INFO: Val 73
+[2024-01-20 12:34:57] __main__ INFO: Epoch 73 loss 0.5113 acc@1 0.8537 acc@5 0.9940
+[2024-01-20 12:34:57] __main__ INFO: Elapsed 1.05
+[2024-01-20 12:34:57] __main__ INFO: Train 74 28470
+[2024-01-20 12:35:04] __main__ INFO: Epoch 74 Step 100/390 lr 0.100000 loss 0.1893 (0.2005) acc@1 0.9297 (0.9299) acc@5 1.0000 (0.9989)
+[2024-01-20 12:35:11] __main__ INFO: Epoch 74 Step 200/390 lr 0.100000 loss 0.2796 (0.2055) acc@1 0.8828 (0.9277) acc@5 1.0000 (0.9988)
+[2024-01-20 12:35:17] __main__ INFO: Epoch 74 Step 300/390 lr 0.100000 loss 0.2700 (0.2086) acc@1 0.9062 (0.9262) acc@5 0.9922 (0.9989)
+[2024-01-20 12:35:24] __main__ INFO: Epoch 74 Step 390/390 lr 0.100000 loss 0.3046 (0.2102) acc@1 0.8594 (0.9256) acc@5 1.0000 (0.9989)
+[2024-01-20 12:35:24] __main__ INFO: Elapsed 26.49
+[2024-01-20 12:35:24] __main__ INFO: Val 74
+[2024-01-20 12:35:25] __main__ INFO: Epoch 74 loss 0.4957 acc@1 0.8526 acc@5 0.9883
+[2024-01-20 12:35:25] __main__ INFO: Elapsed 1.08
+[2024-01-20 12:35:25] __main__ INFO: Train 75 28860
+[2024-01-20 12:35:32] __main__ INFO: Epoch 75 Step 100/390 lr 0.100000 loss 0.1771 (0.1924) acc@1 0.9297 (0.9312) acc@5 1.0000 (0.9992)
+[2024-01-20 12:35:38] __main__ INFO: Epoch 75 Step 200/390 lr 0.100000 loss 0.1618 (0.2002) acc@1 0.9453 (0.9300) acc@5 1.0000 (0.9992)
+[2024-01-20 12:35:45] __main__ INFO: Epoch 75 Step 300/390 lr 0.100000 loss 0.2597 (0.2052) acc@1 0.9297 (0.9285) acc@5 0.9922 (0.9990)
+[2024-01-20 12:35:51] __main__ INFO: Epoch 75 Step 390/390 lr 0.100000 loss 0.2376 (0.2104) acc@1 0.9062 (0.9258) acc@5 1.0000 (0.9988)
+[2024-01-20 12:35:51] __main__ INFO: Elapsed 26.06
+[2024-01-20 12:35:51] __main__ INFO: Val 75
+[2024-01-20 12:35:52] __main__ INFO: Epoch 75 loss 0.6517 acc@1 0.8195 acc@5 0.9893
+[2024-01-20 12:35:52] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:35:52] __main__ INFO: Train 76 29250
+[2024-01-20 12:35:59] __main__ INFO: Epoch 76 Step 100/390 lr 0.100000 loss 0.2985 (0.1912) acc@1 0.9062 (0.9352) acc@5 0.9922 (0.9990)
+[2024-01-20 12:36:06] __main__ INFO: Epoch 76 Step 200/390 lr 0.100000 loss 0.2840 (0.1998) acc@1 0.9062 (0.9318) acc@5 1.0000 (0.9989)
+[2024-01-20 12:36:12] __main__ INFO: Epoch 76 Step 300/390 lr 0.100000 loss 0.1407 (0.2066) acc@1 0.9531 (0.9281) acc@5 1.0000 (0.9989)
+[2024-01-20 12:36:18] __main__ INFO: Epoch 76 Step 390/390 lr 0.100000 loss 0.1909 (0.2094) acc@1 0.9297 (0.9269) acc@5 1.0000 (0.9989)
+[2024-01-20 12:36:18] __main__ INFO: Elapsed 26.20
+[2024-01-20 12:36:18] __main__ INFO: Val 76
+[2024-01-20 12:36:19] __main__ INFO: Epoch 76 loss 0.4423 acc@1 0.8629 acc@5 0.9942
+[2024-01-20 12:36:19] __main__ INFO: Elapsed 1.10
+[2024-01-20 12:36:19] __main__ INFO: Train 77 29640
+[2024-01-20 12:36:26] __main__ INFO: Epoch 77 Step 100/390 lr 0.100000 loss 0.1652 (0.1954) acc@1 0.9453 (0.9313) acc@5 1.0000 (0.9991)
+[2024-01-20 12:36:33] __main__ INFO: Epoch 77 Step 200/390 lr 0.100000 loss 0.1943 (0.1973) acc@1 0.9297 (0.9301) acc@5 1.0000 (0.9992)
+[2024-01-20 12:36:39] __main__ INFO: Epoch 77 Step 300/390 lr 0.100000 loss 0.1153 (0.2053) acc@1 0.9766 (0.9277) acc@5 1.0000 (0.9990)
+[2024-01-20 12:36:46] __main__ INFO: Epoch 77 Step 390/390 lr 0.100000 loss 0.1964 (0.2073) acc@1 0.9375 (0.9274) acc@5 1.0000 (0.9988)
+[2024-01-20 12:36:46] __main__ INFO: Elapsed 26.37
+[2024-01-20 12:36:46] __main__ INFO: Val 77
+[2024-01-20 12:36:47] __main__ INFO: Epoch 77 loss 0.4787 acc@1 0.8528 acc@5 0.9947
+[2024-01-20 12:36:47] __main__ INFO: Elapsed 1.10
+[2024-01-20 12:36:47] __main__ INFO: Train 78 30030
+[2024-01-20 12:36:54] __main__ INFO: Epoch 78 Step 100/390 lr 0.100000 loss 0.1413 (0.1848) acc@1 0.9609 (0.9355) acc@5 1.0000 (0.9995)
+[2024-01-20 12:37:00] __main__ INFO: Epoch 78 Step 200/390 lr 0.100000 loss 0.2269 (0.1878) acc@1 0.9141 (0.9347) acc@5 0.9922 (0.9993)
+[2024-01-20 12:37:07] __main__ INFO: Epoch 78 Step 300/390 lr 0.100000 loss 0.1755 (0.1969) acc@1 0.9453 (0.9313) acc@5 1.0000 (0.9991)
+[2024-01-20 12:37:13] __main__ INFO: Epoch 78 Step 390/390 lr 0.100000 loss 0.2964 (0.2027) acc@1 0.9141 (0.9295) acc@5 1.0000 (0.9989)
+[2024-01-20 12:37:13] __main__ INFO: Elapsed 26.10
+[2024-01-20 12:37:13] __main__ INFO: Val 78
+[2024-01-20 12:37:14] __main__ INFO: Epoch 78 loss 0.5066 acc@1 0.8531 acc@5 0.9929
+[2024-01-20 12:37:14] __main__ INFO: Elapsed 1.07
+[2024-01-20 12:37:14] __main__ INFO: Train 79 30420
+[2024-01-20 12:37:21] __main__ INFO: Epoch 79 Step 100/390 lr 0.100000 loss 0.1962 (0.1877) acc@1 0.9219 (0.9320) acc@5 1.0000 (0.9997)
+[2024-01-20 12:37:28] __main__ INFO: Epoch 79 Step 200/390 lr 0.100000 loss 0.1273 (0.1904) acc@1 0.9609 (0.9333) acc@5 1.0000 (0.9993)
+[2024-01-20 12:37:34] __main__ INFO: Epoch 79 Step 300/390 lr 0.100000 loss 0.2079 (0.1994) acc@1 0.9297 (0.9303) acc@5 0.9922 (0.9992)
+[2024-01-20 12:37:40] __main__ INFO: Epoch 79 Step 390/390 lr 0.100000 loss 0.1359 (0.2010) acc@1 0.9531 (0.9300) acc@5 1.0000 (0.9991)
+[2024-01-20 12:37:40] __main__ INFO: Elapsed 26.11
+[2024-01-20 12:37:40] __main__ INFO: Val 79
+[2024-01-20 12:37:41] __main__ INFO: Epoch 79 loss 0.4816 acc@1 0.8611 acc@5 0.9925
+[2024-01-20 12:37:41] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:37:41] __main__ INFO: Train 80 30810
+[2024-01-20 12:37:48] __main__ INFO: Epoch 80 Step 100/390 lr 0.100000 loss 0.1837 (0.1869) acc@1 0.9375 (0.9326) acc@5 1.0000 (0.9989)
+[2024-01-20 12:37:55] __main__ INFO: Epoch 80 Step 200/390 lr 0.100000 loss 0.3146 (0.1966) acc@1 0.8906 (0.9308) acc@5 1.0000 (0.9989)
+[2024-01-20 12:38:01] __main__ INFO: Epoch 80 Step 300/390 lr 0.100000 loss 0.3647 (0.1961) acc@1 0.8750 (0.9307) acc@5 1.0000 (0.9990)
+[2024-01-20 12:38:07] __main__ INFO: Epoch 80 Step 390/390 lr 0.100000 loss 0.3502 (0.2011) acc@1 0.8750 (0.9290) acc@5 1.0000 (0.9989)
+[2024-01-20 12:38:07] __main__ INFO: Elapsed 26.13
+[2024-01-20 12:38:07] __main__ INFO: Val 80
+[2024-01-20 12:38:08] __main__ INFO: Epoch 80 loss 0.4529 acc@1 0.8574 acc@5 0.9948
+[2024-01-20 12:38:08] __main__ INFO: Elapsed 1.10
+[2024-01-20 12:38:08] __main__ INFO: Train 81 31200
+[2024-01-20 12:38:15] __main__ INFO: Epoch 81 Step 100/390 lr 0.010000 loss 0.1136 (0.1420) acc@1 0.9609 (0.9497) acc@5 1.0000 (0.9993)
+[2024-01-20 12:38:22] __main__ INFO: Epoch 81 Step 200/390 lr 0.010000 loss 0.0597 (0.1248) acc@1 0.9844 (0.9570) acc@5 1.0000 (0.9992)
+[2024-01-20 12:38:28] __main__ INFO: Epoch 81 Step 300/390 lr 0.010000 loss 0.1216 (0.1164) acc@1 0.9531 (0.9607) acc@5 1.0000 (0.9994)
+[2024-01-20 12:38:34] __main__ INFO: Epoch 81 Step 390/390 lr 0.010000 loss 0.0893 (0.1131) acc@1 0.9688 (0.9619) acc@5 1.0000 (0.9995)
+[2024-01-20 12:38:34] __main__ INFO: Elapsed 25.96
+[2024-01-20 12:38:34] __main__ INFO: Val 81
+[2024-01-20 12:38:35] __main__ INFO: Epoch 81 loss 0.2877 acc@1 0.9096 acc@5 0.9971
+[2024-01-20 12:38:35] __main__ INFO: Elapsed 1.07
+[2024-01-20 12:38:35] __main__ INFO: Train 82 31590
+[2024-01-20 12:38:42] __main__ INFO: Epoch 82 Step 100/390 lr 0.010000 loss 0.0833 (0.0834) acc@1 0.9766 (0.9719) acc@5 1.0000 (0.9998)
+[2024-01-20 12:38:49] __main__ INFO: Epoch 82 Step 200/390 lr 0.010000 loss 0.0574 (0.0813) acc@1 0.9766 (0.9727) acc@5 1.0000 (0.9998)
+[2024-01-20 12:38:55] __main__ INFO: Epoch 82 Step 300/390 lr 0.010000 loss 0.0628 (0.0793) acc@1 0.9766 (0.9731) acc@5 1.0000 (0.9998)
+[2024-01-20 12:39:01] __main__ INFO: Epoch 82 Step 390/390 lr 0.010000 loss 0.1206 (0.0791) acc@1 0.9375 (0.9736) acc@5 1.0000 (0.9998)
+[2024-01-20 12:39:01] __main__ INFO: Elapsed 26.01
+[2024-01-20 12:39:01] __main__ INFO: Val 82
+[2024-01-20 12:39:02] __main__ INFO: Epoch 82 loss 0.2833 acc@1 0.9147 acc@5 0.9979
+[2024-01-20 12:39:02] __main__ INFO: Elapsed 1.11
+[2024-01-20 12:39:02] __main__ INFO: Train 83 31980
+[2024-01-20 12:39:09] __main__ INFO: Epoch 83 Step 100/390 lr 0.010000 loss 0.0459 (0.0611) acc@1 0.9922 (0.9809) acc@5 1.0000 (0.9998)
+[2024-01-20 12:39:16] __main__ INFO: Epoch 83 Step 200/390 lr 0.010000 loss 0.0413 (0.0632) acc@1 0.9844 (0.9799) acc@5 1.0000 (0.9998)
+[2024-01-20 12:39:23] __main__ INFO: Epoch 83 Step 300/390 lr 0.010000 loss 0.0412 (0.0639) acc@1 0.9844 (0.9807) acc@5 1.0000 (0.9998)
+[2024-01-20 12:39:29] __main__ INFO: Epoch 83 Step 390/390 lr 0.010000 loss 0.0686 (0.0638) acc@1 0.9688 (0.9801) acc@5 1.0000 (0.9998)
+[2024-01-20 12:39:29] __main__ INFO: Elapsed 26.14
+[2024-01-20 12:39:29] __main__ INFO: Val 83
+[2024-01-20 12:39:30] __main__ INFO: Epoch 83 loss 0.2934 acc@1 0.9160 acc@5 0.9973
+[2024-01-20 12:39:30] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:39:30] __main__ INFO: Train 84 32370
+[2024-01-20 12:39:36] __main__ INFO: Epoch 84 Step 100/390 lr 0.010000 loss 0.0389 (0.0588) acc@1 0.9844 (0.9824) acc@5 1.0000 (0.9998)
+[2024-01-20 12:39:43] __main__ INFO: Epoch 84 Step 200/390 lr 0.010000 loss 0.0829 (0.0589) acc@1 0.9688 (0.9818) acc@5 1.0000 (0.9999)
+[2024-01-20 12:39:50] __main__ INFO: Epoch 84 Step 300/390 lr 0.010000 loss 0.0683 (0.0583) acc@1 0.9688 (0.9817) acc@5 1.0000 (0.9999)
+[2024-01-20 12:39:56] __main__ INFO: Epoch 84 Step 390/390 lr 0.010000 loss 0.0640 (0.0580) acc@1 0.9844 (0.9817) acc@5 1.0000 (0.9999)
+[2024-01-20 12:39:56] __main__ INFO: Elapsed 25.99
+[2024-01-20 12:39:56] __main__ INFO: Val 84
+[2024-01-20 12:39:57] __main__ INFO: Epoch 84 loss 0.2938 acc@1 0.9174 acc@5 0.9976
+[2024-01-20 12:39:57] __main__ INFO: Elapsed 1.13
+[2024-01-20 12:39:57] __main__ INFO: Train 85 32760
+[2024-01-20 12:40:04] __main__ INFO: Epoch 85 Step 100/390 lr 0.010000 loss 0.0253 (0.0511) acc@1 0.9922 (0.9845) acc@5 1.0000 (1.0000)
+[2024-01-20 12:40:11] __main__ INFO: Epoch 85 Step 200/390 lr 0.010000 loss 0.0508 (0.0518) acc@1 0.9844 (0.9836) acc@5 1.0000 (1.0000)
+[2024-01-20 12:40:17] __main__ INFO: Epoch 85 Step 300/390 lr 0.010000 loss 0.0659 (0.0524) acc@1 0.9844 (0.9838) acc@5 1.0000 (0.9999)
+[2024-01-20 12:40:23] __main__ INFO: Epoch 85 Step 390/390 lr 0.010000 loss 0.0372 (0.0519) acc@1 0.9922 (0.9836) acc@5 1.0000 (0.9999)
+[2024-01-20 12:40:23] __main__ INFO: Elapsed 26.34
+[2024-01-20 12:40:23] __main__ INFO: Val 85
+[2024-01-20 12:40:24] __main__ INFO: Epoch 85 loss 0.2945 acc@1 0.9164 acc@5 0.9976
+[2024-01-20 12:40:24] __main__ INFO: Elapsed 1.11
+[2024-01-20 12:40:24] __main__ INFO: Train 86 33150
+[2024-01-20 12:40:31] __main__ INFO: Epoch 86 Step 100/390 lr 0.010000 loss 0.0334 (0.0429) acc@1 0.9922 (0.9873) acc@5 1.0000 (0.9999)
+[2024-01-20 12:40:38] __main__ INFO: Epoch 86 Step 200/390 lr 0.010000 loss 0.0459 (0.0451) acc@1 0.9844 (0.9861) acc@5 1.0000 (0.9999)
+[2024-01-20 12:40:44] __main__ INFO: Epoch 86 Step 300/390 lr 0.010000 loss 0.0366 (0.0450) acc@1 0.9922 (0.9862) acc@5 1.0000 (0.9999)
+[2024-01-20 12:40:50] __main__ INFO: Epoch 86 Step 390/390 lr 0.010000 loss 0.0260 (0.0455) acc@1 0.9922 (0.9860) acc@5 1.0000 (0.9999)
+[2024-01-20 12:40:50] __main__ INFO: Elapsed 26.02
+[2024-01-20 12:40:50] __main__ INFO: Val 86
+[2024-01-20 12:40:51] __main__ INFO: Epoch 86 loss 0.3000 acc@1 0.9162 acc@5 0.9975
+[2024-01-20 12:40:51] __main__ INFO: Elapsed 1.08
+[2024-01-20 12:40:51] __main__ INFO: Train 87 33540
+[2024-01-20 12:40:58] __main__ INFO: Epoch 87 Step 100/390 lr 0.010000 loss 0.0319 (0.0404) acc@1 0.9922 (0.9880) acc@5 1.0000 (0.9999)
+[2024-01-20 12:41:05] __main__ INFO: Epoch 87 Step 200/390 lr 0.010000 loss 0.0376 (0.0413) acc@1 0.9922 (0.9873) acc@5 1.0000 (0.9999)
+[2024-01-20 12:41:11] __main__ INFO: Epoch 87 Step 300/390 lr 0.010000 loss 0.0850 (0.0413) acc@1 0.9766 (0.9872) acc@5 1.0000 (0.9999)
+[2024-01-20 12:41:18] __main__ INFO: Epoch 87 Step 390/390 lr 0.010000 loss 0.0509 (0.0422) acc@1 0.9766 (0.9867) acc@5 1.0000 (0.9999)
+[2024-01-20 12:41:18] __main__ INFO: Elapsed 26.16
+[2024-01-20 12:41:18] __main__ INFO: Val 87
+[2024-01-20 12:41:19] __main__ INFO: Epoch 87 loss 0.3034 acc@1 0.9169 acc@5 0.9970
+[2024-01-20 12:41:19] __main__ INFO: Elapsed 1.10
+[2024-01-20 12:41:19] __main__ INFO: Train 88 33930
+[2024-01-20 12:41:26] __main__ INFO: Epoch 88 Step 100/390 lr 0.010000 loss 0.0180 (0.0391) acc@1 0.9922 (0.9884) acc@5 1.0000 (1.0000)
+[2024-01-20 12:41:32] __main__ INFO: Epoch 88 Step 200/390 lr 0.010000 loss 0.0375 (0.0401) acc@1 0.9844 (0.9874) acc@5 1.0000 (1.0000)
+[2024-01-20 12:41:39] __main__ INFO: Epoch 88 Step 300/390 lr 0.010000 loss 0.0231 (0.0396) acc@1 1.0000 (0.9874) acc@5 1.0000 (1.0000)
+[2024-01-20 12:41:45] __main__ INFO: Epoch 88 Step 390/390 lr 0.010000 loss 0.0640 (0.0399) acc@1 0.9766 (0.9873) acc@5 1.0000 (0.9999)
+[2024-01-20 12:41:45] __main__ INFO: Elapsed 26.09
+[2024-01-20 12:41:45] __main__ INFO: Val 88
+[2024-01-20 12:41:46] __main__ INFO: Epoch 88 loss 0.3099 acc@1 0.9172 acc@5 0.9971
+[2024-01-20 12:41:46] __main__ INFO: Elapsed 1.11
+[2024-01-20 12:41:46] __main__ INFO: Train 89 34320
+[2024-01-20 12:41:53] __main__ INFO: Epoch 89 Step 100/390 lr 0.010000 loss 0.0636 (0.0332) acc@1 0.9688 (0.9910) acc@5 1.0000 (1.0000)
+[2024-01-20 12:41:59] __main__ INFO: Epoch 89 Step 200/390 lr 0.010000 loss 0.0499 (0.0350) acc@1 0.9844 (0.9898) acc@5 1.0000 (1.0000)
+[2024-01-20 12:42:06] __main__ INFO: Epoch 89 Step 300/390 lr 0.010000 loss 0.0209 (0.0356) acc@1 1.0000 (0.9892) acc@5 1.0000 (1.0000)
+[2024-01-20 12:42:12] __main__ INFO: Epoch 89 Step 390/390 lr 0.010000 loss 0.0137 (0.0358) acc@1 1.0000 (0.9893) acc@5 1.0000 (1.0000)
+[2024-01-20 12:42:12] __main__ INFO: Elapsed 26.20
+[2024-01-20 12:42:12] __main__ INFO: Val 89
+[2024-01-20 12:42:13] __main__ INFO: Epoch 89 loss 0.3191 acc@1 0.9166 acc@5 0.9972
+[2024-01-20 12:42:13] __main__ INFO: Elapsed 1.10
+[2024-01-20 12:42:13] __main__ INFO: Train 90 34710
+[2024-01-20 12:42:20] __main__ INFO: Epoch 90 Step 100/390 lr 0.010000 loss 0.0172 (0.0330) acc@1 1.0000 (0.9901) acc@5 1.0000 (0.9999)
+[2024-01-20 12:42:27] __main__ INFO: Epoch 90 Step 200/390 lr 0.010000 loss 0.0572 (0.0337) acc@1 0.9688 (0.9897) acc@5 0.9922 (0.9999)
+[2024-01-20 12:42:33] __main__ INFO: Epoch 90 Step 300/390 lr 0.010000 loss 0.0186 (0.0342) acc@1 0.9922 (0.9893) acc@5 1.0000 (0.9999)
+[2024-01-20 12:42:39] __main__ INFO: Epoch 90 Step 390/390 lr 0.010000 loss 0.0216 (0.0349) acc@1 1.0000 (0.9891) acc@5 1.0000 (0.9999)
+[2024-01-20 12:42:39] __main__ INFO: Elapsed 26.07
+[2024-01-20 12:42:39] __main__ INFO: Val 90
+[2024-01-20 12:42:40] __main__ INFO: Epoch 90 loss 0.3118 acc@1 0.9191 acc@5 0.9971
+[2024-01-20 12:42:40] __main__ INFO: Elapsed 1.08
+[2024-01-20 12:42:40] __main__ INFO: Train 91 35100
+[2024-01-20 12:42:47] __main__ INFO: Epoch 91 Step 100/390 lr 0.010000 loss 0.0187 (0.0290) acc@1 0.9922 (0.9915) acc@5 1.0000 (1.0000)
+[2024-01-20 12:42:54] __main__ INFO: Epoch 91 Step 200/390 lr 0.010000 loss 0.0112 (0.0306) acc@1 1.0000 (0.9909) acc@5 1.0000 (1.0000)
+[2024-01-20 12:43:01] __main__ INFO: Epoch 91 Step 300/390 lr 0.010000 loss 0.0454 (0.0314) acc@1 0.9844 (0.9907) acc@5 1.0000 (1.0000)
+[2024-01-20 12:43:07] __main__ INFO: Epoch 91 Step 390/390 lr 0.010000 loss 0.0241 (0.0318) acc@1 1.0000 (0.9904) acc@5 1.0000 (1.0000)
+[2024-01-20 12:43:07] __main__ INFO: Elapsed 26.30
+[2024-01-20 12:43:07] __main__ INFO: Val 91
+[2024-01-20 12:43:08] __main__ INFO: Epoch 91 loss 0.3210 acc@1 0.9189 acc@5 0.9968
+[2024-01-20 12:43:08] __main__ INFO: Elapsed 1.12
+[2024-01-20 12:43:08] __main__ INFO: Train 92 35490
+[2024-01-20 12:43:15] __main__ INFO: Epoch 92 Step 100/390 lr 0.010000 loss 0.0134 (0.0298) acc@1 1.0000 (0.9916) acc@5 1.0000 (1.0000)
+[2024-01-20 12:43:21] __main__ INFO: Epoch 92 Step 200/390 lr 0.010000 loss 0.0142 (0.0294) acc@1 1.0000 (0.9918) acc@5 1.0000 (1.0000)
+[2024-01-20 12:43:28] __main__ INFO: Epoch 92 Step 300/390 lr 0.010000 loss 0.0675 (0.0294) acc@1 0.9766 (0.9914) acc@5 1.0000 (1.0000)
+[2024-01-20 12:43:34] __main__ INFO: Epoch 92 Step 390/390 lr 0.010000 loss 0.0249 (0.0294) acc@1 1.0000 (0.9913) acc@5 1.0000 (1.0000)
+[2024-01-20 12:43:34] __main__ INFO: Elapsed 26.17
+[2024-01-20 12:43:34] __main__ INFO: Val 92
+[2024-01-20 12:43:35] __main__ INFO: Epoch 92 loss 0.3251 acc@1 0.9185 acc@5 0.9969
+[2024-01-20 12:43:35] __main__ INFO: Elapsed 1.15
+[2024-01-20 12:43:35] __main__ INFO: Train 93 35880
+[2024-01-20 12:43:42] __main__ INFO: Epoch 93 Step 100/390 lr 0.010000 loss 0.0442 (0.0284) acc@1 0.9844 (0.9912) acc@5 1.0000 (0.9999)
+[2024-01-20 12:43:49] __main__ INFO: Epoch 93 Step 200/390 lr 0.010000 loss 0.0254 (0.0272) acc@1 0.9844 (0.9917) acc@5 1.0000 (0.9999)
+[2024-01-20 12:43:55] __main__ INFO: Epoch 93 Step 300/390 lr 0.010000 loss 0.0424 (0.0276) acc@1 0.9922 (0.9915) acc@5 1.0000 (0.9999)
+[2024-01-20 12:44:01] __main__ INFO: Epoch 93 Step 390/390 lr 0.010000 loss 0.0568 (0.0276) acc@1 0.9844 (0.9915) acc@5 1.0000 (1.0000)
+[2024-01-20 12:44:01] __main__ INFO: Elapsed 26.17
+[2024-01-20 12:44:01] __main__ INFO: Val 93
+[2024-01-20 12:44:02] __main__ INFO: Epoch 93 loss 0.3284 acc@1 0.9178 acc@5 0.9968
+[2024-01-20 12:44:02] __main__ INFO: Elapsed 1.07
+[2024-01-20 12:44:02] __main__ INFO: Train 94 36270
+[2024-01-20 12:44:09] __main__ INFO: Epoch 94 Step 100/390 lr 0.010000 loss 0.0311 (0.0278) acc@1 0.9922 (0.9916) acc@5 1.0000 (1.0000)
+[2024-01-20 12:44:16] __main__ INFO: Epoch 94 Step 200/390 lr 0.010000 loss 0.0146 (0.0270) acc@1 0.9922 (0.9916) acc@5 1.0000 (1.0000)
+[2024-01-20 12:44:22] __main__ INFO: Epoch 94 Step 300/390 lr 0.010000 loss 0.0629 (0.0273) acc@1 0.9766 (0.9916) acc@5 1.0000 (1.0000)
+[2024-01-20 12:44:28] __main__ INFO: Epoch 94 Step 390/390 lr 0.010000 loss 0.0103 (0.0267) acc@1 1.0000 (0.9918) acc@5 1.0000 (1.0000)
+[2024-01-20 12:44:28] __main__ INFO: Elapsed 26.13
+[2024-01-20 12:44:28] __main__ INFO: Val 94
+[2024-01-20 12:44:30] __main__ INFO: Epoch 94 loss 0.3403 acc@1 0.9168 acc@5 0.9969
+[2024-01-20 12:44:30] __main__ INFO: Elapsed 1.07
+[2024-01-20 12:44:30] __main__ INFO: Train 95 36660
+[2024-01-20 12:44:36] __main__ INFO: Epoch 95 Step 100/390 lr 0.010000 loss 0.0287 (0.0250) acc@1 0.9922 (0.9920) acc@5 1.0000 (1.0000)
+[2024-01-20 12:44:43] __main__ INFO: Epoch 95 Step 200/390 lr 0.010000 loss 0.0186 (0.0250) acc@1 0.9844 (0.9921) acc@5 1.0000 (1.0000)
+[2024-01-20 12:44:50] __main__ INFO: Epoch 95 Step 300/390 lr 0.010000 loss 0.0340 (0.0252) acc@1 0.9922 (0.9921) acc@5 1.0000 (1.0000)
+[2024-01-20 12:44:56] __main__ INFO: Epoch 95 Step 390/390 lr 0.010000 loss 0.0201 (0.0249) acc@1 0.9922 (0.9923) acc@5 1.0000 (1.0000)
+[2024-01-20 12:44:56] __main__ INFO: Elapsed 26.07
+[2024-01-20 12:44:56] __main__ INFO: Val 95
+[2024-01-20 12:44:57] __main__ INFO: Epoch 95 loss 0.3420 acc@1 0.9162 acc@5 0.9969
+[2024-01-20 12:44:57] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:44:57] __main__ INFO: Train 96 37050
+[2024-01-20 12:45:04] __main__ INFO: Epoch 96 Step 100/390 lr 0.010000 loss 0.0283 (0.0207) acc@1 0.9922 (0.9941) acc@5 1.0000 (1.0000)
+[2024-01-20 12:45:10] __main__ INFO: Epoch 96 Step 200/390 lr 0.010000 loss 0.0114 (0.0217) acc@1 1.0000 (0.9936) acc@5 1.0000 (1.0000)
+[2024-01-20 12:45:17] __main__ INFO: Epoch 96 Step 300/390 lr 0.010000 loss 0.0258 (0.0220) acc@1 0.9922 (0.9935) acc@5 1.0000 (1.0000)
+[2024-01-20 12:45:23] __main__ INFO: Epoch 96 Step 390/390 lr 0.010000 loss 0.0084 (0.0222) acc@1 1.0000 (0.9934) acc@5 1.0000 (1.0000)
+[2024-01-20 12:45:23] __main__ INFO: Elapsed 26.10
+[2024-01-20 12:45:23] __main__ INFO: Val 96
+[2024-01-20 12:45:24] __main__ INFO: Epoch 96 loss 0.3446 acc@1 0.9174 acc@5 0.9969
+[2024-01-20 12:45:24] __main__ INFO: Elapsed 1.10
+[2024-01-20 12:45:24] __main__ INFO: Train 97 37440
+[2024-01-20 12:45:31] __main__ INFO: Epoch 97 Step 100/390 lr 0.010000 loss 0.0094 (0.0202) acc@1 1.0000 (0.9943) acc@5 1.0000 (1.0000)
+[2024-01-20 12:45:37] __main__ INFO: Epoch 97 Step 200/390 lr 0.010000 loss 0.0030 (0.0219) acc@1 1.0000 (0.9936) acc@5 1.0000 (1.0000)
+[2024-01-20 12:45:44] __main__ INFO: Epoch 97 Step 300/390 lr 0.010000 loss 0.0170 (0.0215) acc@1 1.0000 (0.9938) acc@5 1.0000 (1.0000)
+[2024-01-20 12:45:50] __main__ INFO: Epoch 97 Step 390/390 lr 0.010000 loss 0.0147 (0.0212) acc@1 1.0000 (0.9936) acc@5 1.0000 (1.0000)
+[2024-01-20 12:45:50] __main__ INFO: Elapsed 26.29
+[2024-01-20 12:45:50] __main__ INFO: Val 97
+[2024-01-20 12:45:51] __main__ INFO: Epoch 97 loss 0.3421 acc@1 0.9196 acc@5 0.9967
+[2024-01-20 12:45:51] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:45:51] __main__ INFO: Train 98 37830
+[2024-01-20 12:45:58] __main__ INFO: Epoch 98 Step 100/390 lr 0.010000 loss 0.0252 (0.0226) acc@1 0.9922 (0.9937) acc@5 1.0000 (1.0000)
+[2024-01-20 12:46:05] __main__ INFO: Epoch 98 Step 200/390 lr 0.010000 loss 0.0247 (0.0212) acc@1 0.9844 (0.9941) acc@5 1.0000 (1.0000)
+[2024-01-20 12:46:11] __main__ INFO: Epoch 98 Step 300/390 lr 0.010000 loss 0.0144 (0.0209) acc@1 0.9922 (0.9941) acc@5 1.0000 (1.0000)
+[2024-01-20 12:46:17] __main__ INFO: Epoch 98 Step 390/390 lr 0.010000 loss 0.0174 (0.0209) acc@1 1.0000 (0.9941) acc@5 1.0000 (1.0000)
+[2024-01-20 12:46:18] __main__ INFO: Elapsed 26.21
+[2024-01-20 12:46:18] __main__ INFO: Val 98
+[2024-01-20 12:46:19] __main__ INFO: Epoch 98 loss 0.3457 acc@1 0.9177 acc@5 0.9969
+[2024-01-20 12:46:19] __main__ INFO: Elapsed 1.10
+[2024-01-20 12:46:19] __main__ INFO: Train 99 38220
+[2024-01-20 12:46:26] __main__ INFO: Epoch 99 Step 100/390 lr 0.010000 loss 0.0202 (0.0184) acc@1 0.9922 (0.9951) acc@5 1.0000 (1.0000)
+[2024-01-20 12:46:32] __main__ INFO: Epoch 99 Step 200/390 lr 0.010000 loss 0.0213 (0.0193) acc@1 0.9922 (0.9943) acc@5 1.0000 (1.0000)
+[2024-01-20 12:46:39] __main__ INFO: Epoch 99 Step 300/390 lr 0.010000 loss 0.0137 (0.0194) acc@1 1.0000 (0.9943) acc@5 1.0000 (1.0000)
+[2024-01-20 12:46:45] __main__ INFO: Epoch 99 Step 390/390 lr 0.010000 loss 0.0068 (0.0201) acc@1 1.0000 (0.9941) acc@5 1.0000 (1.0000)
+[2024-01-20 12:46:45] __main__ INFO: Elapsed 26.48
+[2024-01-20 12:46:45] __main__ INFO: Val 99
+[2024-01-20 12:46:46] __main__ INFO: Epoch 99 loss 0.3487 acc@1 0.9189 acc@5 0.9970
+[2024-01-20 12:46:46] __main__ INFO: Elapsed 1.10
+[2024-01-20 12:46:46] __main__ INFO: Train 100 38610
+[2024-01-20 12:46:53] __main__ INFO: Epoch 100 Step 100/390 lr 0.010000 loss 0.0315 (0.0171) acc@1 0.9922 (0.9950) acc@5 1.0000 (1.0000)
+[2024-01-20 12:47:00] __main__ INFO: Epoch 100 Step 200/390 lr 0.010000 loss 0.0235 (0.0182) acc@1 0.9922 (0.9946) acc@5 1.0000 (1.0000)
+[2024-01-20 12:47:06] __main__ INFO: Epoch 100 Step 300/390 lr 0.010000 loss 0.0547 (0.0188) acc@1 0.9922 (0.9944) acc@5 1.0000 (1.0000)
+[2024-01-20 12:47:12] __main__ INFO: Epoch 100 Step 390/390 lr 0.010000 loss 0.0439 (0.0186) acc@1 0.9766 (0.9945) acc@5 1.0000 (1.0000)
+[2024-01-20 12:47:12] __main__ INFO: Elapsed 25.96
+[2024-01-20 12:47:12] __main__ INFO: Val 100
+[2024-01-20 12:47:13] __main__ INFO: Epoch 100 loss 0.3563 acc@1 0.9174 acc@5 0.9972
+[2024-01-20 12:47:13] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:47:13] fvcore.common.checkpoint INFO: Saving checkpoint to experiments/cifar10/resnet/exp00/checkpoint_00100.pth
+[2024-01-20 12:47:13] __main__ INFO: Train 101 39000
+[2024-01-20 12:47:20] __main__ INFO: Epoch 101 Step 100/390 lr 0.010000 loss 0.0115 (0.0184) acc@1 1.0000 (0.9950) acc@5 1.0000 (1.0000)
+[2024-01-20 12:47:27] __main__ INFO: Epoch 101 Step 200/390 lr 0.010000 loss 0.0070 (0.0170) acc@1 1.0000 (0.9956) acc@5 1.0000 (1.0000)
+[2024-01-20 12:47:33] __main__ INFO: Epoch 101 Step 300/390 lr 0.010000 loss 0.0273 (0.0173) acc@1 0.9922 (0.9952) acc@5 1.0000 (1.0000)
+[2024-01-20 12:47:40] __main__ INFO: Epoch 101 Step 390/390 lr 0.010000 loss 0.0189 (0.0172) acc@1 1.0000 (0.9952) acc@5 1.0000 (1.0000)
+[2024-01-20 12:47:40] __main__ INFO: Elapsed 26.24
+[2024-01-20 12:47:40] __main__ INFO: Val 101
+[2024-01-20 12:47:41] __main__ INFO: Epoch 101 loss 0.3574 acc@1 0.9170 acc@5 0.9972
+[2024-01-20 12:47:41] __main__ INFO: Elapsed 1.11
+[2024-01-20 12:47:41] __main__ INFO: Train 102 39390
+[2024-01-20 12:47:48] __main__ INFO: Epoch 102 Step 100/390 lr 0.010000 loss 0.0158 (0.0205) acc@1 0.9922 (0.9935) acc@5 1.0000 (1.0000)
+[2024-01-20 12:47:54] __main__ INFO: Epoch 102 Step 200/390 lr 0.010000 loss 0.0706 (0.0194) acc@1 0.9688 (0.9941) acc@5 1.0000 (1.0000)
+[2024-01-20 12:48:01] __main__ INFO: Epoch 102 Step 300/390 lr 0.010000 loss 0.0139 (0.0182) acc@1 1.0000 (0.9947) acc@5 1.0000 (1.0000)
+[2024-01-20 12:48:07] __main__ INFO: Epoch 102 Step 390/390 lr 0.010000 loss 0.0101 (0.0181) acc@1 1.0000 (0.9948) acc@5 1.0000 (1.0000)
+[2024-01-20 12:48:07] __main__ INFO: Elapsed 26.02
+[2024-01-20 12:48:07] __main__ INFO: Val 102
+[2024-01-20 12:48:08] __main__ INFO: Epoch 102 loss 0.3637 acc@1 0.9176 acc@5 0.9973
+[2024-01-20 12:48:08] __main__ INFO: Elapsed 1.12
+[2024-01-20 12:48:08] __main__ INFO: Train 103 39780
+[2024-01-20 12:48:15] __main__ INFO: Epoch 103 Step 100/390 lr 0.010000 loss 0.0076 (0.0167) acc@1 1.0000 (0.9955) acc@5 1.0000 (1.0000)
+[2024-01-20 12:48:21] __main__ INFO: Epoch 103 Step 200/390 lr 0.010000 loss 0.0293 (0.0168) acc@1 0.9688 (0.9951) acc@5 1.0000 (1.0000)
+[2024-01-20 12:48:28] __main__ INFO: Epoch 103 Step 300/390 lr 0.010000 loss 0.0448 (0.0173) acc@1 0.9922 (0.9949) acc@5 1.0000 (1.0000)
+[2024-01-20 12:48:34] __main__ INFO: Epoch 103 Step 390/390 lr 0.010000 loss 0.0139 (0.0173) acc@1 1.0000 (0.9949) acc@5 1.0000 (1.0000)
+[2024-01-20 12:48:34] __main__ INFO: Elapsed 26.30
+[2024-01-20 12:48:34] __main__ INFO: Val 103
+[2024-01-20 12:48:35] __main__ INFO: Epoch 103 loss 0.3642 acc@1 0.9170 acc@5 0.9967
+[2024-01-20 12:48:35] __main__ INFO: Elapsed 1.07
+[2024-01-20 12:48:35] __main__ INFO: Train 104 40170
+[2024-01-20 12:48:42] __main__ INFO: Epoch 104 Step 100/390 lr 0.010000 loss 0.0044 (0.0139) acc@1 1.0000 (0.9962) acc@5 1.0000 (1.0000)
+[2024-01-20 12:48:49] __main__ INFO: Epoch 104 Step 200/390 lr 0.010000 loss 0.0050 (0.0146) acc@1 1.0000 (0.9959) acc@5 1.0000 (1.0000)
+[2024-01-20 12:48:55] __main__ INFO: Epoch 104 Step 300/390 lr 0.010000 loss 0.0009 (0.0146) acc@1 1.0000 (0.9959) acc@5 1.0000 (1.0000)
+[2024-01-20 12:49:01] __main__ INFO: Epoch 104 Step 390/390 lr 0.010000 loss 0.0090 (0.0148) acc@1 1.0000 (0.9958) acc@5 1.0000 (1.0000)
+[2024-01-20 12:49:01] __main__ INFO: Elapsed 25.90
+[2024-01-20 12:49:01] __main__ INFO: Val 104
+[2024-01-20 12:49:02] __main__ INFO: Epoch 104 loss 0.3665 acc@1 0.9165 acc@5 0.9968
+[2024-01-20 12:49:02] __main__ INFO: Elapsed 1.10
+[2024-01-20 12:49:02] __main__ INFO: Train 105 40560
+[2024-01-20 12:49:09] __main__ INFO: Epoch 105 Step 100/390 lr 0.010000 loss 0.0054 (0.0138) acc@1 1.0000 (0.9963) acc@5 1.0000 (1.0000)
+[2024-01-20 12:49:16] __main__ INFO: Epoch 105 Step 200/390 lr 0.010000 loss 0.0141 (0.0147) acc@1 0.9922 (0.9959) acc@5 1.0000 (1.0000)
+[2024-01-20 12:49:22] __main__ INFO: Epoch 105 Step 300/390 lr 0.010000 loss 0.0069 (0.0153) acc@1 1.0000 (0.9956) acc@5 1.0000 (1.0000)
+[2024-01-20 12:49:28] __main__ INFO: Epoch 105 Step 390/390 lr 0.010000 loss 0.0147 (0.0162) acc@1 0.9922 (0.9952) acc@5 1.0000 (1.0000)
+[2024-01-20 12:49:28] __main__ INFO: Elapsed 26.20
+[2024-01-20 12:49:28] __main__ INFO: Val 105
+[2024-01-20 12:49:30] __main__ INFO: Epoch 105 loss 0.3652 acc@1 0.9190 acc@5 0.9970
+[2024-01-20 12:49:30] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:49:30] __main__ INFO: Train 106 40950
+[2024-01-20 12:49:36] __main__ INFO: Epoch 106 Step 100/390 lr 0.010000 loss 0.0047 (0.0148) acc@1 1.0000 (0.9961) acc@5 1.0000 (1.0000)
+[2024-01-20 12:49:43] __main__ INFO: Epoch 106 Step 200/390 lr 0.010000 loss 0.0157 (0.0139) acc@1 1.0000 (0.9964) acc@5 1.0000 (1.0000)
+[2024-01-20 12:49:50] __main__ INFO: Epoch 106 Step 300/390 lr 0.010000 loss 0.0023 (0.0139) acc@1 1.0000 (0.9962) acc@5 1.0000 (1.0000)
+[2024-01-20 12:49:56] __main__ INFO: Epoch 106 Step 390/390 lr 0.010000 loss 0.0033 (0.0138) acc@1 1.0000 (0.9963) acc@5 1.0000 (1.0000)
+[2024-01-20 12:49:56] __main__ INFO: Elapsed 26.18
+[2024-01-20 12:49:56] __main__ INFO: Val 106
+[2024-01-20 12:49:57] __main__ INFO: Epoch 106 loss 0.3723 acc@1 0.9171 acc@5 0.9968
+[2024-01-20 12:49:57] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:49:57] __main__ INFO: Train 107 41340
+[2024-01-20 12:50:04] __main__ INFO: Epoch 107 Step 100/390 lr 0.010000 loss 0.0348 (0.0139) acc@1 0.9844 (0.9959) acc@5 1.0000 (1.0000)
+[2024-01-20 12:50:10] __main__ INFO: Epoch 107 Step 200/390 lr 0.010000 loss 0.0092 (0.0140) acc@1 1.0000 (0.9958) acc@5 1.0000 (1.0000)
+[2024-01-20 12:50:17] __main__ INFO: Epoch 107 Step 300/390 lr 0.010000 loss 0.0082 (0.0144) acc@1 1.0000 (0.9957) acc@5 1.0000 (1.0000)
+[2024-01-20 12:50:23] __main__ INFO: Epoch 107 Step 390/390 lr 0.010000 loss 0.0055 (0.0145) acc@1 1.0000 (0.9958) acc@5 1.0000 (1.0000)
+[2024-01-20 12:50:23] __main__ INFO: Elapsed 26.03
+[2024-01-20 12:50:23] __main__ INFO: Val 107
+[2024-01-20 12:50:24] __main__ INFO: Epoch 107 loss 0.3707 acc@1 0.9172 acc@5 0.9968
+[2024-01-20 12:50:24] __main__ INFO: Elapsed 1.08
+[2024-01-20 12:50:24] __main__ INFO: Train 108 41730
+[2024-01-20 12:50:31] __main__ INFO: Epoch 108 Step 100/390 lr 0.010000 loss 0.0328 (0.0154) acc@1 0.9922 (0.9955) acc@5 1.0000 (1.0000)
+[2024-01-20 12:50:38] __main__ INFO: Epoch 108 Step 200/390 lr 0.010000 loss 0.0377 (0.0147) acc@1 0.9844 (0.9955) acc@5 1.0000 (1.0000)
+[2024-01-20 12:50:44] __main__ INFO: Epoch 108 Step 300/390 lr 0.010000 loss 0.0123 (0.0136) acc@1 0.9922 (0.9960) acc@5 1.0000 (1.0000)
+[2024-01-20 12:50:50] __main__ INFO: Epoch 108 Step 390/390 lr 0.010000 loss 0.0053 (0.0139) acc@1 1.0000 (0.9958) acc@5 1.0000 (1.0000)
+[2024-01-20 12:50:50] __main__ INFO: Elapsed 26.24
+[2024-01-20 12:50:50] __main__ INFO: Val 108
+[2024-01-20 12:50:51] __main__ INFO: Epoch 108 loss 0.3748 acc@1 0.9162 acc@5 0.9965
+[2024-01-20 12:50:51] __main__ INFO: Elapsed 1.10
+[2024-01-20 12:50:51] __main__ INFO: Train 109 42120
+[2024-01-20 12:50:58] __main__ INFO: Epoch 109 Step 100/390 lr 0.010000 loss 0.0082 (0.0109) acc@1 1.0000 (0.9973) acc@5 1.0000 (1.0000)
+[2024-01-20 12:51:05] __main__ INFO: Epoch 109 Step 200/390 lr 0.010000 loss 0.0143 (0.0110) acc@1 1.0000 (0.9975) acc@5 1.0000 (1.0000)
+[2024-01-20 12:51:11] __main__ INFO: Epoch 109 Step 300/390 lr 0.010000 loss 0.0163 (0.0114) acc@1 0.9922 (0.9974) acc@5 1.0000 (1.0000)
+[2024-01-20 12:51:17] __main__ INFO: Epoch 109 Step 390/390 lr 0.010000 loss 0.0142 (0.0116) acc@1 1.0000 (0.9973) acc@5 1.0000 (1.0000)
+[2024-01-20 12:51:17] __main__ INFO: Elapsed 26.13
+[2024-01-20 12:51:17] __main__ INFO: Val 109
+[2024-01-20 12:51:19] __main__ INFO: Epoch 109 loss 0.3813 acc@1 0.9155 acc@5 0.9970
+[2024-01-20 12:51:19] __main__ INFO: Elapsed 1.14
+[2024-01-20 12:51:19] __main__ INFO: Train 110 42510
+[2024-01-20 12:51:25] __main__ INFO: Epoch 110 Step 100/390 lr 0.010000 loss 0.0104 (0.0120) acc@1 1.0000 (0.9970) acc@5 1.0000 (1.0000)
+[2024-01-20 12:51:32] __main__ INFO: Epoch 110 Step 200/390 lr 0.010000 loss 0.0104 (0.0119) acc@1 1.0000 (0.9970) acc@5 1.0000 (1.0000)
+[2024-01-20 12:51:39] __main__ INFO: Epoch 110 Step 300/390 lr 0.010000 loss 0.0023 (0.0119) acc@1 1.0000 (0.9968) acc@5 1.0000 (1.0000)
+[2024-01-20 12:51:45] __main__ INFO: Epoch 110 Step 390/390 lr 0.010000 loss 0.0138 (0.0119) acc@1 0.9922 (0.9968) acc@5 1.0000 (1.0000)
+[2024-01-20 12:51:45] __main__ INFO: Elapsed 26.04
+[2024-01-20 12:51:45] __main__ INFO: Val 110
+[2024-01-20 12:51:46] __main__ INFO: Epoch 110 loss 0.3747 acc@1 0.9179 acc@5 0.9967
+[2024-01-20 12:51:46] __main__ INFO: Elapsed 1.10
+[2024-01-20 12:51:46] __main__ INFO: Train 111 42900
+[2024-01-20 12:51:53] __main__ INFO: Epoch 111 Step 100/390 lr 0.010000 loss 0.0175 (0.0119) acc@1 1.0000 (0.9970) acc@5 1.0000 (0.9999)
+[2024-01-20 12:51:59] __main__ INFO: Epoch 111 Step 200/390 lr 0.010000 loss 0.0060 (0.0125) acc@1 1.0000 (0.9964) acc@5 1.0000 (1.0000)
+[2024-01-20 12:52:06] __main__ INFO: Epoch 111 Step 300/390 lr 0.010000 loss 0.0242 (0.0121) acc@1 0.9922 (0.9967) acc@5 1.0000 (1.0000)
+[2024-01-20 12:52:12] __main__ INFO: Epoch 111 Step 390/390 lr 0.010000 loss 0.0049 (0.0118) acc@1 1.0000 (0.9968) acc@5 1.0000 (1.0000)
+[2024-01-20 12:52:12] __main__ INFO: Elapsed 26.08
+[2024-01-20 12:52:12] __main__ INFO: Val 111
+[2024-01-20 12:52:13] __main__ INFO: Epoch 111 loss 0.3796 acc@1 0.9187 acc@5 0.9963
+[2024-01-20 12:52:13] __main__ INFO: Elapsed 1.07
+[2024-01-20 12:52:13] __main__ INFO: Train 112 43290
+[2024-01-20 12:52:20] __main__ INFO: Epoch 112 Step 100/390 lr 0.010000 loss 0.0213 (0.0105) acc@1 0.9922 (0.9976) acc@5 1.0000 (1.0000)
+[2024-01-20 12:52:26] __main__ INFO: Epoch 112 Step 200/390 lr 0.010000 loss 0.0032 (0.0119) acc@1 1.0000 (0.9970) acc@5 1.0000 (1.0000)
+[2024-01-20 12:52:33] __main__ INFO: Epoch 112 Step 300/390 lr 0.010000 loss 0.0503 (0.0115) acc@1 0.9844 (0.9970) acc@5 1.0000 (1.0000)
+[2024-01-20 12:52:39] __main__ INFO: Epoch 112 Step 390/390 lr 0.010000 loss 0.0125 (0.0116) acc@1 0.9922 (0.9969) acc@5 1.0000 (1.0000)
+[2024-01-20 12:52:39] __main__ INFO: Elapsed 26.14
+[2024-01-20 12:52:39] __main__ INFO: Val 112
+[2024-01-20 12:52:40] __main__ INFO: Epoch 112 loss 0.3821 acc@1 0.9187 acc@5 0.9967
+[2024-01-20 12:52:40] __main__ INFO: Elapsed 1.08
+[2024-01-20 12:52:40] __main__ INFO: Train 113 43680
+[2024-01-20 12:52:47] __main__ INFO: Epoch 113 Step 100/390 lr 0.010000 loss 0.0059 (0.0103) acc@1 1.0000 (0.9975) acc@5 1.0000 (1.0000)
+[2024-01-20 12:52:53] __main__ INFO: Epoch 113 Step 200/390 lr 0.010000 loss 0.0099 (0.0112) acc@1 1.0000 (0.9971) acc@5 1.0000 (1.0000)
+[2024-01-20 12:53:00] __main__ INFO: Epoch 113 Step 300/390 lr 0.010000 loss 0.0085 (0.0110) acc@1 1.0000 (0.9973) acc@5 1.0000 (1.0000)
+[2024-01-20 12:53:06] __main__ INFO: Epoch 113 Step 390/390 lr 0.010000 loss 0.0044 (0.0111) acc@1 1.0000 (0.9972) acc@5 1.0000 (1.0000)
+[2024-01-20 12:53:06] __main__ INFO: Elapsed 26.01
+[2024-01-20 12:53:06] __main__ INFO: Val 113
+[2024-01-20 12:53:07] __main__ INFO: Epoch 113 loss 0.3822 acc@1 0.9202 acc@5 0.9966
+[2024-01-20 12:53:07] __main__ INFO: Elapsed 1.11
+[2024-01-20 12:53:07] __main__ INFO: Train 114 44070
+[2024-01-20 12:53:14] __main__ INFO: Epoch 114 Step 100/390 lr 0.010000 loss 0.0075 (0.0111) acc@1 1.0000 (0.9970) acc@5 1.0000 (1.0000)
+[2024-01-20 12:53:21] __main__ INFO: Epoch 114 Step 200/390 lr 0.010000 loss 0.0061 (0.0118) acc@1 1.0000 (0.9969) acc@5 1.0000 (1.0000)
+[2024-01-20 12:53:27] __main__ INFO: Epoch 114 Step 300/390 lr 0.010000 loss 0.0172 (0.0120) acc@1 0.9922 (0.9967) acc@5 1.0000 (1.0000)
+[2024-01-20 12:53:33] __main__ INFO: Epoch 114 Step 390/390 lr 0.010000 loss 0.0069 (0.0120) acc@1 1.0000 (0.9966) acc@5 1.0000 (1.0000)
+[2024-01-20 12:53:33] __main__ INFO: Elapsed 26.07
+[2024-01-20 12:53:33] __main__ INFO: Val 114
+[2024-01-20 12:53:34] __main__ INFO: Epoch 114 loss 0.3861 acc@1 0.9179 acc@5 0.9968
+[2024-01-20 12:53:34] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:53:34] __main__ INFO: Train 115 44460
+[2024-01-20 12:53:41] __main__ INFO: Epoch 115 Step 100/390 lr 0.010000 loss 0.0034 (0.0108) acc@1 1.0000 (0.9970) acc@5 1.0000 (1.0000)
+[2024-01-20 12:53:48] __main__ INFO: Epoch 115 Step 200/390 lr 0.010000 loss 0.0079 (0.0115) acc@1 1.0000 (0.9970) acc@5 1.0000 (1.0000)
+[2024-01-20 12:53:54] __main__ INFO: Epoch 115 Step 300/390 lr 0.010000 loss 0.0029 (0.0116) acc@1 1.0000 (0.9970) acc@5 1.0000 (1.0000)
+[2024-01-20 12:54:00] __main__ INFO: Epoch 115 Step 390/390 lr 0.010000 loss 0.0151 (0.0117) acc@1 1.0000 (0.9968) acc@5 1.0000 (1.0000)
+[2024-01-20 12:54:00] __main__ INFO: Elapsed 26.13
+[2024-01-20 12:54:00] __main__ INFO: Val 115
+[2024-01-20 12:54:02] __main__ INFO: Epoch 115 loss 0.3855 acc@1 0.9172 acc@5 0.9965
+[2024-01-20 12:54:02] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:54:02] __main__ INFO: Train 116 44850
+[2024-01-20 12:54:08] __main__ INFO: Epoch 116 Step 100/390 lr 0.010000 loss 0.0072 (0.0122) acc@1 1.0000 (0.9963) acc@5 1.0000 (1.0000)
+[2024-01-20 12:54:15] __main__ INFO: Epoch 116 Step 200/390 lr 0.010000 loss 0.0228 (0.0126) acc@1 0.9922 (0.9963) acc@5 1.0000 (1.0000)
+[2024-01-20 12:54:22] __main__ INFO: Epoch 116 Step 300/390 lr 0.010000 loss 0.0067 (0.0117) acc@1 1.0000 (0.9968) acc@5 1.0000 (1.0000)
+[2024-01-20 12:54:28] __main__ INFO: Epoch 116 Step 390/390 lr 0.010000 loss 0.0088 (0.0118) acc@1 1.0000 (0.9967) acc@5 1.0000 (1.0000)
+[2024-01-20 12:54:28] __main__ INFO: Elapsed 26.23
+[2024-01-20 12:54:28] __main__ INFO: Val 116
+[2024-01-20 12:54:29] __main__ INFO: Epoch 116 loss 0.3933 acc@1 0.9161 acc@5 0.9961
+[2024-01-20 12:54:29] __main__ INFO: Elapsed 1.11
+[2024-01-20 12:54:29] __main__ INFO: Train 117 45240
+[2024-01-20 12:54:36] __main__ INFO: Epoch 117 Step 100/390 lr 0.010000 loss 0.0069 (0.0103) acc@1 1.0000 (0.9968) acc@5 1.0000 (1.0000)
+[2024-01-20 12:54:42] __main__ INFO: Epoch 117 Step 200/390 lr 0.010000 loss 0.0040 (0.0106) acc@1 1.0000 (0.9968) acc@5 1.0000 (1.0000)
+[2024-01-20 12:54:49] __main__ INFO: Epoch 117 Step 300/390 lr 0.010000 loss 0.0387 (0.0106) acc@1 0.9922 (0.9968) acc@5 1.0000 (1.0000)
+[2024-01-20 12:54:55] __main__ INFO: Epoch 117 Step 390/390 lr 0.010000 loss 0.0216 (0.0102) acc@1 0.9922 (0.9969) acc@5 1.0000 (1.0000)
+[2024-01-20 12:54:55] __main__ INFO: Elapsed 26.15
+[2024-01-20 12:54:55] __main__ INFO: Val 117
+[2024-01-20 12:54:56] __main__ INFO: Epoch 117 loss 0.3991 acc@1 0.9143 acc@5 0.9967
+[2024-01-20 12:54:56] __main__ INFO: Elapsed 1.15
+[2024-01-20 12:54:56] __main__ INFO: Train 118 45630
+[2024-01-20 12:55:03] __main__ INFO: Epoch 118 Step 100/390 lr 0.010000 loss 0.0078 (0.0114) acc@1 1.0000 (0.9966) acc@5 1.0000 (1.0000)
+[2024-01-20 12:55:10] __main__ INFO: Epoch 118 Step 200/390 lr 0.010000 loss 0.0087 (0.0111) acc@1 1.0000 (0.9968) acc@5 1.0000 (1.0000)
+[2024-01-20 12:55:16] __main__ INFO: Epoch 118 Step 300/390 lr 0.010000 loss 0.0075 (0.0108) acc@1 1.0000 (0.9970) acc@5 1.0000 (1.0000)
+[2024-01-20 12:55:22] __main__ INFO: Epoch 118 Step 390/390 lr 0.010000 loss 0.0036 (0.0106) acc@1 1.0000 (0.9971) acc@5 1.0000 (1.0000)
+[2024-01-20 12:55:22] __main__ INFO: Elapsed 26.09
+[2024-01-20 12:55:22] __main__ INFO: Val 118
+[2024-01-20 12:55:23] __main__ INFO: Epoch 118 loss 0.3911 acc@1 0.9164 acc@5 0.9967
+[2024-01-20 12:55:23] __main__ INFO: Elapsed 1.08
+[2024-01-20 12:55:23] __main__ INFO: Train 119 46020
+[2024-01-20 12:55:30] __main__ INFO: Epoch 119 Step 100/390 lr 0.010000 loss 0.0028 (0.0102) acc@1 1.0000 (0.9976) acc@5 1.0000 (1.0000)
+[2024-01-20 12:55:37] __main__ INFO: Epoch 119 Step 200/390 lr 0.010000 loss 0.0029 (0.0093) acc@1 1.0000 (0.9979) acc@5 1.0000 (1.0000)
+[2024-01-20 12:55:43] __main__ INFO: Epoch 119 Step 300/390 lr 0.010000 loss 0.0029 (0.0095) acc@1 1.0000 (0.9978) acc@5 1.0000 (1.0000)
+[2024-01-20 12:55:49] __main__ INFO: Epoch 119 Step 390/390 lr 0.010000 loss 0.0058 (0.0093) acc@1 1.0000 (0.9977) acc@5 1.0000 (1.0000)
+[2024-01-20 12:55:49] __main__ INFO: Elapsed 25.93
+[2024-01-20 12:55:49] __main__ INFO: Val 119
+[2024-01-20 12:55:50] __main__ INFO: Epoch 119 loss 0.3870 acc@1 0.9166 acc@5 0.9964
+[2024-01-20 12:55:50] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:55:50] __main__ INFO: Train 120 46410
+[2024-01-20 12:55:57] __main__ INFO: Epoch 120 Step 100/390 lr 0.010000 loss 0.0045 (0.0083) acc@1 1.0000 (0.9981) acc@5 1.0000 (1.0000)
+[2024-01-20 12:56:04] __main__ INFO: Epoch 120 Step 200/390 lr 0.010000 loss 0.0057 (0.0090) acc@1 1.0000 (0.9978) acc@5 1.0000 (1.0000)
+[2024-01-20 12:56:10] __main__ INFO: Epoch 120 Step 300/390 lr 0.010000 loss 0.0029 (0.0092) acc@1 1.0000 (0.9977) acc@5 1.0000 (1.0000)
+[2024-01-20 12:56:16] __main__ INFO: Epoch 120 Step 390/390 lr 0.010000 loss 0.0064 (0.0093) acc@1 1.0000 (0.9977) acc@5 1.0000 (1.0000)
+[2024-01-20 12:56:16] __main__ INFO: Elapsed 26.00
+[2024-01-20 12:56:16] __main__ INFO: Val 120
+[2024-01-20 12:56:18] __main__ INFO: Epoch 120 loss 0.3933 acc@1 0.9178 acc@5 0.9965
+[2024-01-20 12:56:18] __main__ INFO: Elapsed 1.11
+[2024-01-20 12:56:18] __main__ INFO: Train 121 46800
+[2024-01-20 12:56:24] __main__ INFO: Epoch 121 Step 100/390 lr 0.001000 loss 0.0024 (0.0088) acc@1 1.0000 (0.9974) acc@5 1.0000 (1.0000)
+[2024-01-20 12:56:31] __main__ INFO: Epoch 121 Step 200/390 lr 0.001000 loss 0.0124 (0.0088) acc@1 0.9922 (0.9976) acc@5 1.0000 (1.0000)
+[2024-01-20 12:56:37] __main__ INFO: Epoch 121 Step 300/390 lr 0.001000 loss 0.0068 (0.0085) acc@1 1.0000 (0.9977) acc@5 1.0000 (1.0000)
+[2024-01-20 12:56:43] __main__ INFO: Epoch 121 Step 390/390 lr 0.001000 loss 0.0024 (0.0082) acc@1 1.0000 (0.9978) acc@5 1.0000 (1.0000)
+[2024-01-20 12:56:43] __main__ INFO: Elapsed 25.87
+[2024-01-20 12:56:43] __main__ INFO: Val 121
+[2024-01-20 12:56:44] __main__ INFO: Epoch 121 loss 0.3845 acc@1 0.9199 acc@5 0.9966
+[2024-01-20 12:56:44] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:56:44] __main__ INFO: Train 122 47190
+[2024-01-20 12:56:51] __main__ INFO: Epoch 122 Step 100/390 lr 0.001000 loss 0.0131 (0.0089) acc@1 1.0000 (0.9977) acc@5 1.0000 (1.0000)
+[2024-01-20 12:56:58] __main__ INFO: Epoch 122 Step 200/390 lr 0.001000 loss 0.0285 (0.0081) acc@1 0.9922 (0.9980) acc@5 1.0000 (1.0000)
+[2024-01-20 12:57:04] __main__ INFO: Epoch 122 Step 300/390 lr 0.001000 loss 0.0014 (0.0076) acc@1 1.0000 (0.9982) acc@5 1.0000 (1.0000)
+[2024-01-20 12:57:10] __main__ INFO: Epoch 122 Step 390/390 lr 0.001000 loss 0.0038 (0.0073) acc@1 1.0000 (0.9983) acc@5 1.0000 (1.0000)
+[2024-01-20 12:57:10] __main__ INFO: Elapsed 25.91
+[2024-01-20 12:57:10] __main__ INFO: Val 122
+[2024-01-20 12:57:12] __main__ INFO: Epoch 122 loss 0.3800 acc@1 0.9204 acc@5 0.9968
+[2024-01-20 12:57:12] __main__ INFO: Elapsed 1.11
+[2024-01-20 12:57:12] __main__ INFO: Train 123 47580
+[2024-01-20 12:57:18] __main__ INFO: Epoch 123 Step 100/390 lr 0.001000 loss 0.0102 (0.0088) acc@1 0.9922 (0.9980) acc@5 1.0000 (0.9999)
+[2024-01-20 12:57:25] __main__ INFO: Epoch 123 Step 200/390 lr 0.001000 loss 0.0038 (0.0078) acc@1 1.0000 (0.9983) acc@5 1.0000 (1.0000)
+[2024-01-20 12:57:31] __main__ INFO: Epoch 123 Step 300/390 lr 0.001000 loss 0.0125 (0.0077) acc@1 0.9922 (0.9983) acc@5 1.0000 (1.0000)
+[2024-01-20 12:57:37] __main__ INFO: Epoch 123 Step 390/390 lr 0.001000 loss 0.0072 (0.0076) acc@1 1.0000 (0.9982) acc@5 1.0000 (1.0000)
+[2024-01-20 12:57:38] __main__ INFO: Elapsed 26.03
+[2024-01-20 12:57:38] __main__ INFO: Val 123
+[2024-01-20 12:57:39] __main__ INFO: Epoch 123 loss 0.3829 acc@1 0.9197 acc@5 0.9964
+[2024-01-20 12:57:39] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:57:39] __main__ INFO: Train 124 47970
+[2024-01-20 12:57:45] __main__ INFO: Epoch 124 Step 100/390 lr 0.001000 loss 0.0010 (0.0068) acc@1 1.0000 (0.9986) acc@5 1.0000 (1.0000)
+[2024-01-20 12:57:52] __main__ INFO: Epoch 124 Step 200/390 lr 0.001000 loss 0.0017 (0.0066) acc@1 1.0000 (0.9986) acc@5 1.0000 (1.0000)
+[2024-01-20 12:57:58] __main__ INFO: Epoch 124 Step 300/390 lr 0.001000 loss 0.0055 (0.0068) acc@1 1.0000 (0.9985) acc@5 1.0000 (1.0000)
+[2024-01-20 12:58:04] __main__ INFO: Epoch 124 Step 390/390 lr 0.001000 loss 0.0030 (0.0070) acc@1 1.0000 (0.9985) acc@5 1.0000 (1.0000)
+[2024-01-20 12:58:05] __main__ INFO: Elapsed 25.88
+[2024-01-20 12:58:05] __main__ INFO: Val 124
+[2024-01-20 12:58:06] __main__ INFO: Epoch 124 loss 0.3823 acc@1 0.9206 acc@5 0.9965
+[2024-01-20 12:58:06] __main__ INFO: Elapsed 1.12
+[2024-01-20 12:58:06] __main__ INFO: Train 125 48360
+[2024-01-20 12:58:12] __main__ INFO: Epoch 125 Step 100/390 lr 0.001000 loss 0.0035 (0.0067) acc@1 1.0000 (0.9986) acc@5 1.0000 (1.0000)
+[2024-01-20 12:58:19] __main__ INFO: Epoch 125 Step 200/390 lr 0.001000 loss 0.0039 (0.0068) acc@1 1.0000 (0.9986) acc@5 1.0000 (1.0000)
+[2024-01-20 12:58:26] __main__ INFO: Epoch 125 Step 300/390 lr 0.001000 loss 0.0109 (0.0068) acc@1 1.0000 (0.9986) acc@5 1.0000 (1.0000)
+[2024-01-20 12:58:32] __main__ INFO: Epoch 125 Step 390/390 lr 0.001000 loss 0.0058 (0.0068) acc@1 1.0000 (0.9986) acc@5 1.0000 (1.0000)
+[2024-01-20 12:58:32] __main__ INFO: Elapsed 25.95
+[2024-01-20 12:58:32] __main__ INFO: Val 125
+[2024-01-20 12:58:33] __main__ INFO: Epoch 125 loss 0.3832 acc@1 0.9204 acc@5 0.9967
+[2024-01-20 12:58:33] __main__ INFO: Elapsed 1.11
+[2024-01-20 12:58:33] __main__ INFO: Train 126 48750
+[2024-01-20 12:58:40] __main__ INFO: Epoch 126 Step 100/390 lr 0.001000 loss 0.0033 (0.0080) acc@1 1.0000 (0.9980) acc@5 1.0000 (1.0000)
+[2024-01-20 12:58:46] __main__ INFO: Epoch 126 Step 200/390 lr 0.001000 loss 0.0071 (0.0072) acc@1 1.0000 (0.9983) acc@5 1.0000 (1.0000)
+[2024-01-20 12:58:53] __main__ INFO: Epoch 126 Step 300/390 lr 0.001000 loss 0.0077 (0.0069) acc@1 1.0000 (0.9985) acc@5 1.0000 (1.0000)
+[2024-01-20 12:58:59] __main__ INFO: Epoch 126 Step 390/390 lr 0.001000 loss 0.0115 (0.0068) acc@1 1.0000 (0.9984) acc@5 1.0000 (1.0000)
+[2024-01-20 12:58:59] __main__ INFO: Elapsed 26.27
+[2024-01-20 12:58:59] __main__ INFO: Val 126
+[2024-01-20 12:59:00] __main__ INFO: Epoch 126 loss 0.3804 acc@1 0.9200 acc@5 0.9967
+[2024-01-20 12:59:00] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:59:00] __main__ INFO: Train 127 49140
+[2024-01-20 12:59:07] __main__ INFO: Epoch 127 Step 100/390 lr 0.001000 loss 0.0021 (0.0064) acc@1 1.0000 (0.9988) acc@5 1.0000 (1.0000)
+[2024-01-20 12:59:14] __main__ INFO: Epoch 127 Step 200/390 lr 0.001000 loss 0.0019 (0.0066) acc@1 1.0000 (0.9986) acc@5 1.0000 (1.0000)
+[2024-01-20 12:59:20] __main__ INFO: Epoch 127 Step 300/390 lr 0.001000 loss 0.0021 (0.0070) acc@1 1.0000 (0.9985) acc@5 1.0000 (1.0000)
+[2024-01-20 12:59:26] __main__ INFO: Epoch 127 Step 390/390 lr 0.001000 loss 0.0047 (0.0073) acc@1 1.0000 (0.9984) acc@5 1.0000 (1.0000)
+[2024-01-20 12:59:26] __main__ INFO: Elapsed 25.84
+[2024-01-20 12:59:26] __main__ INFO: Val 127
+[2024-01-20 12:59:27] __main__ INFO: Epoch 127 loss 0.3795 acc@1 0.9202 acc@5 0.9967
+[2024-01-20 12:59:27] __main__ INFO: Elapsed 1.09
+[2024-01-20 12:59:27] __main__ INFO: Train 128 49530
+[2024-01-20 12:59:34] __main__ INFO: Epoch 128 Step 100/390 lr 0.001000 loss 0.0039 (0.0076) acc@1 1.0000 (0.9980) acc@5 1.0000 (1.0000)
+[2024-01-20 12:59:41] __main__ INFO: Epoch 128 Step 200/390 lr 0.001000 loss 0.0028 (0.0072) acc@1 1.0000 (0.9984) acc@5 1.0000 (1.0000)
+[2024-01-20 12:59:47] __main__ INFO: Epoch 128 Step 300/390 lr 0.001000 loss 0.0064 (0.0069) acc@1 1.0000 (0.9986) acc@5 1.0000 (1.0000)
+[2024-01-20 12:59:53] __main__ INFO: Epoch 128 Step 390/390 lr 0.001000 loss 0.0021 (0.0069) acc@1 1.0000 (0.9985) acc@5 1.0000 (1.0000)
+[2024-01-20 12:59:53] __main__ INFO: Elapsed 26.04
+[2024-01-20 12:59:53] __main__ INFO: Val 128
+[2024-01-20 12:59:54] __main__ INFO: Epoch 128 loss 0.3839 acc@1 0.9195 acc@5 0.9965
+[2024-01-20 12:59:54] __main__ INFO: Elapsed 1.06
+[2024-01-20 12:59:54] __main__ INFO: Train 129 49920
+[2024-01-20 13:00:01] __main__ INFO: Epoch 129 Step 100/390 lr 0.001000 loss 0.0039 (0.0067) acc@1 1.0000 (0.9985) acc@5 1.0000 (1.0000)
+[2024-01-20 13:00:08] __main__ INFO: Epoch 129 Step 200/390 lr 0.001000 loss 0.0149 (0.0065) acc@1 1.0000 (0.9986) acc@5 1.0000 (1.0000)
+[2024-01-20 13:00:14] __main__ INFO: Epoch 129 Step 300/390 lr 0.001000 loss 0.0072 (0.0063) acc@1 1.0000 (0.9987) acc@5 1.0000 (1.0000)
+[2024-01-20 13:00:20] __main__ INFO: Epoch 129 Step 390/390 lr 0.001000 loss 0.0075 (0.0062) acc@1 1.0000 (0.9987) acc@5 1.0000 (1.0000)
+[2024-01-20 13:00:20] __main__ INFO: Elapsed 26.35
+[2024-01-20 13:00:20] __main__ INFO: Val 129
+[2024-01-20 13:00:22] __main__ INFO: Epoch 129 loss 0.3810 acc@1 0.9203 acc@5 0.9968
+[2024-01-20 13:00:22] __main__ INFO: Elapsed 1.12
+[2024-01-20 13:00:22] __main__ INFO: Train 130 50310
+[2024-01-20 13:00:28] __main__ INFO: Epoch 130 Step 100/390 lr 0.001000 loss 0.0011 (0.0069) acc@1 1.0000 (0.9986) acc@5 1.0000 (1.0000)
+[2024-01-20 13:00:35] __main__ INFO: Epoch 130 Step 200/390 lr 0.001000 loss 0.0016 (0.0064) acc@1 1.0000 (0.9986) acc@5 1.0000 (1.0000)
+[2024-01-20 13:00:42] __main__ INFO: Epoch 130 Step 300/390 lr 0.001000 loss 0.0017 (0.0066) acc@1 1.0000 (0.9985) acc@5 1.0000 (1.0000)
+[2024-01-20 13:00:47] __main__ INFO: Epoch 130 Step 390/390 lr 0.001000 loss 0.0071 (0.0064) acc@1 1.0000 (0.9986) acc@5 1.0000 (1.0000)
+[2024-01-20 13:00:48] __main__ INFO: Elapsed 25.94
+[2024-01-20 13:00:48] __main__ INFO: Val 130
+[2024-01-20 13:00:49] __main__ INFO: Epoch 130 loss 0.3791 acc@1 0.9207 acc@5 0.9963
+[2024-01-20 13:00:49] __main__ INFO: Elapsed 1.12
+[2024-01-20 13:00:49] __main__ INFO: Train 131 50700
+[2024-01-20 13:00:56] __main__ INFO: Epoch 131 Step 100/390 lr 0.001000 loss 0.0046 (0.0060) acc@1 1.0000 (0.9985) acc@5 1.0000 (1.0000)
+[2024-01-20 13:01:02] __main__ INFO: Epoch 131 Step 200/390 lr 0.001000 loss 0.0011 (0.0065) acc@1 1.0000 (0.9986) acc@5 1.0000 (1.0000)
+[2024-01-20 13:01:09] __main__ INFO: Epoch 131 Step 300/390 lr 0.001000 loss 0.0089 (0.0064) acc@1 0.9922 (0.9985) acc@5 1.0000 (1.0000)
+[2024-01-20 13:01:15] __main__ INFO: Epoch 131 Step 390/390 lr 0.001000 loss 0.0018 (0.0062) acc@1 1.0000 (0.9986) acc@5 1.0000 (1.0000)
+[2024-01-20 13:01:15] __main__ INFO: Elapsed 26.30
+[2024-01-20 13:01:15] __main__ INFO: Val 131
+[2024-01-20 13:01:16] __main__ INFO: Epoch 131 loss 0.3819 acc@1 0.9203 acc@5 0.9964
+[2024-01-20 13:01:16] __main__ INFO: Elapsed 1.12
+[2024-01-20 13:01:16] __main__ INFO: Train 132 51090
+[2024-01-20 13:01:23] __main__ INFO: Epoch 132 Step 100/390 lr 0.001000 loss 0.0013 (0.0057) acc@1 1.0000 (0.9988) acc@5 1.0000 (1.0000)
+[2024-01-20 13:01:30] __main__ INFO: Epoch 132 Step 200/390 lr 0.001000 loss 0.0115 (0.0059) acc@1 0.9922 (0.9986) acc@5 1.0000 (1.0000)
+[2024-01-20 13:01:36] __main__ INFO: Epoch 132 Step 300/390 lr 0.001000 loss 0.0026 (0.0059) acc@1 1.0000 (0.9987) acc@5 1.0000 (1.0000)
+[2024-01-20 13:01:42] __main__ INFO: Epoch 132 Step 390/390 lr 0.001000 loss 0.0028 (0.0060) acc@1 1.0000 (0.9987) acc@5 1.0000 (1.0000)
+[2024-01-20 13:01:42] __main__ INFO: Elapsed 26.10
+[2024-01-20 13:01:42] __main__ INFO: Val 132
+[2024-01-20 13:01:43] __main__ INFO: Epoch 132 loss 0.3822 acc@1 0.9197 acc@5 0.9964
+[2024-01-20 13:01:43] __main__ INFO: Elapsed 1.14
+[2024-01-20 13:01:43] __main__ INFO: Train 133 51480
+[2024-01-20 13:01:50] __main__ INFO: Epoch 133 Step 100/390 lr 0.001000 loss 0.0099 (0.0062) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:01:57] __main__ INFO: Epoch 133 Step 200/390 lr 0.001000 loss 0.0049 (0.0060) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:02:04] __main__ INFO: Epoch 133 Step 300/390 lr 0.001000 loss 0.0062 (0.0061) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:02:10] __main__ INFO: Epoch 133 Step 390/390 lr 0.001000 loss 0.0020 (0.0059) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:02:10] __main__ INFO: Elapsed 26.42
+[2024-01-20 13:02:10] __main__ INFO: Val 133
+[2024-01-20 13:02:11] __main__ INFO: Epoch 133 loss 0.3807 acc@1 0.9204 acc@5 0.9965
+[2024-01-20 13:02:11] __main__ INFO: Elapsed 1.13
+[2024-01-20 13:02:11] __main__ INFO: Train 134 51870
+[2024-01-20 13:02:18] __main__ INFO: Epoch 134 Step 100/390 lr 0.001000 loss 0.0025 (0.0068) acc@1 1.0000 (0.9987) acc@5 1.0000 (1.0000)
+[2024-01-20 13:02:24] __main__ INFO: Epoch 134 Step 200/390 lr 0.001000 loss 0.0018 (0.0063) acc@1 1.0000 (0.9988) acc@5 1.0000 (1.0000)
+[2024-01-20 13:02:31] __main__ INFO: Epoch 134 Step 300/390 lr 0.001000 loss 0.0022 (0.0063) acc@1 1.0000 (0.9987) acc@5 1.0000 (1.0000)
+[2024-01-20 13:02:37] __main__ INFO: Epoch 134 Step 390/390 lr 0.001000 loss 0.0017 (0.0062) acc@1 1.0000 (0.9987) acc@5 1.0000 (1.0000)
+[2024-01-20 13:02:37] __main__ INFO: Elapsed 26.13
+[2024-01-20 13:02:37] __main__ INFO: Val 134
+[2024-01-20 13:02:38] __main__ INFO: Epoch 134 loss 0.3844 acc@1 0.9202 acc@5 0.9963
+[2024-01-20 13:02:38] __main__ INFO: Elapsed 1.10
+[2024-01-20 13:02:38] __main__ INFO: Train 135 52260
+[2024-01-20 13:02:45] __main__ INFO: Epoch 135 Step 100/390 lr 0.001000 loss 0.0022 (0.0057) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:02:52] __main__ INFO: Epoch 135 Step 200/390 lr 0.001000 loss 0.0053 (0.0057) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:02:58] __main__ INFO: Epoch 135 Step 300/390 lr 0.001000 loss 0.0021 (0.0057) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:03:04] __main__ INFO: Epoch 135 Step 390/390 lr 0.001000 loss 0.0027 (0.0057) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:03:04] __main__ INFO: Elapsed 26.21
+[2024-01-20 13:03:04] __main__ INFO: Val 135
+[2024-01-20 13:03:05] __main__ INFO: Epoch 135 loss 0.3826 acc@1 0.9205 acc@5 0.9965
+[2024-01-20 13:03:05] __main__ INFO: Elapsed 1.09
+[2024-01-20 13:03:05] __main__ INFO: Train 136 52650
+[2024-01-20 13:03:12] __main__ INFO: Epoch 136 Step 100/390 lr 0.001000 loss 0.0027 (0.0059) acc@1 1.0000 (0.9988) acc@5 1.0000 (1.0000)
+[2024-01-20 13:03:19] __main__ INFO: Epoch 136 Step 200/390 lr 0.001000 loss 0.0086 (0.0057) acc@1 1.0000 (0.9988) acc@5 1.0000 (1.0000)
+[2024-01-20 13:03:25] __main__ INFO: Epoch 136 Step 300/390 lr 0.001000 loss 0.0075 (0.0057) acc@1 0.9922 (0.9987) acc@5 1.0000 (1.0000)
+[2024-01-20 13:03:31] __main__ INFO: Epoch 136 Step 390/390 lr 0.001000 loss 0.0016 (0.0057) acc@1 1.0000 (0.9987) acc@5 1.0000 (1.0000)
+[2024-01-20 13:03:32] __main__ INFO: Elapsed 26.10
+[2024-01-20 13:03:32] __main__ INFO: Val 136
+[2024-01-20 13:03:33] __main__ INFO: Epoch 136 loss 0.3863 acc@1 0.9202 acc@5 0.9963
+[2024-01-20 13:03:33] __main__ INFO: Elapsed 1.07
+[2024-01-20 13:03:33] __main__ INFO: Train 137 53040
+[2024-01-20 13:03:40] __main__ INFO: Epoch 137 Step 100/390 lr 0.001000 loss 0.0164 (0.0052) acc@1 0.9922 (0.9993) acc@5 1.0000 (1.0000)
+[2024-01-20 13:03:46] __main__ INFO: Epoch 137 Step 200/390 lr 0.001000 loss 0.0049 (0.0051) acc@1 1.0000 (0.9993) acc@5 1.0000 (1.0000)
+[2024-01-20 13:03:53] __main__ INFO: Epoch 137 Step 300/390 lr 0.001000 loss 0.0022 (0.0052) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:03:59] __main__ INFO: Epoch 137 Step 390/390 lr 0.001000 loss 0.0003 (0.0053) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:03:59] __main__ INFO: Elapsed 26.23
+[2024-01-20 13:03:59] __main__ INFO: Val 137
+[2024-01-20 13:04:00] __main__ INFO: Epoch 137 loss 0.3831 acc@1 0.9202 acc@5 0.9963
+[2024-01-20 13:04:00] __main__ INFO: Elapsed 1.10
+[2024-01-20 13:04:00] __main__ INFO: Train 138 53430
+[2024-01-20 13:04:07] __main__ INFO: Epoch 138 Step 100/390 lr 0.001000 loss 0.0047 (0.0052) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:04:14] __main__ INFO: Epoch 138 Step 200/390 lr 0.001000 loss 0.0023 (0.0056) acc@1 1.0000 (0.9989) acc@5 1.0000 (1.0000)
+[2024-01-20 13:04:20] __main__ INFO: Epoch 138 Step 300/390 lr 0.001000 loss 0.0118 (0.0054) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:04:26] __main__ INFO: Epoch 138 Step 390/390 lr 0.001000 loss 0.0020 (0.0055) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:04:26] __main__ INFO: Elapsed 26.21
+[2024-01-20 13:04:26] __main__ INFO: Val 138
+[2024-01-20 13:04:27] __main__ INFO: Epoch 138 loss 0.3843 acc@1 0.9205 acc@5 0.9964
+[2024-01-20 13:04:27] __main__ INFO: Elapsed 1.09
+[2024-01-20 13:04:27] __main__ INFO: Train 139 53820
+[2024-01-20 13:04:34] __main__ INFO: Epoch 139 Step 100/390 lr 0.001000 loss 0.0041 (0.0049) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:04:41] __main__ INFO: Epoch 139 Step 200/390 lr 0.001000 loss 0.0062 (0.0053) acc@1 1.0000 (0.9989) acc@5 1.0000 (1.0000)
+[2024-01-20 13:04:47] __main__ INFO: Epoch 139 Step 300/390 lr 0.001000 loss 0.0039 (0.0053) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:04:53] __main__ INFO: Epoch 139 Step 390/390 lr 0.001000 loss 0.0086 (0.0053) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:04:53] __main__ INFO: Elapsed 26.09
+[2024-01-20 13:04:53] __main__ INFO: Val 139
+[2024-01-20 13:04:54] __main__ INFO: Epoch 139 loss 0.3862 acc@1 0.9203 acc@5 0.9965
+[2024-01-20 13:04:54] __main__ INFO: Elapsed 1.09
+[2024-01-20 13:04:54] __main__ INFO: Train 140 54210
+[2024-01-20 13:05:01] __main__ INFO: Epoch 140 Step 100/390 lr 0.001000 loss 0.0024 (0.0043) acc@1 1.0000 (0.9994) acc@5 1.0000 (1.0000)
+[2024-01-20 13:05:08] __main__ INFO: Epoch 140 Step 200/390 lr 0.001000 loss 0.0067 (0.0047) acc@1 1.0000 (0.9993) acc@5 1.0000 (1.0000)
+[2024-01-20 13:05:14] __main__ INFO: Epoch 140 Step 300/390 lr 0.001000 loss 0.0070 (0.0050) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:05:20] __main__ INFO: Epoch 140 Step 390/390 lr 0.001000 loss 0.0018 (0.0050) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:05:20] __main__ INFO: Elapsed 25.85
+[2024-01-20 13:05:20] __main__ INFO: Val 140
+[2024-01-20 13:05:21] __main__ INFO: Epoch 140 loss 0.3877 acc@1 0.9202 acc@5 0.9967
+[2024-01-20 13:05:21] __main__ INFO: Elapsed 1.10
+[2024-01-20 13:05:21] __main__ INFO: Train 141 54600
+[2024-01-20 13:05:28] __main__ INFO: Epoch 141 Step 100/390 lr 0.001000 loss 0.0087 (0.0050) acc@1 0.9922 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:05:35] __main__ INFO: Epoch 141 Step 200/390 lr 0.001000 loss 0.0054 (0.0052) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:05:41] __main__ INFO: Epoch 141 Step 300/390 lr 0.001000 loss 0.0022 (0.0054) acc@1 1.0000 (0.9988) acc@5 1.0000 (1.0000)
+[2024-01-20 13:05:47] __main__ INFO: Epoch 141 Step 390/390 lr 0.001000 loss 0.0032 (0.0054) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:05:47] __main__ INFO: Elapsed 26.06
+[2024-01-20 13:05:47] __main__ INFO: Val 141
+[2024-01-20 13:05:49] __main__ INFO: Epoch 141 loss 0.3825 acc@1 0.9197 acc@5 0.9963
+[2024-01-20 13:05:49] __main__ INFO: Elapsed 1.08
+[2024-01-20 13:05:49] __main__ INFO: Train 142 54990
+[2024-01-20 13:05:55] __main__ INFO: Epoch 142 Step 100/390 lr 0.001000 loss 0.0109 (0.0052) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:06:02] __main__ INFO: Epoch 142 Step 200/390 lr 0.001000 loss 0.0041 (0.0053) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:06:09] __main__ INFO: Epoch 142 Step 300/390 lr 0.001000 loss 0.0045 (0.0053) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:06:15] __main__ INFO: Epoch 142 Step 390/390 lr 0.001000 loss 0.0043 (0.0053) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:06:15] __main__ INFO: Elapsed 26.17
+[2024-01-20 13:06:15] __main__ INFO: Val 142
+[2024-01-20 13:06:16] __main__ INFO: Epoch 142 loss 0.3853 acc@1 0.9196 acc@5 0.9965
+[2024-01-20 13:06:16] __main__ INFO: Elapsed 1.07
+[2024-01-20 13:06:16] __main__ INFO: Train 143 55380
+[2024-01-20 13:06:23] __main__ INFO: Epoch 143 Step 100/390 lr 0.001000 loss 0.0023 (0.0049) acc@1 1.0000 (0.9988) acc@5 1.0000 (1.0000)
+[2024-01-20 13:06:29] __main__ INFO: Epoch 143 Step 200/390 lr 0.001000 loss 0.0026 (0.0049) acc@1 1.0000 (0.9989) acc@5 1.0000 (1.0000)
+[2024-01-20 13:06:36] __main__ INFO: Epoch 143 Step 300/390 lr 0.001000 loss 0.0045 (0.0048) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:06:42] __main__ INFO: Epoch 143 Step 390/390 lr 0.001000 loss 0.0043 (0.0049) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:06:42] __main__ INFO: Elapsed 26.21
+[2024-01-20 13:06:42] __main__ INFO: Val 143
+[2024-01-20 13:06:43] __main__ INFO: Epoch 143 loss 0.3857 acc@1 0.9206 acc@5 0.9967
+[2024-01-20 13:06:43] __main__ INFO: Elapsed 1.09
+[2024-01-20 13:06:43] __main__ INFO: Train 144 55770
+[2024-01-20 13:06:50] __main__ INFO: Epoch 144 Step 100/390 lr 0.001000 loss 0.0042 (0.0052) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:06:57] __main__ INFO: Epoch 144 Step 200/390 lr 0.001000 loss 0.0040 (0.0051) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:07:03] __main__ INFO: Epoch 144 Step 300/390 lr 0.001000 loss 0.0023 (0.0052) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:07:09] __main__ INFO: Epoch 144 Step 390/390 lr 0.001000 loss 0.0015 (0.0053) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:07:09] __main__ INFO: Elapsed 26.33
+[2024-01-20 13:07:09] __main__ INFO: Val 144
+[2024-01-20 13:07:11] __main__ INFO: Epoch 144 loss 0.3845 acc@1 0.9206 acc@5 0.9963
+[2024-01-20 13:07:11] __main__ INFO: Elapsed 1.13
+[2024-01-20 13:07:11] __main__ INFO: Train 145 56160
+[2024-01-20 13:07:18] __main__ INFO: Epoch 145 Step 100/390 lr 0.001000 loss 0.0028 (0.0055) acc@1 1.0000 (0.9988) acc@5 1.0000 (1.0000)
+[2024-01-20 13:07:24] __main__ INFO: Epoch 145 Step 200/390 lr 0.001000 loss 0.0256 (0.0056) acc@1 0.9922 (0.9987) acc@5 1.0000 (1.0000)
+[2024-01-20 13:07:31] __main__ INFO: Epoch 145 Step 300/390 lr 0.001000 loss 0.0026 (0.0055) acc@1 1.0000 (0.9988) acc@5 1.0000 (1.0000)
+[2024-01-20 13:07:37] __main__ INFO: Epoch 145 Step 390/390 lr 0.001000 loss 0.0012 (0.0054) acc@1 1.0000 (0.9989) acc@5 1.0000 (1.0000)
+[2024-01-20 13:07:37] __main__ INFO: Elapsed 26.20
+[2024-01-20 13:07:37] __main__ INFO: Val 145
+[2024-01-20 13:07:38] __main__ INFO: Epoch 145 loss 0.3838 acc@1 0.9203 acc@5 0.9963
+[2024-01-20 13:07:38] __main__ INFO: Elapsed 1.09
+[2024-01-20 13:07:38] __main__ INFO: Train 146 56550
+[2024-01-20 13:07:45] __main__ INFO: Epoch 146 Step 100/390 lr 0.001000 loss 0.0017 (0.0051) acc@1 1.0000 (0.9989) acc@5 1.0000 (1.0000)
+[2024-01-20 13:07:51] __main__ INFO: Epoch 146 Step 200/390 lr 0.001000 loss 0.0096 (0.0051) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:07:58] __main__ INFO: Epoch 146 Step 300/390 lr 0.001000 loss 0.0014 (0.0053) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:08:04] __main__ INFO: Epoch 146 Step 390/390 lr 0.001000 loss 0.0035 (0.0054) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:08:04] __main__ INFO: Elapsed 26.01
+[2024-01-20 13:08:04] __main__ INFO: Val 146
+[2024-01-20 13:08:05] __main__ INFO: Epoch 146 loss 0.3870 acc@1 0.9199 acc@5 0.9963
+[2024-01-20 13:08:05] __main__ INFO: Elapsed 1.11
+[2024-01-20 13:08:05] __main__ INFO: Train 147 56940
+[2024-01-20 13:08:12] __main__ INFO: Epoch 147 Step 100/390 lr 0.001000 loss 0.0030 (0.0053) acc@1 1.0000 (0.9989) acc@5 1.0000 (1.0000)
+[2024-01-20 13:08:19] __main__ INFO: Epoch 147 Step 200/390 lr 0.001000 loss 0.0023 (0.0049) acc@1 1.0000 (0.9993) acc@5 1.0000 (1.0000)
+[2024-01-20 13:08:25] __main__ INFO: Epoch 147 Step 300/390 lr 0.001000 loss 0.0015 (0.0051) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:08:31] __main__ INFO: Epoch 147 Step 390/390 lr 0.001000 loss 0.0026 (0.0051) acc@1 1.0000 (0.9989) acc@5 1.0000 (1.0000)
+[2024-01-20 13:08:31] __main__ INFO: Elapsed 26.32
+[2024-01-20 13:08:31] __main__ INFO: Val 147
+[2024-01-20 13:08:32] __main__ INFO: Epoch 147 loss 0.3849 acc@1 0.9203 acc@5 0.9962
+[2024-01-20 13:08:32] __main__ INFO: Elapsed 1.12
+[2024-01-20 13:08:32] __main__ INFO: Train 148 57330
+[2024-01-20 13:08:39] __main__ INFO: Epoch 148 Step 100/390 lr 0.001000 loss 0.0020 (0.0054) acc@1 1.0000 (0.9988) acc@5 1.0000 (1.0000)
+[2024-01-20 13:08:46] __main__ INFO: Epoch 148 Step 200/390 lr 0.001000 loss 0.0025 (0.0052) acc@1 1.0000 (0.9989) acc@5 1.0000 (1.0000)
+[2024-01-20 13:08:52] __main__ INFO: Epoch 148 Step 300/390 lr 0.001000 loss 0.0090 (0.0052) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:08:59] __main__ INFO: Epoch 148 Step 390/390 lr 0.001000 loss 0.0007 (0.0053) acc@1 1.0000 (0.9989) acc@5 1.0000 (1.0000)
+[2024-01-20 13:08:59] __main__ INFO: Elapsed 26.17
+[2024-01-20 13:08:59] __main__ INFO: Val 148
+[2024-01-20 13:09:00] __main__ INFO: Epoch 148 loss 0.3845 acc@1 0.9208 acc@5 0.9965
+[2024-01-20 13:09:00] __main__ INFO: Elapsed 1.08
+[2024-01-20 13:09:00] __main__ INFO: Train 149 57720
+[2024-01-20 13:09:06] __main__ INFO: Epoch 149 Step 100/390 lr 0.001000 loss 0.0079 (0.0054) acc@1 1.0000 (0.9988) acc@5 1.0000 (1.0000)
+[2024-01-20 13:09:13] __main__ INFO: Epoch 149 Step 200/390 lr 0.001000 loss 0.0037 (0.0054) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:09:19] __main__ INFO: Epoch 149 Step 300/390 lr 0.001000 loss 0.0043 (0.0055) acc@1 1.0000 (0.9989) acc@5 1.0000 (1.0000)
+[2024-01-20 13:09:25] __main__ INFO: Epoch 149 Step 390/390 lr 0.001000 loss 0.0020 (0.0055) acc@1 1.0000 (0.9989) acc@5 1.0000 (1.0000)
+[2024-01-20 13:09:25] __main__ INFO: Elapsed 25.80
+[2024-01-20 13:09:25] __main__ INFO: Val 149
+[2024-01-20 13:09:27] __main__ INFO: Epoch 149 loss 0.3880 acc@1 0.9214 acc@5 0.9965
+[2024-01-20 13:09:27] __main__ INFO: Elapsed 1.06
+[2024-01-20 13:09:27] __main__ INFO: Train 150 58110
+[2024-01-20 13:09:33] __main__ INFO: Epoch 150 Step 100/390 lr 0.001000 loss 0.0033 (0.0063) acc@1 1.0000 (0.9986) acc@5 1.0000 (1.0000)
+[2024-01-20 13:09:40] __main__ INFO: Epoch 150 Step 200/390 lr 0.001000 loss 0.0081 (0.0056) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:09:46] __main__ INFO: Epoch 150 Step 300/390 lr 0.001000 loss 0.0120 (0.0053) acc@1 0.9922 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:09:52] __main__ INFO: Epoch 150 Step 390/390 lr 0.001000 loss 0.0090 (0.0053) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:09:52] __main__ INFO: Elapsed 25.85
+[2024-01-20 13:09:52] __main__ INFO: Val 150
+[2024-01-20 13:09:53] __main__ INFO: Epoch 150 loss 0.3850 acc@1 0.9202 acc@5 0.9965
+[2024-01-20 13:09:53] __main__ INFO: Elapsed 1.04
+[2024-01-20 13:09:53] __main__ INFO: Train 151 58500
+[2024-01-20 13:10:00] __main__ INFO: Epoch 151 Step 100/390 lr 0.001000 loss 0.0014 (0.0047) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:10:07] __main__ INFO: Epoch 151 Step 200/390 lr 0.001000 loss 0.0074 (0.0051) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:10:14] __main__ INFO: Epoch 151 Step 300/390 lr 0.001000 loss 0.0014 (0.0051) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:10:20] __main__ INFO: Epoch 151 Step 390/390 lr 0.001000 loss 0.0056 (0.0049) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:10:20] __main__ INFO: Elapsed 26.19
+[2024-01-20 13:10:20] __main__ INFO: Val 151
+[2024-01-20 13:10:21] __main__ INFO: Epoch 151 loss 0.3882 acc@1 0.9204 acc@5 0.9966
+[2024-01-20 13:10:21] __main__ INFO: Elapsed 1.04
+[2024-01-20 13:10:21] __main__ INFO: Train 152 58890
+[2024-01-20 13:10:27] __main__ INFO: Epoch 152 Step 100/390 lr 0.001000 loss 0.0051 (0.0046) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[2024-01-20 13:10:34] __main__ INFO: Epoch 152 Step 200/390 lr 0.001000 loss 0.0023 (0.0049) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:10:41] __main__ INFO: Epoch 152 Step 300/390 lr 0.001000 loss 0.0020 (0.0050) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:10:47] __main__ INFO: Epoch 152 Step 390/390 lr 0.001000 loss 0.0026 (0.0049) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:10:47] __main__ INFO: Elapsed 25.99
+[2024-01-20 13:10:47] __main__ INFO: Val 152
+[2024-01-20 13:10:48] __main__ INFO: Epoch 152 loss 0.3848 acc@1 0.9199 acc@5 0.9966
+[2024-01-20 13:10:48] __main__ INFO: Elapsed 1.08
+[2024-01-20 13:10:48] __main__ INFO: Train 153 59280
+[2024-01-20 13:10:55] __main__ INFO: Epoch 153 Step 100/390 lr 0.001000 loss 0.0029 (0.0048) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:11:01] __main__ INFO: Epoch 153 Step 200/390 lr 0.001000 loss 0.0053 (0.0049) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:11:07] __main__ INFO: Epoch 153 Step 300/390 lr 0.001000 loss 0.0004 (0.0048) acc@1 1.0000 (0.9992) acc@5 1.0000 (1.0000)
+[2024-01-20 13:11:13] __main__ INFO: Epoch 153 Step 390/390 lr 0.001000 loss 0.0052 (0.0049) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:11:13] __main__ INFO: Elapsed 25.73
+[2024-01-20 13:11:13] __main__ INFO: Val 153
+[2024-01-20 13:11:15] __main__ INFO: Epoch 153 loss 0.3910 acc@1 0.9202 acc@5 0.9969
+[2024-01-20 13:11:15] __main__ INFO: Elapsed 1.11
+[2024-01-20 13:11:15] __main__ INFO: Train 154 59670
+[2024-01-20 13:11:21] __main__ INFO: Epoch 154 Step 100/390 lr 0.001000 loss 0.0110 (0.0049) acc@1 0.9922 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:11:28] __main__ INFO: Epoch 154 Step 200/390 lr 0.001000 loss 0.0030 (0.0050) acc@1 1.0000 (0.9989) acc@5 1.0000 (1.0000)
+[2024-01-20 13:11:35] __main__ INFO: Epoch 154 Step 300/390 lr 0.001000 loss 0.0032 (0.0049) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:11:41] __main__ INFO: Epoch 154 Step 390/390 lr 0.001000 loss 0.0054 (0.0049) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[2024-01-20 13:11:41] __main__ INFO: Elapsed 26.09
+[2024-01-20 13:11:41] __main__ INFO: Val 154
+[2024-01-20 13:11:42] __main__ INFO: Epoch 154 loss 0.3866 acc@1 0.9198 acc@5 0.9968
+[2024-01-20 13:11:42] __main__ INFO: Elapsed 1.08
+[2024-01-20 13:11:42] __main__ INFO: Train 155 60060
+[2024-01-20 13:11:49] __main__ INFO: Epoch 155 Step 100/390 lr 0.001000 loss 0.0019 (0.0049) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:11:55] __main__ INFO: Epoch 155 Step 200/390 lr 0.001000 loss 0.0018 (0.0048) acc@1 1.0000 (0.9993) acc@5 1.0000 (1.0000)
+[2024-01-20 13:12:02] __main__ INFO: Epoch 155 Step 300/390 lr 0.001000 loss 0.0016 (0.0047) acc@1 1.0000 (0.9992) acc@5 1.0000 (1.0000)
+[2024-01-20 13:12:08] __main__ INFO: Epoch 155 Step 390/390 lr 0.001000 loss 0.0020 (0.0048) acc@1 1.0000 (0.9992) acc@5 1.0000 (1.0000)
+[2024-01-20 13:12:08] __main__ INFO: Elapsed 26.01
+[2024-01-20 13:12:08] __main__ INFO: Val 155
+[2024-01-20 13:12:09] __main__ INFO: Epoch 155 loss 0.3872 acc@1 0.9201 acc@5 0.9965
+[2024-01-20 13:12:09] __main__ INFO: Elapsed 1.13
+[2024-01-20 13:12:09] __main__ INFO: Train 156 60450
+[2024-01-20 13:12:16] __main__ INFO: Epoch 156 Step 100/390 lr 0.001000 loss 0.0031 (0.0046) acc@1 1.0000 (0.9992) acc@5 1.0000 (1.0000)
+[2024-01-20 13:12:23] __main__ INFO: Epoch 156 Step 200/390 lr 0.001000 loss 0.0014 (0.0048) acc@1 1.0000 (0.9993) acc@5 1.0000 (1.0000)
+[2024-01-20 13:12:29] __main__ INFO: Epoch 156 Step 300/390 lr 0.001000 loss 0.0020 (0.0050) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:12:35] __main__ INFO: Epoch 156 Step 390/390 lr 0.001000 loss 0.0079 (0.0051) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:12:35] __main__ INFO: Elapsed 26.09
+[2024-01-20 13:12:35] __main__ INFO: Val 156
+[2024-01-20 13:12:36] __main__ INFO: Epoch 156 loss 0.3865 acc@1 0.9193 acc@5 0.9965
+[2024-01-20 13:12:36] __main__ INFO: Elapsed 1.06
+[2024-01-20 13:12:36] __main__ INFO: Train 157 60840
+[2024-01-20 13:12:43] __main__ INFO: Epoch 157 Step 100/390 lr 0.001000 loss 0.0018 (0.0050) acc@1 1.0000 (0.9992) acc@5 1.0000 (1.0000)
+[2024-01-20 13:12:50] __main__ INFO: Epoch 157 Step 200/390 lr 0.001000 loss 0.0096 (0.0051) acc@1 1.0000 (0.9993) acc@5 1.0000 (1.0000)
+[2024-01-20 13:12:56] __main__ INFO: Epoch 157 Step 300/390 lr 0.001000 loss 0.0073 (0.0052) acc@1 1.0000 (0.9992) acc@5 1.0000 (1.0000)
+[2024-01-20 13:13:02] __main__ INFO: Epoch 157 Step 390/390 lr 0.001000 loss 0.0027 (0.0052) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:13:02] __main__ INFO: Elapsed 25.89
+[2024-01-20 13:13:02] __main__ INFO: Val 157
+[2024-01-20 13:13:03] __main__ INFO: Epoch 157 loss 0.3873 acc@1 0.9199 acc@5 0.9968
+[2024-01-20 13:13:03] __main__ INFO: Elapsed 1.11
+[2024-01-20 13:13:03] __main__ INFO: Train 158 61230
+[2024-01-20 13:13:10] __main__ INFO: Epoch 158 Step 100/390 lr 0.001000 loss 0.0020 (0.0056) acc@1 1.0000 (0.9988) acc@5 1.0000 (1.0000)
+[2024-01-20 13:13:17] __main__ INFO: Epoch 158 Step 200/390 lr 0.001000 loss 0.0033 (0.0054) acc@1 1.0000 (0.9988) acc@5 1.0000 (1.0000)
+[2024-01-20 13:13:23] __main__ INFO: Epoch 158 Step 300/390 lr 0.001000 loss 0.0025 (0.0054) acc@1 1.0000 (0.9989) acc@5 1.0000 (1.0000)
+[2024-01-20 13:13:29] __main__ INFO: Epoch 158 Step 390/390 lr 0.001000 loss 0.0027 (0.0055) acc@1 1.0000 (0.9988) acc@5 1.0000 (1.0000)
+[2024-01-20 13:13:29] __main__ INFO: Elapsed 26.05
+[2024-01-20 13:13:29] __main__ INFO: Val 158
+[2024-01-20 13:13:30] __main__ INFO: Epoch 158 loss 0.3858 acc@1 0.9206 acc@5 0.9965
+[2024-01-20 13:13:30] __main__ INFO: Elapsed 1.10
+[2024-01-20 13:13:30] __main__ INFO: Train 159 61620
+[2024-01-20 13:13:37] __main__ INFO: Epoch 159 Step 100/390 lr 0.001000 loss 0.0066 (0.0046) acc@1 1.0000 (0.9993) acc@5 1.0000 (1.0000)
+[2024-01-20 13:13:44] __main__ INFO: Epoch 159 Step 200/390 lr 0.001000 loss 0.0013 (0.0044) acc@1 1.0000 (0.9993) acc@5 1.0000 (1.0000)
+[2024-01-20 13:13:50] __main__ INFO: Epoch 159 Step 300/390 lr 0.001000 loss 0.0047 (0.0045) acc@1 1.0000 (0.9993) acc@5 1.0000 (1.0000)
+[2024-01-20 13:13:56] __main__ INFO: Epoch 159 Step 390/390 lr 0.001000 loss 0.0037 (0.0046) acc@1 1.0000 (0.9992) acc@5 1.0000 (1.0000)
+[2024-01-20 13:13:56] __main__ INFO: Elapsed 25.80
+[2024-01-20 13:13:56] __main__ INFO: Val 159
+[2024-01-20 13:13:57] __main__ INFO: Epoch 159 loss 0.3886 acc@1 0.9201 acc@5 0.9965
+[2024-01-20 13:13:57] __main__ INFO: Elapsed 1.12
+[2024-01-20 13:13:57] __main__ INFO: Train 160 62010
+[2024-01-20 13:14:04] __main__ INFO: Epoch 160 Step 100/390 lr 0.001000 loss 0.0018 (0.0044) acc@1 1.0000 (0.9994) acc@5 1.0000 (1.0000)
+[2024-01-20 13:14:11] __main__ INFO: Epoch 160 Step 200/390 lr 0.001000 loss 0.0032 (0.0050) acc@1 1.0000 (0.9992) acc@5 1.0000 (1.0000)
+[2024-01-20 13:14:17] __main__ INFO: Epoch 160 Step 300/390 lr 0.001000 loss 0.0133 (0.0051) acc@1 0.9922 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:14:23] __main__ INFO: Epoch 160 Step 390/390 lr 0.001000 loss 0.0036 (0.0052) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[2024-01-20 13:14:23] __main__ INFO: Elapsed 26.19
+[2024-01-20 13:14:23] __main__ INFO: Val 160
+[2024-01-20 13:14:24] __main__ INFO: Epoch 160 loss 0.3870 acc@1 0.9200 acc@5 0.9963
+[2024-01-20 13:14:24] __main__ INFO: Elapsed 1.12
+[2024-01-20 13:14:24] fvcore.common.checkpoint INFO: Saving checkpoint to experiments/cifar10/resnet/exp00/checkpoint_00160.pth

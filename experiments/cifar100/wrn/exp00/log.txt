@@ -1,0 +1,2071 @@
+[32m[2024-01-20 12:03:55] __main__ INFO: [0mdevice: cuda:3
+attack:
+  name: Square
+  epsilon: 12.75
+  p: inf
+  max_loss_queries: 10000
+  ub: 1.0
+  lb: 0.0
+  target: False
+  target_type: median
+  NES:
+    fd_eta: 0.006274509803921569
+    lr: 0.006274509803921569
+    q: 15
+  ZOSignSGD:
+    fd_eta: 0.006274509803921569
+    lr: 0.006274509803921569
+    q: 30
+  Bandit:
+    lr: 0.006274509803921569
+    fd_eta: 0.006274509803921569
+    prior_lr: 0.1
+    prior_size: 20
+    data_size: 32
+    prior_exploration: 0.1
+  Sign:
+    fd_eta: 0.03137254901960784
+  Simple:
+    delta: 0.00392156862745098
+  Square:
+    p_init: 0.05
+  SignOPT:
+    alpha: 0.2
+    beta: 0.001
+    svm: False
+    momentum: 0
+    k: 200
+    sigma: 0
+  HSJ:
+    gamma: 1.0
+    stepsize_search: geometric_progression
+    max_num_evals: 10000
+    init_num_evals: 100
+    EOT: 1
+    sigma: 0
+  GeoDA:
+    sub_dim: 10
+    tol: 0.0001
+    alpha: 0.0002
+    mu: 0.6
+    search_space: sub
+    grad_estimator_batch_size: 40
+    sigma: 0
+  Opt:
+    alpha: 0.2
+    beta: 0.001
+  Evolutionary:
+    sub: 2
+  SignFlip:
+    
+  resize_factor: 1.0
+  RayS:
+    
+  Boundary:
+    steps: 25000
+    spherical_step: 0.01
+    source_step: 0.01
+    source_step_convergance: 1e-07
+    step_adaptation: 1.5
+    update_stats_every_k: 10
+cudnn:
+  benchmark: True
+  deterministic: False
+dataset:
+  name: CIFAR100
+  dataset_dir: ~/.torch/datasets/CIFAR100
+  image_size: 32
+  n_channels: 3
+  n_classes: 100
+  normalize: False
+model:
+  type: cifar
+  name: wrn
+  init_mode: kaiming_fan_in
+  normalize_layer: True
+  vgg:
+    n_channels: [64, 128, 256, 512, 512]
+    n_layers: [2, 2, 3, 3, 3]
+    use_bn: True
+  resnet:
+    depth: 110
+    n_blocks: [2, 2, 2, 2]
+    block_type: basic
+    initial_channels: 16
+  resnet_preact:
+    depth: 110
+    n_blocks: [2, 2, 2, 2]
+    block_type: basic
+    initial_channels: 16
+    remove_first_relu: False
+    add_last_bn: False
+    preact_stage: [True, True, True]
+  wrn:
+    depth: 28
+    initial_channels: 16
+    widening_factor: 10
+    drop_rate: 0.0
+  densenet:
+    depth: 100
+    n_blocks: [6, 12, 24, 16]
+    block_type: bottleneck
+    growth_rate: 12
+    drop_rate: 0.0
+    compression_rate: 0.5
+  pyramidnet:
+    depth: 272
+    n_blocks: [3, 24, 36, 3]
+    initial_channels: 16
+    block_type: bottleneck
+    alpha: 200
+  resnext:
+    depth: 29
+    n_blocks: [3, 4, 6, 3]
+    initial_channels: 64
+    cardinality: 8
+    base_channels: 4
+  shake_shake:
+    depth: 26
+    initial_channels: 96
+    shake_forward: True
+    shake_backward: True
+    shake_image: True
+  se_resnet_preact:
+    depth: 110
+    initial_channels: 16
+    se_reduction: 16
+    block_type: basic
+    remove_first_relu: False
+    add_last_bn: False
+    preact_stage: [True, True, True]
+train:
+  checkpoint: ''
+  resume: False
+  use_apex: False
+  precision: O0
+  batch_size: 128
+  subdivision: 1
+  optimizer: sgd
+  base_lr: 0.1
+  momentum: 0.9
+  nesterov: True
+  weight_decay: 0.0005
+  no_weight_decay_on_bn: False
+  gradient_clip: 0.0
+  start_epoch: 0
+  seed: 0
+  val_first: True
+  val_period: 1
+  val_ratio: 0.0
+  use_test_as_val: True
+  output_dir: experiments/cifar100/wrn/exp00
+  log_period: 100
+  checkpoint_period: 100
+  use_tensorboard: True
+  dataloader:
+    num_workers: 2
+    drop_last: True
+    pin_memory: False
+    non_blocking: False
+  distributed: False
+  dist:
+    backend: nccl
+    init_method: env://
+    world_size: -1
+    node_rank: -1
+    local_rank: 0
+    use_sync_bn: False
+tensorboard:
+  train_images: False
+  val_images: False
+  model_params: False
+optim:
+  adam:
+    betas: (0.9, 0.999)
+  lars:
+    eps: 1e-09
+    threshold: 0.01
+  adabound:
+    betas: (0.9, 0.999)
+    final_lr: 0.1
+    gamma: 0.001
+scheduler:
+  epochs: 200
+  warmup:
+    type: none
+    epochs: 0
+    start_factor: 0.001
+    exponent: 4
+  type: multistep
+  milestones: [60, 120, 160]
+  lr_decay: 0.2
+  lr_min_factor: 0.001
+  T0: 10
+  T_mul: 1.0
+validation:
+  batch_size: 256
+  dataloader:
+    num_workers: 2
+    drop_last: False
+    pin_memory: False
+    non_blocking: False
+augmentation:
+  use_random_crop: True
+  use_random_horizontal_flip: True
+  use_cutout: False
+  use_random_erasing: False
+  use_dual_cutout: False
+  use_mixup: False
+  use_ricap: False
+  use_cutmix: False
+  use_label_smoothing: False
+  random_crop:
+    padding: 4
+    fill: 0
+    padding_mode: constant
+  random_horizontal_flip:
+    prob: 0.5
+  cutout:
+    prob: 1.0
+    mask_size: 16
+    cut_inside: False
+    mask_color: 0
+    dual_cutout_alpha: 0.1
+  random_erasing:
+    prob: 0.5
+    area_ratio_range: [0.02, 0.4]
+    min_aspect_ratio: 0.3
+    max_attempt: 20
+  mixup:
+    alpha: 1.0
+  ricap:
+    beta: 0.3
+  cutmix:
+    alpha: 1.0
+  label_smoothing:
+    epsilon: 0.1
+tta:
+  use_resize: False
+  use_center_crop: False
+  resize: 256
+test:
+  checkpoint: ''
+  output_dir: ''
+  batch_size: 256
+  dataloader:
+    num_workers: 2
+    pin_memory: False
+[32m[2024-01-20 12:03:55] __main__ INFO: [0menv_info:
+  pytorch_version: 2.1.2
+  cuda_version: 12.1
+  cudnn_version: 8902
+  num_gpus: 4
+  gpu_name: NVIDIA A100 80GB PCIe
+  gpu_capability: 8.0
+[32m[2024-01-20 12:03:59] __main__ INFO: [0mMACs   : 5.25G
+[32m[2024-01-20 12:03:59] __main__ INFO: [0m#params: 36.54M
+[32m[2024-01-20 12:03:59] __main__ INFO: [0mVal 0
+[32m[2024-01-20 12:04:04] __main__ INFO: [0mEpoch 0 loss 220.7854 acc@1 0.0126 acc@5 0.0550
+[32m[2024-01-20 12:04:04] __main__ INFO: [0mElapsed 5.28
+[32m[2024-01-20 12:04:04] __main__ INFO: [0mTrain 1 0
+[32m[2024-01-20 12:04:22] __main__ INFO: [0mEpoch 1 Step 100/390 lr 0.100000 loss 3.7663 (4.1039) acc@1 0.0938 (0.0777) acc@5 0.3594 (0.2529)
+[32m[2024-01-20 12:04:38] __main__ INFO: [0mEpoch 1 Step 200/390 lr 0.100000 loss 3.5189 (3.8566) acc@1 0.1484 (0.1102) acc@5 0.4219 (0.3220)
+[32m[2024-01-20 12:04:53] __main__ INFO: [0mEpoch 1 Step 300/390 lr 0.100000 loss 3.3454 (3.6780) acc@1 0.1797 (0.1372) acc@5 0.4297 (0.3724)
+[32m[2024-01-20 12:05:08] __main__ INFO: [0mEpoch 1 Step 390/390 lr 0.100000 loss 2.8748 (3.5309) acc@1 0.2422 (0.1594) acc@5 0.6016 (0.4133)
+[32m[2024-01-20 12:05:08] __main__ INFO: [0mElapsed 63.49
+[32m[2024-01-20 12:05:08] __main__ INFO: [0mVal 1
+[32m[2024-01-20 12:05:11] __main__ INFO: [0mEpoch 1 loss 3.2679 acc@1 0.2291 acc@5 0.5227
+[32m[2024-01-20 12:05:11] __main__ INFO: [0mElapsed 3.61
+[32m[2024-01-20 12:05:11] __main__ INFO: [0mTrain 2 390
+[32m[2024-01-20 12:05:27] __main__ INFO: [0mEpoch 2 Step 100/390 lr 0.100000 loss 2.8138 (2.7859) acc@1 0.2656 (0.2836) acc@5 0.5781 (0.6080)
+[32m[2024-01-20 12:05:43] __main__ INFO: [0mEpoch 2 Step 200/390 lr 0.100000 loss 2.4903 (2.6984) acc@1 0.3906 (0.3049) acc@5 0.6094 (0.6287)
+[32m[2024-01-20 12:05:59] __main__ INFO: [0mEpoch 2 Step 300/390 lr 0.100000 loss 2.6061 (2.6171) acc@1 0.3203 (0.3185) acc@5 0.6484 (0.6495)
+[32m[2024-01-20 12:06:13] __main__ INFO: [0mEpoch 2 Step 390/390 lr 0.100000 loss 2.3951 (2.5574) acc@1 0.3984 (0.3314) acc@5 0.6797 (0.6623)
+[32m[2024-01-20 12:06:13] __main__ INFO: [0mElapsed 61.60
+[32m[2024-01-20 12:06:13] __main__ INFO: [0mVal 2
+[32m[2024-01-20 12:06:17] __main__ INFO: [0mEpoch 2 loss 2.5252 acc@1 0.3397 acc@5 0.6728
+[32m[2024-01-20 12:06:17] __main__ INFO: [0mElapsed 3.61
+[32m[2024-01-20 12:06:17] __main__ INFO: [0mTrain 3 780
+[32m[2024-01-20 12:06:33] __main__ INFO: [0mEpoch 3 Step 100/390 lr 0.100000 loss 2.1059 (2.1894) acc@1 0.4141 (0.4084) acc@5 0.7969 (0.7438)
+[32m[2024-01-20 12:06:48] __main__ INFO: [0mEpoch 3 Step 200/390 lr 0.100000 loss 2.1405 (2.1511) acc@1 0.3984 (0.4189) acc@5 0.8047 (0.7509)
+[32m[2024-01-20 12:07:04] __main__ INFO: [0mEpoch 3 Step 300/390 lr 0.100000 loss 2.0470 (2.1197) acc@1 0.4531 (0.4262) acc@5 0.7422 (0.7561)
+[32m[2024-01-20 12:07:18] __main__ INFO: [0mEpoch 3 Step 390/390 lr 0.100000 loss 2.0396 (2.0884) acc@1 0.3984 (0.4334) acc@5 0.8125 (0.7621)
+[32m[2024-01-20 12:07:18] __main__ INFO: [0mElapsed 61.47
+[32m[2024-01-20 12:07:18] __main__ INFO: [0mVal 3
+[32m[2024-01-20 12:07:22] __main__ INFO: [0mEpoch 3 loss 2.0888 acc@1 0.4395 acc@5 0.7619
+[32m[2024-01-20 12:07:22] __main__ INFO: [0mElapsed 3.66
+[32m[2024-01-20 12:07:22] __main__ INFO: [0mTrain 4 1170
+[32m[2024-01-20 12:07:38] __main__ INFO: [0mEpoch 4 Step 100/390 lr 0.100000 loss 2.0076 (1.8735) acc@1 0.4297 (0.4777) acc@5 0.8047 (0.8016)
+[32m[2024-01-20 12:07:53] __main__ INFO: [0mEpoch 4 Step 200/390 lr 0.100000 loss 1.8493 (1.8409) acc@1 0.5000 (0.4845) acc@5 0.8203 (0.8093)
+[32m[2024-01-20 12:08:09] __main__ INFO: [0mEpoch 4 Step 300/390 lr 0.100000 loss 1.5255 (1.8337) acc@1 0.5859 (0.4883) acc@5 0.8516 (0.8105)
+[32m[2024-01-20 12:08:23] __main__ INFO: [0mEpoch 4 Step 390/390 lr 0.100000 loss 1.6348 (1.8133) acc@1 0.5703 (0.4945) acc@5 0.8281 (0.8141)
+[32m[2024-01-20 12:08:23] __main__ INFO: [0mElapsed 61.44
+[32m[2024-01-20 12:08:23] __main__ INFO: [0mVal 4
+[32m[2024-01-20 12:08:27] __main__ INFO: [0mEpoch 4 loss 1.8877 acc@1 0.4798 acc@5 0.7954
+[32m[2024-01-20 12:08:27] __main__ INFO: [0mElapsed 3.64
+[32m[2024-01-20 12:08:27] __main__ INFO: [0mTrain 5 1560
+[32m[2024-01-20 12:08:43] __main__ INFO: [0mEpoch 5 Step 100/390 lr 0.100000 loss 1.7569 (1.6220) acc@1 0.5312 (0.5402) acc@5 0.8438 (0.8479)
+[32m[2024-01-20 12:08:58] __main__ INFO: [0mEpoch 5 Step 200/390 lr 0.100000 loss 1.7033 (1.6409) acc@1 0.4766 (0.5347) acc@5 0.8516 (0.8439)
+[32m[2024-01-20 12:09:14] __main__ INFO: [0mEpoch 5 Step 300/390 lr 0.100000 loss 1.7158 (1.6398) acc@1 0.5312 (0.5365) acc@5 0.8203 (0.8447)
+[32m[2024-01-20 12:09:28] __main__ INFO: [0mEpoch 5 Step 390/390 lr 0.100000 loss 1.7727 (1.6311) acc@1 0.5156 (0.5386) acc@5 0.8125 (0.8462)
+[32m[2024-01-20 12:09:28] __main__ INFO: [0mElapsed 61.58
+[32m[2024-01-20 12:09:28] __main__ INFO: [0mVal 5
+[32m[2024-01-20 12:09:32] __main__ INFO: [0mEpoch 5 loss 1.7467 acc@1 0.5133 acc@5 0.8204
+[32m[2024-01-20 12:09:32] __main__ INFO: [0mElapsed 3.65
+[32m[2024-01-20 12:09:32] __main__ INFO: [0mTrain 6 1950
+[32m[2024-01-20 12:09:48] __main__ INFO: [0mEpoch 6 Step 100/390 lr 0.100000 loss 1.6899 (1.4900) acc@1 0.5312 (0.5771) acc@5 0.8047 (0.8673)
+[32m[2024-01-20 12:10:03] __main__ INFO: [0mEpoch 6 Step 200/390 lr 0.100000 loss 1.3165 (1.4968) acc@1 0.6016 (0.5726) acc@5 0.9062 (0.8680)
+[32m[2024-01-20 12:10:19] __main__ INFO: [0mEpoch 6 Step 300/390 lr 0.100000 loss 1.4482 (1.5076) acc@1 0.6328 (0.5717) acc@5 0.8594 (0.8666)
+[32m[2024-01-20 12:10:34] __main__ INFO: [0mEpoch 6 Step 390/390 lr 0.100000 loss 1.6738 (1.5053) acc@1 0.5547 (0.5719) acc@5 0.8750 (0.8664)
+[32m[2024-01-20 12:10:34] __main__ INFO: [0mElapsed 61.59
+[32m[2024-01-20 12:10:34] __main__ INFO: [0mVal 6
+[32m[2024-01-20 12:10:37] __main__ INFO: [0mEpoch 6 loss 1.8280 acc@1 0.4988 acc@5 0.8106
+[32m[2024-01-20 12:10:37] __main__ INFO: [0mElapsed 3.61
+[32m[2024-01-20 12:10:37] __main__ INFO: [0mTrain 7 2340
+[32m[2024-01-20 12:10:53] __main__ INFO: [0mEpoch 7 Step 100/390 lr 0.100000 loss 1.4658 (1.4024) acc@1 0.5547 (0.5972) acc@5 0.8906 (0.8784)
+[32m[2024-01-20 12:11:09] __main__ INFO: [0mEpoch 7 Step 200/390 lr 0.100000 loss 1.3531 (1.4093) acc@1 0.6250 (0.6016) acc@5 0.9141 (0.8786)
+[32m[2024-01-20 12:11:24] __main__ INFO: [0mEpoch 7 Step 300/390 lr 0.100000 loss 1.5086 (1.4127) acc@1 0.5547 (0.5986) acc@5 0.8438 (0.8799)
+[32m[2024-01-20 12:11:39] __main__ INFO: [0mEpoch 7 Step 390/390 lr 0.100000 loss 1.5740 (1.4092) acc@1 0.5781 (0.5988) acc@5 0.8438 (0.8802)
+[32m[2024-01-20 12:11:39] __main__ INFO: [0mElapsed 61.51
+[32m[2024-01-20 12:11:39] __main__ INFO: [0mVal 7
+[32m[2024-01-20 12:11:42] __main__ INFO: [0mEpoch 7 loss 1.7498 acc@1 0.5301 acc@5 0.8273
+[32m[2024-01-20 12:11:42] __main__ INFO: [0mElapsed 3.64
+[32m[2024-01-20 12:11:42] __main__ INFO: [0mTrain 8 2730
+[32m[2024-01-20 12:11:58] __main__ INFO: [0mEpoch 8 Step 100/390 lr 0.100000 loss 1.3802 (1.3242) acc@1 0.6172 (0.6218) acc@5 0.8984 (0.8914)
+[32m[2024-01-20 12:12:14] __main__ INFO: [0mEpoch 8 Step 200/390 lr 0.100000 loss 1.3952 (1.3247) acc@1 0.5625 (0.6195) acc@5 0.8984 (0.8949)
+[32m[2024-01-20 12:12:30] __main__ INFO: [0mEpoch 8 Step 300/390 lr 0.100000 loss 1.4342 (1.3268) acc@1 0.5703 (0.6195) acc@5 0.8828 (0.8939)
+[32m[2024-01-20 12:12:44] __main__ INFO: [0mEpoch 8 Step 390/390 lr 0.100000 loss 1.6357 (1.3325) acc@1 0.5469 (0.6175) acc@5 0.8281 (0.8925)
+[32m[2024-01-20 12:12:44] __main__ INFO: [0mElapsed 61.50
+[32m[2024-01-20 12:12:44] __main__ INFO: [0mVal 8
+[32m[2024-01-20 12:12:47] __main__ INFO: [0mEpoch 8 loss 1.7533 acc@1 0.5356 acc@5 0.8278
+[32m[2024-01-20 12:12:48] __main__ INFO: [0mElapsed 3.64
+[32m[2024-01-20 12:12:48] __main__ INFO: [0mTrain 9 3120
+[32m[2024-01-20 12:13:04] __main__ INFO: [0mEpoch 9 Step 100/390 lr 0.100000 loss 1.1477 (1.2295) acc@1 0.6484 (0.6467) acc@5 0.9141 (0.9072)
+[32m[2024-01-20 12:13:19] __main__ INFO: [0mEpoch 9 Step 200/390 lr 0.100000 loss 1.3748 (1.2481) acc@1 0.5781 (0.6401) acc@5 0.9375 (0.9039)
+[32m[2024-01-20 12:13:35] __main__ INFO: [0mEpoch 9 Step 300/390 lr 0.100000 loss 0.9408 (1.2679) acc@1 0.7734 (0.6352) acc@5 0.9375 (0.9011)
+[32m[2024-01-20 12:13:49] __main__ INFO: [0mEpoch 9 Step 390/390 lr 0.100000 loss 1.3738 (1.2702) acc@1 0.6094 (0.6345) acc@5 0.8516 (0.9004)
+[32m[2024-01-20 12:13:49] __main__ INFO: [0mElapsed 61.39
+[32m[2024-01-20 12:13:49] __main__ INFO: [0mVal 9
+[32m[2024-01-20 12:13:53] __main__ INFO: [0mEpoch 9 loss 1.8986 acc@1 0.5103 acc@5 0.8107
+[32m[2024-01-20 12:13:53] __main__ INFO: [0mElapsed 3.64
+[32m[2024-01-20 12:13:53] __main__ INFO: [0mTrain 10 3510
+[32m[2024-01-20 12:14:09] __main__ INFO: [0mEpoch 10 Step 100/390 lr 0.100000 loss 1.1605 (1.1929) acc@1 0.6328 (0.6517) acc@5 0.9062 (0.9120)
+[32m[2024-01-20 12:14:24] __main__ INFO: [0mEpoch 10 Step 200/390 lr 0.100000 loss 1.4048 (1.2046) acc@1 0.6172 (0.6497) acc@5 0.8672 (0.9100)
+[32m[2024-01-20 12:14:40] __main__ INFO: [0mEpoch 10 Step 300/390 lr 0.100000 loss 1.2706 (1.2238) acc@1 0.6641 (0.6435) acc@5 0.8594 (0.9072)
+[32m[2024-01-20 12:14:54] __main__ INFO: [0mEpoch 10 Step 390/390 lr 0.100000 loss 0.9858 (1.2283) acc@1 0.6719 (0.6424) acc@5 0.9609 (0.9061)
+[32m[2024-01-20 12:14:54] __main__ INFO: [0mElapsed 61.52
+[32m[2024-01-20 12:14:54] __main__ INFO: [0mVal 10
+[32m[2024-01-20 12:14:58] __main__ INFO: [0mEpoch 10 loss 1.7680 acc@1 0.5365 acc@5 0.8264
+[32m[2024-01-20 12:14:58] __main__ INFO: [0mElapsed 3.61
+[32m[2024-01-20 12:14:58] __main__ INFO: [0mTrain 11 3900
+[32m[2024-01-20 12:15:14] __main__ INFO: [0mEpoch 11 Step 100/390 lr 0.100000 loss 1.1780 (1.1247) acc@1 0.6641 (0.6641) acc@5 0.8828 (0.9230)
+[32m[2024-01-20 12:15:29] __main__ INFO: [0mEpoch 11 Step 200/390 lr 0.100000 loss 1.2669 (1.1609) acc@1 0.6250 (0.6573) acc@5 0.9141 (0.9159)
+[32m[2024-01-20 12:15:45] __main__ INFO: [0mEpoch 11 Step 300/390 lr 0.100000 loss 1.2254 (1.1760) acc@1 0.6953 (0.6546) acc@5 0.9062 (0.9129)
+[32m[2024-01-20 12:15:59] __main__ INFO: [0mEpoch 11 Step 390/390 lr 0.100000 loss 1.3485 (1.1877) acc@1 0.6094 (0.6528) acc@5 0.8984 (0.9109)
+[32m[2024-01-20 12:15:59] __main__ INFO: [0mElapsed 61.46
+[32m[2024-01-20 12:15:59] __main__ INFO: [0mVal 11
+[32m[2024-01-20 12:16:03] __main__ INFO: [0mEpoch 11 loss 1.7900 acc@1 0.5252 acc@5 0.8303
+[32m[2024-01-20 12:16:03] __main__ INFO: [0mElapsed 3.64
+[32m[2024-01-20 12:16:03] __main__ INFO: [0mTrain 12 4290
+[32m[2024-01-20 12:16:19] __main__ INFO: [0mEpoch 12 Step 100/390 lr 0.100000 loss 1.1966 (1.1225) acc@1 0.6797 (0.6723) acc@5 0.9141 (0.9202)
+[32m[2024-01-20 12:16:34] __main__ INFO: [0mEpoch 12 Step 200/390 lr 0.100000 loss 1.1988 (1.1279) acc@1 0.6797 (0.6728) acc@5 0.9219 (0.9178)
+[32m[2024-01-20 12:16:50] __main__ INFO: [0mEpoch 12 Step 300/390 lr 0.100000 loss 1.2289 (1.1402) acc@1 0.6797 (0.6692) acc@5 0.8984 (0.9170)
+[32m[2024-01-20 12:17:04] __main__ INFO: [0mEpoch 12 Step 390/390 lr 0.100000 loss 1.0777 (1.1459) acc@1 0.6641 (0.6691) acc@5 0.9453 (0.9160)
+[32m[2024-01-20 12:17:04] __main__ INFO: [0mElapsed 61.33
+[32m[2024-01-20 12:17:04] __main__ INFO: [0mVal 12
+[32m[2024-01-20 12:17:08] __main__ INFO: [0mEpoch 12 loss 1.8609 acc@1 0.5301 acc@5 0.8162
+[32m[2024-01-20 12:17:08] __main__ INFO: [0mElapsed 3.62
+[32m[2024-01-20 12:17:08] __main__ INFO: [0mTrain 13 4680
+[32m[2024-01-20 12:17:24] __main__ INFO: [0mEpoch 13 Step 100/390 lr 0.100000 loss 1.0338 (1.0562) acc@1 0.6562 (0.6891) acc@5 0.9297 (0.9284)
+[32m[2024-01-20 12:17:39] __main__ INFO: [0mEpoch 13 Step 200/390 lr 0.100000 loss 1.1030 (1.0883) acc@1 0.6953 (0.6822) acc@5 0.9375 (0.9238)
+[32m[2024-01-20 12:17:55] __main__ INFO: [0mEpoch 13 Step 300/390 lr 0.100000 loss 1.1219 (1.1051) acc@1 0.6875 (0.6783) acc@5 0.9375 (0.9218)
+[32m[2024-01-20 12:18:09] __main__ INFO: [0mEpoch 13 Step 390/390 lr 0.100000 loss 1.0536 (1.1137) acc@1 0.7031 (0.6754) acc@5 0.9453 (0.9205)
+[32m[2024-01-20 12:18:09] __main__ INFO: [0mElapsed 61.29
+[32m[2024-01-20 12:18:09] __main__ INFO: [0mVal 13
+[32m[2024-01-20 12:18:13] __main__ INFO: [0mEpoch 13 loss 1.6083 acc@1 0.5666 acc@5 0.8622
+[32m[2024-01-20 12:18:13] __main__ INFO: [0mElapsed 3.62
+[32m[2024-01-20 12:18:13] __main__ INFO: [0mTrain 14 5070
+[32m[2024-01-20 12:18:29] __main__ INFO: [0mEpoch 14 Step 100/390 lr 0.100000 loss 1.1187 (1.0334) acc@1 0.6797 (0.6969) acc@5 0.9141 (0.9318)
+[32m[2024-01-20 12:18:44] __main__ INFO: [0mEpoch 14 Step 200/390 lr 0.100000 loss 1.2366 (1.0627) acc@1 0.6797 (0.6909) acc@5 0.9062 (0.9273)
+[32m[2024-01-20 12:19:00] __main__ INFO: [0mEpoch 14 Step 300/390 lr 0.100000 loss 1.2681 (1.0710) acc@1 0.5703 (0.6882) acc@5 0.9219 (0.9261)
+[32m[2024-01-20 12:19:14] __main__ INFO: [0mEpoch 14 Step 390/390 lr 0.100000 loss 1.2595 (1.0901) acc@1 0.6797 (0.6832) acc@5 0.9141 (0.9238)
+[32m[2024-01-20 12:19:14] __main__ INFO: [0mElapsed 61.63
+[32m[2024-01-20 12:19:14] __main__ INFO: [0mVal 14
+[32m[2024-01-20 12:19:18] __main__ INFO: [0mEpoch 14 loss 1.6707 acc@1 0.5546 acc@5 0.8415
+[32m[2024-01-20 12:19:18] __main__ INFO: [0mElapsed 3.62
+[32m[2024-01-20 12:19:18] __main__ INFO: [0mTrain 15 5460
+[32m[2024-01-20 12:19:34] __main__ INFO: [0mEpoch 15 Step 100/390 lr 0.100000 loss 0.9599 (0.9883) acc@1 0.7422 (0.7083) acc@5 0.9297 (0.9376)
+[32m[2024-01-20 12:19:49] __main__ INFO: [0mEpoch 15 Step 200/390 lr 0.100000 loss 1.2738 (1.0254) acc@1 0.6016 (0.6976) acc@5 0.9141 (0.9323)
+[32m[2024-01-20 12:20:05] __main__ INFO: [0mEpoch 15 Step 300/390 lr 0.100000 loss 1.0784 (1.0420) acc@1 0.6953 (0.6929) acc@5 0.9219 (0.9313)
+[32m[2024-01-20 12:20:19] __main__ INFO: [0mEpoch 15 Step 390/390 lr 0.100000 loss 0.9774 (1.0549) acc@1 0.7109 (0.6893) acc@5 0.9453 (0.9295)
+[32m[2024-01-20 12:20:19] __main__ INFO: [0mElapsed 61.39
+[32m[2024-01-20 12:20:19] __main__ INFO: [0mVal 15
+[32m[2024-01-20 12:20:23] __main__ INFO: [0mEpoch 15 loss 1.8580 acc@1 0.5433 acc@5 0.8179
+[32m[2024-01-20 12:20:23] __main__ INFO: [0mElapsed 3.61
+[32m[2024-01-20 12:20:23] __main__ INFO: [0mTrain 16 5850
+[32m[2024-01-20 12:20:39] __main__ INFO: [0mEpoch 16 Step 100/390 lr 0.100000 loss 1.1280 (0.9699) acc@1 0.6641 (0.7141) acc@5 0.9062 (0.9386)
+[32m[2024-01-20 12:20:54] __main__ INFO: [0mEpoch 16 Step 200/390 lr 0.100000 loss 1.0758 (1.0090) acc@1 0.6797 (0.7043) acc@5 0.9453 (0.9342)
+[32m[2024-01-20 12:21:10] __main__ INFO: [0mEpoch 16 Step 300/390 lr 0.100000 loss 1.2842 (1.0229) acc@1 0.5938 (0.6997) acc@5 0.8984 (0.9326)
+[32m[2024-01-20 12:21:24] __main__ INFO: [0mEpoch 16 Step 390/390 lr 0.100000 loss 1.0445 (1.0388) acc@1 0.6875 (0.6964) acc@5 0.9375 (0.9306)
+[32m[2024-01-20 12:21:24] __main__ INFO: [0mElapsed 61.40
+[32m[2024-01-20 12:21:24] __main__ INFO: [0mVal 16
+[32m[2024-01-20 12:21:28] __main__ INFO: [0mEpoch 16 loss 1.6614 acc@1 0.5651 acc@5 0.8473
+[32m[2024-01-20 12:21:28] __main__ INFO: [0mElapsed 3.62
+[32m[2024-01-20 12:21:28] __main__ INFO: [0mTrain 17 6240
+[32m[2024-01-20 12:21:44] __main__ INFO: [0mEpoch 17 Step 100/390 lr 0.100000 loss 0.7613 (0.9463) acc@1 0.7656 (0.7165) acc@5 0.9922 (0.9426)
+[32m[2024-01-20 12:21:59] __main__ INFO: [0mEpoch 17 Step 200/390 lr 0.100000 loss 1.0365 (0.9728) acc@1 0.7188 (0.7110) acc@5 0.9297 (0.9388)
+[32m[2024-01-20 12:22:15] __main__ INFO: [0mEpoch 17 Step 300/390 lr 0.100000 loss 1.0877 (0.9943) acc@1 0.6875 (0.7060) acc@5 0.9219 (0.9357)
+[32m[2024-01-20 12:22:29] __main__ INFO: [0mEpoch 17 Step 390/390 lr 0.100000 loss 1.4147 (1.0081) acc@1 0.5781 (0.7031) acc@5 0.8438 (0.9338)
+[32m[2024-01-20 12:22:29] __main__ INFO: [0mElapsed 61.42
+[32m[2024-01-20 12:22:29] __main__ INFO: [0mVal 17
+[32m[2024-01-20 12:22:33] __main__ INFO: [0mEpoch 17 loss 1.6717 acc@1 0.5695 acc@5 0.8471
+[32m[2024-01-20 12:22:33] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 12:22:33] __main__ INFO: [0mTrain 18 6630
+[32m[2024-01-20 12:22:49] __main__ INFO: [0mEpoch 18 Step 100/390 lr 0.100000 loss 0.9283 (0.9423) acc@1 0.7422 (0.7240) acc@5 0.9844 (0.9433)
+[32m[2024-01-20 12:23:04] __main__ INFO: [0mEpoch 18 Step 200/390 lr 0.100000 loss 1.2456 (0.9666) acc@1 0.6641 (0.7157) acc@5 0.9141 (0.9389)
+[32m[2024-01-20 12:23:20] __main__ INFO: [0mEpoch 18 Step 300/390 lr 0.100000 loss 0.8944 (0.9834) acc@1 0.7344 (0.7107) acc@5 0.9453 (0.9370)
+[32m[2024-01-20 12:23:34] __main__ INFO: [0mEpoch 18 Step 390/390 lr 0.100000 loss 1.2336 (1.0001) acc@1 0.6484 (0.7073) acc@5 0.9062 (0.9342)
+[32m[2024-01-20 12:23:34] __main__ INFO: [0mElapsed 61.40
+[32m[2024-01-20 12:23:34] __main__ INFO: [0mVal 18
+[32m[2024-01-20 12:23:38] __main__ INFO: [0mEpoch 18 loss 1.6123 acc@1 0.5749 acc@5 0.8561
+[32m[2024-01-20 12:23:38] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 12:23:38] __main__ INFO: [0mTrain 19 7020
+[32m[2024-01-20 12:23:54] __main__ INFO: [0mEpoch 19 Step 100/390 lr 0.100000 loss 1.1434 (0.9091) acc@1 0.6328 (0.7334) acc@5 0.9219 (0.9474)
+[32m[2024-01-20 12:24:09] __main__ INFO: [0mEpoch 19 Step 200/390 lr 0.100000 loss 1.1524 (0.9458) acc@1 0.6875 (0.7226) acc@5 0.9219 (0.9427)
+[32m[2024-01-20 12:24:25] __main__ INFO: [0mEpoch 19 Step 300/390 lr 0.100000 loss 0.9688 (0.9696) acc@1 0.7031 (0.7148) acc@5 0.9531 (0.9397)
+[32m[2024-01-20 12:24:39] __main__ INFO: [0mEpoch 19 Step 390/390 lr 0.100000 loss 1.0169 (0.9811) acc@1 0.7109 (0.7124) acc@5 0.9609 (0.9385)
+[32m[2024-01-20 12:24:39] __main__ INFO: [0mElapsed 61.35
+[32m[2024-01-20 12:24:39] __main__ INFO: [0mVal 19
+[32m[2024-01-20 12:24:43] __main__ INFO: [0mEpoch 19 loss 1.5276 acc@1 0.5895 acc@5 0.8658
+[32m[2024-01-20 12:24:43] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 12:24:43] __main__ INFO: [0mTrain 20 7410
+[32m[2024-01-20 12:24:59] __main__ INFO: [0mEpoch 20 Step 100/390 lr 0.100000 loss 0.8194 (0.8784) acc@1 0.7422 (0.7381) acc@5 0.9531 (0.9486)
+[32m[2024-01-20 12:25:14] __main__ INFO: [0mEpoch 20 Step 200/390 lr 0.100000 loss 1.0668 (0.9109) acc@1 0.6641 (0.7316) acc@5 0.9062 (0.9447)
+[32m[2024-01-20 12:25:30] __main__ INFO: [0mEpoch 20 Step 300/390 lr 0.100000 loss 0.9625 (0.9412) acc@1 0.7266 (0.7228) acc@5 0.9297 (0.9417)
+[32m[2024-01-20 12:25:44] __main__ INFO: [0mEpoch 20 Step 390/390 lr 0.100000 loss 0.9143 (0.9566) acc@1 0.7578 (0.7182) acc@5 0.9219 (0.9397)
+[32m[2024-01-20 12:25:44] __main__ INFO: [0mElapsed 61.52
+[32m[2024-01-20 12:25:44] __main__ INFO: [0mVal 20
+[32m[2024-01-20 12:25:48] __main__ INFO: [0mEpoch 20 loss 1.4808 acc@1 0.6016 acc@5 0.8684
+[32m[2024-01-20 12:25:48] __main__ INFO: [0mElapsed 3.56
+[32m[2024-01-20 12:25:48] __main__ INFO: [0mTrain 21 7800
+[32m[2024-01-20 12:26:04] __main__ INFO: [0mEpoch 21 Step 100/390 lr 0.100000 loss 1.0486 (0.8790) acc@1 0.7344 (0.7405) acc@5 0.9297 (0.9461)
+[32m[2024-01-20 12:26:19] __main__ INFO: [0mEpoch 21 Step 200/390 lr 0.100000 loss 1.1750 (0.9112) acc@1 0.6641 (0.7307) acc@5 0.8750 (0.9442)
+[32m[2024-01-20 12:26:35] __main__ INFO: [0mEpoch 21 Step 300/390 lr 0.100000 loss 0.7240 (0.9386) acc@1 0.8047 (0.7240) acc@5 0.9453 (0.9402)
+[32m[2024-01-20 12:26:49] __main__ INFO: [0mEpoch 21 Step 390/390 lr 0.100000 loss 0.9370 (0.9508) acc@1 0.6641 (0.7200) acc@5 0.9375 (0.9392)
+[32m[2024-01-20 12:26:49] __main__ INFO: [0mElapsed 61.28
+[32m[2024-01-20 12:26:49] __main__ INFO: [0mVal 21
+[32m[2024-01-20 12:26:53] __main__ INFO: [0mEpoch 21 loss 1.5933 acc@1 0.5823 acc@5 0.8576
+[32m[2024-01-20 12:26:53] __main__ INFO: [0mElapsed 3.56
+[32m[2024-01-20 12:26:53] __main__ INFO: [0mTrain 22 8190
+[32m[2024-01-20 12:27:09] __main__ INFO: [0mEpoch 22 Step 100/390 lr 0.100000 loss 0.7905 (0.8592) acc@1 0.7578 (0.7441) acc@5 0.9531 (0.9489)
+[32m[2024-01-20 12:27:24] __main__ INFO: [0mEpoch 22 Step 200/390 lr 0.100000 loss 0.7834 (0.8890) acc@1 0.7812 (0.7386) acc@5 0.9531 (0.9461)
+[32m[2024-01-20 12:27:40] __main__ INFO: [0mEpoch 22 Step 300/390 lr 0.100000 loss 0.9177 (0.9148) acc@1 0.6875 (0.7305) acc@5 0.9688 (0.9435)
+[32m[2024-01-20 12:27:54] __main__ INFO: [0mEpoch 22 Step 390/390 lr 0.100000 loss 0.8575 (0.9300) acc@1 0.7422 (0.7262) acc@5 0.9375 (0.9420)
+[32m[2024-01-20 12:27:54] __main__ INFO: [0mElapsed 61.38
+[32m[2024-01-20 12:27:54] __main__ INFO: [0mVal 22
+[32m[2024-01-20 12:27:58] __main__ INFO: [0mEpoch 22 loss 1.5047 acc@1 0.6073 acc@5 0.8645
+[32m[2024-01-20 12:27:58] __main__ INFO: [0mElapsed 3.56
+[32m[2024-01-20 12:27:58] __main__ INFO: [0mTrain 23 8580
+[32m[2024-01-20 12:28:14] __main__ INFO: [0mEpoch 23 Step 100/390 lr 0.100000 loss 0.8574 (0.8470) acc@1 0.7422 (0.7441) acc@5 0.9688 (0.9549)
+[32m[2024-01-20 12:28:29] __main__ INFO: [0mEpoch 23 Step 200/390 lr 0.100000 loss 1.0037 (0.8828) acc@1 0.6953 (0.7370) acc@5 0.9375 (0.9496)
+[32m[2024-01-20 12:28:45] __main__ INFO: [0mEpoch 23 Step 300/390 lr 0.100000 loss 0.9425 (0.9116) acc@1 0.7344 (0.7290) acc@5 0.9531 (0.9459)
+[32m[2024-01-20 12:28:59] __main__ INFO: [0mEpoch 23 Step 390/390 lr 0.100000 loss 0.9810 (0.9192) acc@1 0.7422 (0.7270) acc@5 0.9219 (0.9445)
+[32m[2024-01-20 12:28:59] __main__ INFO: [0mElapsed 61.38
+[32m[2024-01-20 12:28:59] __main__ INFO: [0mVal 23
+[32m[2024-01-20 12:29:03] __main__ INFO: [0mEpoch 23 loss 1.5765 acc@1 0.5938 acc@5 0.8599
+[32m[2024-01-20 12:29:03] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 12:29:03] __main__ INFO: [0mTrain 24 8970
+[32m[2024-01-20 12:29:19] __main__ INFO: [0mEpoch 24 Step 100/390 lr 0.100000 loss 1.0161 (0.8575) acc@1 0.6953 (0.7478) acc@5 0.9531 (0.9523)
+[32m[2024-01-20 12:29:34] __main__ INFO: [0mEpoch 24 Step 200/390 lr 0.100000 loss 1.0708 (0.8835) acc@1 0.6797 (0.7382) acc@5 0.9219 (0.9492)
+[32m[2024-01-20 12:29:50] __main__ INFO: [0mEpoch 24 Step 300/390 lr 0.100000 loss 0.9515 (0.9060) acc@1 0.6797 (0.7325) acc@5 0.9062 (0.9453)
+[32m[2024-01-20 12:30:04] __main__ INFO: [0mEpoch 24 Step 390/390 lr 0.100000 loss 1.0937 (0.9173) acc@1 0.7188 (0.7301) acc@5 0.9219 (0.9440)
+[32m[2024-01-20 12:30:04] __main__ INFO: [0mElapsed 61.58
+[32m[2024-01-20 12:30:04] __main__ INFO: [0mVal 24
+[32m[2024-01-20 12:30:08] __main__ INFO: [0mEpoch 24 loss 1.3837 acc@1 0.6262 acc@5 0.8853
+[32m[2024-01-20 12:30:08] __main__ INFO: [0mElapsed 3.58
+[32m[2024-01-20 12:30:08] __main__ INFO: [0mTrain 25 9360
+[32m[2024-01-20 12:30:24] __main__ INFO: [0mEpoch 25 Step 100/390 lr 0.100000 loss 0.7174 (0.8359) acc@1 0.8047 (0.7514) acc@5 0.9531 (0.9533)
+[32m[2024-01-20 12:30:39] __main__ INFO: [0mEpoch 25 Step 200/390 lr 0.100000 loss 1.1133 (0.8687) acc@1 0.6875 (0.7428) acc@5 0.9297 (0.9494)
+[32m[2024-01-20 12:30:55] __main__ INFO: [0mEpoch 25 Step 300/390 lr 0.100000 loss 0.9367 (0.8923) acc@1 0.7188 (0.7368) acc@5 0.9609 (0.9472)
+[32m[2024-01-20 12:31:09] __main__ INFO: [0mEpoch 25 Step 390/390 lr 0.100000 loss 0.9596 (0.9047) acc@1 0.6953 (0.7342) acc@5 0.9375 (0.9451)
+[32m[2024-01-20 12:31:09] __main__ INFO: [0mElapsed 61.49
+[32m[2024-01-20 12:31:09] __main__ INFO: [0mVal 25
+[32m[2024-01-20 12:31:13] __main__ INFO: [0mEpoch 25 loss 1.5678 acc@1 0.5929 acc@5 0.8647
+[32m[2024-01-20 12:31:13] __main__ INFO: [0mElapsed 3.63
+[32m[2024-01-20 12:31:13] __main__ INFO: [0mTrain 26 9750
+[32m[2024-01-20 12:31:29] __main__ INFO: [0mEpoch 26 Step 100/390 lr 0.100000 loss 0.7547 (0.7978) acc@1 0.7422 (0.7607) acc@5 0.9766 (0.9587)
+[32m[2024-01-20 12:31:44] __main__ INFO: [0mEpoch 26 Step 200/390 lr 0.100000 loss 0.8723 (0.8554) acc@1 0.7422 (0.7459) acc@5 0.9297 (0.9514)
+[32m[2024-01-20 12:32:00] __main__ INFO: [0mEpoch 26 Step 300/390 lr 0.100000 loss 0.9893 (0.8771) acc@1 0.7031 (0.7408) acc@5 0.9297 (0.9475)
+[32m[2024-01-20 12:32:14] __main__ INFO: [0mEpoch 26 Step 390/390 lr 0.100000 loss 0.7745 (0.8914) acc@1 0.8047 (0.7375) acc@5 0.9297 (0.9459)
+[32m[2024-01-20 12:32:14] __main__ INFO: [0mElapsed 61.46
+[32m[2024-01-20 12:32:14] __main__ INFO: [0mVal 26
+[32m[2024-01-20 12:32:18] __main__ INFO: [0mEpoch 26 loss 1.7012 acc@1 0.5633 acc@5 0.8455
+[32m[2024-01-20 12:32:18] __main__ INFO: [0mElapsed 3.57
+[32m[2024-01-20 12:32:18] __main__ INFO: [0mTrain 27 10140
+[32m[2024-01-20 12:32:34] __main__ INFO: [0mEpoch 27 Step 100/390 lr 0.100000 loss 0.9038 (0.7927) acc@1 0.7422 (0.7649) acc@5 0.9609 (0.9583)
+[32m[2024-01-20 12:32:49] __main__ INFO: [0mEpoch 27 Step 200/390 lr 0.100000 loss 1.0441 (0.8439) acc@1 0.6953 (0.7509) acc@5 0.9375 (0.9514)
+[32m[2024-01-20 12:33:05] __main__ INFO: [0mEpoch 27 Step 300/390 lr 0.100000 loss 0.7531 (0.8699) acc@1 0.8047 (0.7430) acc@5 0.9609 (0.9486)
+[32m[2024-01-20 12:33:19] __main__ INFO: [0mEpoch 27 Step 390/390 lr 0.100000 loss 0.8069 (0.8778) acc@1 0.7344 (0.7413) acc@5 0.9531 (0.9479)
+[32m[2024-01-20 12:33:19] __main__ INFO: [0mElapsed 61.45
+[32m[2024-01-20 12:33:19] __main__ INFO: [0mVal 27
+[32m[2024-01-20 12:33:23] __main__ INFO: [0mEpoch 27 loss 1.7138 acc@1 0.5621 acc@5 0.8431
+[32m[2024-01-20 12:33:23] __main__ INFO: [0mElapsed 3.62
+[32m[2024-01-20 12:33:23] __main__ INFO: [0mTrain 28 10530
+[32m[2024-01-20 12:33:39] __main__ INFO: [0mEpoch 28 Step 100/390 lr 0.100000 loss 0.6788 (0.8171) acc@1 0.8125 (0.7569) acc@5 0.9531 (0.9548)
+[32m[2024-01-20 12:33:55] __main__ INFO: [0mEpoch 28 Step 200/390 lr 0.100000 loss 0.7293 (0.8477) acc@1 0.7656 (0.7483) acc@5 0.9609 (0.9528)
+[32m[2024-01-20 12:34:10] __main__ INFO: [0mEpoch 28 Step 300/390 lr 0.100000 loss 1.0520 (0.8597) acc@1 0.6953 (0.7455) acc@5 0.9609 (0.9515)
+[32m[2024-01-20 12:34:25] __main__ INFO: [0mEpoch 28 Step 390/390 lr 0.100000 loss 0.8742 (0.8757) acc@1 0.7969 (0.7408) acc@5 0.9219 (0.9494)
+[32m[2024-01-20 12:34:25] __main__ INFO: [0mElapsed 61.51
+[32m[2024-01-20 12:34:25] __main__ INFO: [0mVal 28
+[32m[2024-01-20 12:34:28] __main__ INFO: [0mEpoch 28 loss 1.6650 acc@1 0.5843 acc@5 0.8483
+[32m[2024-01-20 12:34:28] __main__ INFO: [0mElapsed 3.57
+[32m[2024-01-20 12:34:28] __main__ INFO: [0mTrain 29 10920
+[32m[2024-01-20 12:34:44] __main__ INFO: [0mEpoch 29 Step 100/390 lr 0.100000 loss 0.6259 (0.7812) acc@1 0.8438 (0.7681) acc@5 0.9688 (0.9607)
+[32m[2024-01-20 12:35:00] __main__ INFO: [0mEpoch 29 Step 200/390 lr 0.100000 loss 0.9756 (0.8194) acc@1 0.7266 (0.7566) acc@5 0.9219 (0.9557)
+[32m[2024-01-20 12:35:15] __main__ INFO: [0mEpoch 29 Step 300/390 lr 0.100000 loss 1.0999 (0.8527) acc@1 0.7031 (0.7487) acc@5 0.9141 (0.9511)
+[32m[2024-01-20 12:35:30] __main__ INFO: [0mEpoch 29 Step 390/390 lr 0.100000 loss 0.8199 (0.8679) acc@1 0.7344 (0.7444) acc@5 0.9688 (0.9491)
+[32m[2024-01-20 12:35:30] __main__ INFO: [0mElapsed 61.37
+[32m[2024-01-20 12:35:30] __main__ INFO: [0mVal 29
+[32m[2024-01-20 12:35:33] __main__ INFO: [0mEpoch 29 loss 1.4898 acc@1 0.6115 acc@5 0.8702
+[32m[2024-01-20 12:35:33] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 12:35:33] __main__ INFO: [0mTrain 30 11310
+[32m[2024-01-20 12:35:49] __main__ INFO: [0mEpoch 30 Step 100/390 lr 0.100000 loss 0.9058 (0.7864) acc@1 0.7578 (0.7688) acc@5 0.9375 (0.9586)
+[32m[2024-01-20 12:36:04] __main__ INFO: [0mEpoch 30 Step 200/390 lr 0.100000 loss 1.1607 (0.8224) acc@1 0.6562 (0.7567) acc@5 0.9297 (0.9550)
+[32m[2024-01-20 12:36:20] __main__ INFO: [0mEpoch 30 Step 300/390 lr 0.100000 loss 0.7311 (0.8449) acc@1 0.7812 (0.7507) acc@5 0.9688 (0.9521)
+[32m[2024-01-20 12:36:35] __main__ INFO: [0mEpoch 30 Step 390/390 lr 0.100000 loss 0.8249 (0.8580) acc@1 0.7812 (0.7466) acc@5 0.9609 (0.9509)
+[32m[2024-01-20 12:36:35] __main__ INFO: [0mElapsed 61.39
+[32m[2024-01-20 12:36:35] __main__ INFO: [0mVal 30
+[32m[2024-01-20 12:36:38] __main__ INFO: [0mEpoch 30 loss 1.4072 acc@1 0.6188 acc@5 0.8806
+[32m[2024-01-20 12:36:38] __main__ INFO: [0mElapsed 3.57
+[32m[2024-01-20 12:36:38] __main__ INFO: [0mTrain 31 11700
+[32m[2024-01-20 12:36:54] __main__ INFO: [0mEpoch 31 Step 100/390 lr 0.100000 loss 0.9450 (0.8007) acc@1 0.7656 (0.7623) acc@5 0.9219 (0.9601)
+[32m[2024-01-20 12:37:10] __main__ INFO: [0mEpoch 31 Step 200/390 lr 0.100000 loss 0.6236 (0.8191) acc@1 0.8047 (0.7556) acc@5 0.9844 (0.9567)
+[32m[2024-01-20 12:37:25] __main__ INFO: [0mEpoch 31 Step 300/390 lr 0.100000 loss 0.8041 (0.8421) acc@1 0.7500 (0.7496) acc@5 0.9688 (0.9539)
+[32m[2024-01-20 12:37:40] __main__ INFO: [0mEpoch 31 Step 390/390 lr 0.100000 loss 0.7721 (0.8537) acc@1 0.7734 (0.7468) acc@5 0.9531 (0.9515)
+[32m[2024-01-20 12:37:40] __main__ INFO: [0mElapsed 61.51
+[32m[2024-01-20 12:37:40] __main__ INFO: [0mVal 31
+[32m[2024-01-20 12:37:43] __main__ INFO: [0mEpoch 31 loss 1.3881 acc@1 0.6280 acc@5 0.8904
+[32m[2024-01-20 12:37:43] __main__ INFO: [0mElapsed 3.64
+[32m[2024-01-20 12:37:43] __main__ INFO: [0mTrain 32 12090
+[32m[2024-01-20 12:37:59] __main__ INFO: [0mEpoch 32 Step 100/390 lr 0.100000 loss 0.8888 (0.7653) acc@1 0.7422 (0.7702) acc@5 0.9375 (0.9605)
+[32m[2024-01-20 12:38:15] __main__ INFO: [0mEpoch 32 Step 200/390 lr 0.100000 loss 0.9548 (0.7978) acc@1 0.7656 (0.7609) acc@5 0.9297 (0.9576)
+[32m[2024-01-20 12:38:30] __main__ INFO: [0mEpoch 32 Step 300/390 lr 0.100000 loss 0.8998 (0.8263) acc@1 0.7578 (0.7535) acc@5 0.9453 (0.9540)
+[32m[2024-01-20 12:38:45] __main__ INFO: [0mEpoch 32 Step 390/390 lr 0.100000 loss 1.1157 (0.8439) acc@1 0.6719 (0.7488) acc@5 0.9219 (0.9526)
+[32m[2024-01-20 12:38:45] __main__ INFO: [0mElapsed 61.41
+[32m[2024-01-20 12:38:45] __main__ INFO: [0mVal 32
+[32m[2024-01-20 12:38:48] __main__ INFO: [0mEpoch 32 loss 2.0122 acc@1 0.5255 acc@5 0.8231
+[32m[2024-01-20 12:38:48] __main__ INFO: [0mElapsed 3.58
+[32m[2024-01-20 12:38:48] __main__ INFO: [0mTrain 33 12480
+[32m[2024-01-20 12:39:04] __main__ INFO: [0mEpoch 33 Step 100/390 lr 0.100000 loss 0.7060 (0.7633) acc@1 0.7969 (0.7730) acc@5 0.9609 (0.9584)
+[32m[2024-01-20 12:39:20] __main__ INFO: [0mEpoch 33 Step 200/390 lr 0.100000 loss 1.0062 (0.7970) acc@1 0.6953 (0.7636) acc@5 0.9609 (0.9558)
+[32m[2024-01-20 12:39:35] __main__ INFO: [0mEpoch 33 Step 300/390 lr 0.100000 loss 0.8716 (0.8238) acc@1 0.7578 (0.7585) acc@5 0.9531 (0.9532)
+[32m[2024-01-20 12:39:50] __main__ INFO: [0mEpoch 33 Step 390/390 lr 0.100000 loss 0.9170 (0.8371) acc@1 0.7188 (0.7540) acc@5 0.9375 (0.9517)
+[32m[2024-01-20 12:39:50] __main__ INFO: [0mElapsed 61.36
+[32m[2024-01-20 12:39:50] __main__ INFO: [0mVal 33
+[32m[2024-01-20 12:39:53] __main__ INFO: [0mEpoch 33 loss 1.4578 acc@1 0.6132 acc@5 0.8768
+[32m[2024-01-20 12:39:53] __main__ INFO: [0mElapsed 3.56
+[32m[2024-01-20 12:39:53] __main__ INFO: [0mTrain 34 12870
+[32m[2024-01-20 12:40:09] __main__ INFO: [0mEpoch 34 Step 100/390 lr 0.100000 loss 0.7379 (0.7480) acc@1 0.7969 (0.7738) acc@5 0.9531 (0.9623)
+[32m[2024-01-20 12:40:25] __main__ INFO: [0mEpoch 34 Step 200/390 lr 0.100000 loss 0.8972 (0.7977) acc@1 0.7422 (0.7613) acc@5 0.9453 (0.9564)
+[32m[2024-01-20 12:40:40] __main__ INFO: [0mEpoch 34 Step 300/390 lr 0.100000 loss 0.8615 (0.8164) acc@1 0.7188 (0.7580) acc@5 0.9609 (0.9535)
+[32m[2024-01-20 12:40:55] __main__ INFO: [0mEpoch 34 Step 390/390 lr 0.100000 loss 0.8580 (0.8323) acc@1 0.7344 (0.7542) acc@5 0.9297 (0.9526)
+[32m[2024-01-20 12:40:55] __main__ INFO: [0mElapsed 61.36
+[32m[2024-01-20 12:40:55] __main__ INFO: [0mVal 34
+[32m[2024-01-20 12:40:58] __main__ INFO: [0mEpoch 34 loss 1.4010 acc@1 0.6282 acc@5 0.8748
+[32m[2024-01-20 12:40:58] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 12:40:58] __main__ INFO: [0mTrain 35 13260
+[32m[2024-01-20 12:41:14] __main__ INFO: [0mEpoch 35 Step 100/390 lr 0.100000 loss 0.9036 (0.7624) acc@1 0.7422 (0.7721) acc@5 0.9375 (0.9609)
+[32m[2024-01-20 12:41:29] __main__ INFO: [0mEpoch 35 Step 200/390 lr 0.100000 loss 0.8658 (0.8021) acc@1 0.7344 (0.7580) acc@5 0.9219 (0.9585)
+[32m[2024-01-20 12:41:45] __main__ INFO: [0mEpoch 35 Step 300/390 lr 0.100000 loss 1.1409 (0.8251) acc@1 0.6641 (0.7528) acc@5 0.9375 (0.9562)
+[32m[2024-01-20 12:42:00] __main__ INFO: [0mEpoch 35 Step 390/390 lr 0.100000 loss 0.8022 (0.8376) acc@1 0.7422 (0.7507) acc@5 0.9453 (0.9540)
+[32m[2024-01-20 12:42:00] __main__ INFO: [0mElapsed 61.45
+[32m[2024-01-20 12:42:00] __main__ INFO: [0mVal 35
+[32m[2024-01-20 12:42:03] __main__ INFO: [0mEpoch 35 loss 1.4816 acc@1 0.6125 acc@5 0.8733
+[32m[2024-01-20 12:42:03] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 12:42:03] __main__ INFO: [0mTrain 36 13650
+[32m[2024-01-20 12:42:19] __main__ INFO: [0mEpoch 36 Step 100/390 lr 0.100000 loss 0.8122 (0.7465) acc@1 0.7891 (0.7737) acc@5 0.9453 (0.9623)
+[32m[2024-01-20 12:42:35] __main__ INFO: [0mEpoch 36 Step 200/390 lr 0.100000 loss 0.6784 (0.7868) acc@1 0.7734 (0.7645) acc@5 0.9766 (0.9587)
+[32m[2024-01-20 12:42:51] __main__ INFO: [0mEpoch 36 Step 300/390 lr 0.100000 loss 1.1834 (0.8118) acc@1 0.6406 (0.7570) acc@5 0.9219 (0.9566)
+[32m[2024-01-20 12:43:05] __main__ INFO: [0mEpoch 36 Step 390/390 lr 0.100000 loss 0.9348 (0.8288) acc@1 0.7578 (0.7530) acc@5 0.9531 (0.9547)
+[32m[2024-01-20 12:43:05] __main__ INFO: [0mElapsed 61.58
+[32m[2024-01-20 12:43:05] __main__ INFO: [0mVal 36
+[32m[2024-01-20 12:43:08] __main__ INFO: [0mEpoch 36 loss 1.6061 acc@1 0.5874 acc@5 0.8571
+[32m[2024-01-20 12:43:08] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 12:43:08] __main__ INFO: [0mTrain 37 14040
+[32m[2024-01-20 12:43:24] __main__ INFO: [0mEpoch 37 Step 100/390 lr 0.100000 loss 0.8090 (0.7502) acc@1 0.7734 (0.7798) acc@5 0.9688 (0.9615)
+[32m[2024-01-20 12:43:40] __main__ INFO: [0mEpoch 37 Step 200/390 lr 0.100000 loss 0.8002 (0.7799) acc@1 0.7891 (0.7683) acc@5 0.9531 (0.9596)
+[32m[2024-01-20 12:43:55] __main__ INFO: [0mEpoch 37 Step 300/390 lr 0.100000 loss 0.8874 (0.8072) acc@1 0.7734 (0.7624) acc@5 0.9453 (0.9564)
+[32m[2024-01-20 12:44:10] __main__ INFO: [0mEpoch 37 Step 390/390 lr 0.100000 loss 0.9503 (0.8212) acc@1 0.6953 (0.7590) acc@5 0.9453 (0.9543)
+[32m[2024-01-20 12:44:10] __main__ INFO: [0mElapsed 61.32
+[32m[2024-01-20 12:44:10] __main__ INFO: [0mVal 37
+[32m[2024-01-20 12:44:13] __main__ INFO: [0mEpoch 37 loss 1.6081 acc@1 0.5975 acc@5 0.8643
+[32m[2024-01-20 12:44:13] __main__ INFO: [0mElapsed 3.56
+[32m[2024-01-20 12:44:13] __main__ INFO: [0mTrain 38 14430
+[32m[2024-01-20 12:44:29] __main__ INFO: [0mEpoch 38 Step 100/390 lr 0.100000 loss 0.7954 (0.7553) acc@1 0.7344 (0.7759) acc@5 0.9609 (0.9631)
+[32m[2024-01-20 12:44:45] __main__ INFO: [0mEpoch 38 Step 200/390 lr 0.100000 loss 0.9725 (0.7862) acc@1 0.7422 (0.7659) acc@5 0.8984 (0.9596)
+[32m[2024-01-20 12:45:00] __main__ INFO: [0mEpoch 38 Step 300/390 lr 0.100000 loss 1.0413 (0.8046) acc@1 0.6797 (0.7619) acc@5 0.9141 (0.9571)
+[32m[2024-01-20 12:45:15] __main__ INFO: [0mEpoch 38 Step 390/390 lr 0.100000 loss 1.0029 (0.8274) acc@1 0.6953 (0.7562) acc@5 0.9219 (0.9545)
+[32m[2024-01-20 12:45:15] __main__ INFO: [0mElapsed 61.34
+[32m[2024-01-20 12:45:15] __main__ INFO: [0mVal 38
+[32m[2024-01-20 12:45:18] __main__ INFO: [0mEpoch 38 loss 1.6314 acc@1 0.5869 acc@5 0.8567
+[32m[2024-01-20 12:45:18] __main__ INFO: [0mElapsed 3.54
+[32m[2024-01-20 12:45:18] __main__ INFO: [0mTrain 39 14820
+[32m[2024-01-20 12:45:34] __main__ INFO: [0mEpoch 39 Step 100/390 lr 0.100000 loss 0.6253 (0.7234) acc@1 0.7891 (0.7831) acc@5 0.9844 (0.9672)
+[32m[2024-01-20 12:45:49] __main__ INFO: [0mEpoch 39 Step 200/390 lr 0.100000 loss 0.8792 (0.7661) acc@1 0.7656 (0.7712) acc@5 0.9219 (0.9632)
+[32m[2024-01-20 12:46:05] __main__ INFO: [0mEpoch 39 Step 300/390 lr 0.100000 loss 0.8879 (0.7970) acc@1 0.7734 (0.7632) acc@5 0.9531 (0.9589)
+[32m[2024-01-20 12:46:19] __main__ INFO: [0mEpoch 39 Step 390/390 lr 0.100000 loss 0.8403 (0.8074) acc@1 0.7422 (0.7600) acc@5 0.9531 (0.9572)
+[32m[2024-01-20 12:46:19] __main__ INFO: [0mElapsed 61.34
+[32m[2024-01-20 12:46:19] __main__ INFO: [0mVal 39
+[32m[2024-01-20 12:46:23] __main__ INFO: [0mEpoch 39 loss 1.4390 acc@1 0.6285 acc@5 0.8773
+[32m[2024-01-20 12:46:23] __main__ INFO: [0mElapsed 3.56
+[32m[2024-01-20 12:46:23] __main__ INFO: [0mTrain 40 15210
+[32m[2024-01-20 12:46:39] __main__ INFO: [0mEpoch 40 Step 100/390 lr 0.100000 loss 0.6235 (0.7273) acc@1 0.8359 (0.7804) acc@5 0.9688 (0.9644)
+[32m[2024-01-20 12:46:54] __main__ INFO: [0mEpoch 40 Step 200/390 lr 0.100000 loss 1.0407 (0.7616) acc@1 0.7031 (0.7721) acc@5 0.9141 (0.9615)
+[32m[2024-01-20 12:47:10] __main__ INFO: [0mEpoch 40 Step 300/390 lr 0.100000 loss 0.8540 (0.7858) acc@1 0.7266 (0.7658) acc@5 0.9531 (0.9582)
+[32m[2024-01-20 12:47:24] __main__ INFO: [0mEpoch 40 Step 390/390 lr 0.100000 loss 0.8514 (0.8025) acc@1 0.7266 (0.7614) acc@5 0.9453 (0.9555)
+[32m[2024-01-20 12:47:24] __main__ INFO: [0mElapsed 61.34
+[32m[2024-01-20 12:47:24] __main__ INFO: [0mVal 40
+[32m[2024-01-20 12:47:28] __main__ INFO: [0mEpoch 40 loss 1.5099 acc@1 0.6118 acc@5 0.8751
+[32m[2024-01-20 12:47:28] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 12:47:28] __main__ INFO: [0mTrain 41 15600
+[32m[2024-01-20 12:47:44] __main__ INFO: [0mEpoch 41 Step 100/390 lr 0.100000 loss 0.9175 (0.7131) acc@1 0.7422 (0.7879) acc@5 0.9375 (0.9655)
+[32m[2024-01-20 12:47:59] __main__ INFO: [0mEpoch 41 Step 200/390 lr 0.100000 loss 0.7327 (0.7488) acc@1 0.7969 (0.7753) acc@5 0.9609 (0.9627)
+[32m[2024-01-20 12:48:15] __main__ INFO: [0mEpoch 41 Step 300/390 lr 0.100000 loss 0.9462 (0.7715) acc@1 0.7188 (0.7697) acc@5 0.9375 (0.9599)
+[32m[2024-01-20 12:48:29] __main__ INFO: [0mEpoch 41 Step 390/390 lr 0.100000 loss 0.9654 (0.7969) acc@1 0.6875 (0.7623) acc@5 0.9453 (0.9579)
+[32m[2024-01-20 12:48:29] __main__ INFO: [0mElapsed 61.41
+[32m[2024-01-20 12:48:29] __main__ INFO: [0mVal 41
+[32m[2024-01-20 12:48:33] __main__ INFO: [0mEpoch 41 loss 1.4184 acc@1 0.6199 acc@5 0.8748
+[32m[2024-01-20 12:48:33] __main__ INFO: [0mElapsed 3.57
+[32m[2024-01-20 12:48:33] __main__ INFO: [0mTrain 42 15990
+[32m[2024-01-20 12:48:49] __main__ INFO: [0mEpoch 42 Step 100/390 lr 0.100000 loss 0.6610 (0.7450) acc@1 0.7812 (0.7780) acc@5 0.9766 (0.9620)
+[32m[2024-01-20 12:49:04] __main__ INFO: [0mEpoch 42 Step 200/390 lr 0.100000 loss 0.7049 (0.7681) acc@1 0.7969 (0.7721) acc@5 0.9844 (0.9599)
+[32m[2024-01-20 12:49:20] __main__ INFO: [0mEpoch 42 Step 300/390 lr 0.100000 loss 0.8732 (0.7953) acc@1 0.7422 (0.7650) acc@5 0.9609 (0.9573)
+[32m[2024-01-20 12:49:34] __main__ INFO: [0mEpoch 42 Step 390/390 lr 0.100000 loss 0.8913 (0.8034) acc@1 0.7734 (0.7625) acc@5 0.9297 (0.9565)
+[32m[2024-01-20 12:49:34] __main__ INFO: [0mElapsed 61.30
+[32m[2024-01-20 12:49:34] __main__ INFO: [0mVal 42
+[32m[2024-01-20 12:49:38] __main__ INFO: [0mEpoch 42 loss 1.5548 acc@1 0.5988 acc@5 0.8667
+[32m[2024-01-20 12:49:38] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 12:49:38] __main__ INFO: [0mTrain 43 16380
+[32m[2024-01-20 12:49:54] __main__ INFO: [0mEpoch 43 Step 100/390 lr 0.100000 loss 0.6699 (0.7209) acc@1 0.8281 (0.7834) acc@5 0.9688 (0.9639)
+[32m[2024-01-20 12:50:09] __main__ INFO: [0mEpoch 43 Step 200/390 lr 0.100000 loss 0.9962 (0.7553) acc@1 0.7266 (0.7741) acc@5 0.9297 (0.9609)
+[32m[2024-01-20 12:50:25] __main__ INFO: [0mEpoch 43 Step 300/390 lr 0.100000 loss 0.8162 (0.7768) acc@1 0.7656 (0.7680) acc@5 0.9688 (0.9595)
+[32m[2024-01-20 12:50:39] __main__ INFO: [0mEpoch 43 Step 390/390 lr 0.100000 loss 0.9019 (0.7987) acc@1 0.7422 (0.7626) acc@5 0.9531 (0.9574)
+[32m[2024-01-20 12:50:39] __main__ INFO: [0mElapsed 61.47
+[32m[2024-01-20 12:50:39] __main__ INFO: [0mVal 43
+[32m[2024-01-20 12:50:43] __main__ INFO: [0mEpoch 43 loss 1.4887 acc@1 0.6208 acc@5 0.8732
+[32m[2024-01-20 12:50:43] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 12:50:43] __main__ INFO: [0mTrain 44 16770
+[32m[2024-01-20 12:50:59] __main__ INFO: [0mEpoch 44 Step 100/390 lr 0.100000 loss 0.7072 (0.7131) acc@1 0.7891 (0.7877) acc@5 0.9688 (0.9654)
+[32m[2024-01-20 12:51:14] __main__ INFO: [0mEpoch 44 Step 200/390 lr 0.100000 loss 0.9088 (0.7529) acc@1 0.7344 (0.7764) acc@5 0.9375 (0.9612)
+[32m[2024-01-20 12:51:30] __main__ INFO: [0mEpoch 44 Step 300/390 lr 0.100000 loss 0.8104 (0.7780) acc@1 0.7656 (0.7686) acc@5 0.9453 (0.9591)
+[32m[2024-01-20 12:51:44] __main__ INFO: [0mEpoch 44 Step 390/390 lr 0.100000 loss 0.7470 (0.7939) acc@1 0.7578 (0.7638) acc@5 0.9453 (0.9576)
+[32m[2024-01-20 12:51:44] __main__ INFO: [0mElapsed 61.46
+[32m[2024-01-20 12:51:44] __main__ INFO: [0mVal 44
+[32m[2024-01-20 12:51:48] __main__ INFO: [0mEpoch 44 loss 1.5653 acc@1 0.5932 acc@5 0.8687
+[32m[2024-01-20 12:51:48] __main__ INFO: [0mElapsed 3.58
+[32m[2024-01-20 12:51:48] __main__ INFO: [0mTrain 45 17160
+[32m[2024-01-20 12:52:04] __main__ INFO: [0mEpoch 45 Step 100/390 lr 0.100000 loss 0.7797 (0.7083) acc@1 0.7500 (0.7865) acc@5 0.9219 (0.9663)
+[32m[2024-01-20 12:52:19] __main__ INFO: [0mEpoch 45 Step 200/390 lr 0.100000 loss 0.7603 (0.7354) acc@1 0.7812 (0.7803) acc@5 0.9375 (0.9624)
+[32m[2024-01-20 12:52:35] __main__ INFO: [0mEpoch 45 Step 300/390 lr 0.100000 loss 1.0604 (0.7681) acc@1 0.7109 (0.7688) acc@5 0.9297 (0.9599)
+[32m[2024-01-20 12:52:49] __main__ INFO: [0mEpoch 45 Step 390/390 lr 0.100000 loss 0.8901 (0.7811) acc@1 0.7422 (0.7661) acc@5 0.9453 (0.9587)
+[32m[2024-01-20 12:52:49] __main__ INFO: [0mElapsed 61.35
+[32m[2024-01-20 12:52:49] __main__ INFO: [0mVal 45
+[32m[2024-01-20 12:52:53] __main__ INFO: [0mEpoch 45 loss 1.5833 acc@1 0.5984 acc@5 0.8577
+[32m[2024-01-20 12:52:53] __main__ INFO: [0mElapsed 3.58
+[32m[2024-01-20 12:52:53] __main__ INFO: [0mTrain 46 17550
+[32m[2024-01-20 12:53:09] __main__ INFO: [0mEpoch 46 Step 100/390 lr 0.100000 loss 0.6835 (0.7117) acc@1 0.8203 (0.7884) acc@5 0.9531 (0.9655)
+[32m[2024-01-20 12:53:24] __main__ INFO: [0mEpoch 46 Step 200/390 lr 0.100000 loss 0.8282 (0.7489) acc@1 0.7812 (0.7768) acc@5 0.9609 (0.9618)
+[32m[2024-01-20 12:53:40] __main__ INFO: [0mEpoch 46 Step 300/390 lr 0.100000 loss 0.6689 (0.7708) acc@1 0.7891 (0.7708) acc@5 0.9688 (0.9601)
+[32m[2024-01-20 12:53:54] __main__ INFO: [0mEpoch 46 Step 390/390 lr 0.100000 loss 0.7289 (0.7841) acc@1 0.7891 (0.7670) acc@5 0.9688 (0.9584)
+[32m[2024-01-20 12:53:54] __main__ INFO: [0mElapsed 61.35
+[32m[2024-01-20 12:53:54] __main__ INFO: [0mVal 46
+[32m[2024-01-20 12:53:58] __main__ INFO: [0mEpoch 46 loss 1.5500 acc@1 0.6003 acc@5 0.8684
+[32m[2024-01-20 12:53:58] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 12:53:58] __main__ INFO: [0mTrain 47 17940
+[32m[2024-01-20 12:54:14] __main__ INFO: [0mEpoch 47 Step 100/390 lr 0.100000 loss 0.6954 (0.7097) acc@1 0.8047 (0.7903) acc@5 0.9766 (0.9659)
+[32m[2024-01-20 12:54:29] __main__ INFO: [0mEpoch 47 Step 200/390 lr 0.100000 loss 0.9202 (0.7560) acc@1 0.7422 (0.7752) acc@5 0.9453 (0.9621)
+[32m[2024-01-20 12:54:45] __main__ INFO: [0mEpoch 47 Step 300/390 lr 0.100000 loss 0.8560 (0.7747) acc@1 0.7109 (0.7685) acc@5 0.9453 (0.9609)
+[32m[2024-01-20 12:54:59] __main__ INFO: [0mEpoch 47 Step 390/390 lr 0.100000 loss 0.8475 (0.7903) acc@1 0.7109 (0.7640) acc@5 0.9688 (0.9587)
+[32m[2024-01-20 12:54:59] __main__ INFO: [0mElapsed 61.44
+[32m[2024-01-20 12:54:59] __main__ INFO: [0mVal 47
+[32m[2024-01-20 12:55:03] __main__ INFO: [0mEpoch 47 loss 1.4965 acc@1 0.6209 acc@5 0.8830
+[32m[2024-01-20 12:55:03] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 12:55:03] __main__ INFO: [0mTrain 48 18330
+[32m[2024-01-20 12:55:19] __main__ INFO: [0mEpoch 48 Step 100/390 lr 0.100000 loss 0.8931 (0.7128) acc@1 0.7500 (0.7857) acc@5 0.9688 (0.9653)
+[32m[2024-01-20 12:55:34] __main__ INFO: [0mEpoch 48 Step 200/390 lr 0.100000 loss 0.7733 (0.7432) acc@1 0.8047 (0.7772) acc@5 0.9375 (0.9630)
+[32m[2024-01-20 12:55:50] __main__ INFO: [0mEpoch 48 Step 300/390 lr 0.100000 loss 0.7168 (0.7564) acc@1 0.8281 (0.7748) acc@5 0.9531 (0.9612)
+[32m[2024-01-20 12:56:05] __main__ INFO: [0mEpoch 48 Step 390/390 lr 0.100000 loss 0.6631 (0.7760) acc@1 0.8125 (0.7695) acc@5 0.9766 (0.9589)
+[32m[2024-01-20 12:56:05] __main__ INFO: [0mElapsed 61.72
+[32m[2024-01-20 12:56:05] __main__ INFO: [0mVal 48
+[32m[2024-01-20 12:56:08] __main__ INFO: [0mEpoch 48 loss 1.5930 acc@1 0.6044 acc@5 0.8611
+[32m[2024-01-20 12:56:08] __main__ INFO: [0mElapsed 3.62
+[32m[2024-01-20 12:56:08] __main__ INFO: [0mTrain 49 18720
+[32m[2024-01-20 12:56:24] __main__ INFO: [0mEpoch 49 Step 100/390 lr 0.100000 loss 0.6042 (0.6992) acc@1 0.8672 (0.7892) acc@5 0.9531 (0.9681)
+[32m[2024-01-20 12:56:40] __main__ INFO: [0mEpoch 49 Step 200/390 lr 0.100000 loss 0.9241 (0.7400) acc@1 0.7188 (0.7781) acc@5 0.9453 (0.9650)
+[32m[2024-01-20 12:56:55] __main__ INFO: [0mEpoch 49 Step 300/390 lr 0.100000 loss 0.7784 (0.7604) acc@1 0.7578 (0.7740) acc@5 0.9531 (0.9633)
+[32m[2024-01-20 12:57:10] __main__ INFO: [0mEpoch 49 Step 390/390 lr 0.100000 loss 0.8233 (0.7732) acc@1 0.7734 (0.7703) acc@5 0.9609 (0.9610)
+[32m[2024-01-20 12:57:10] __main__ INFO: [0mElapsed 61.38
+[32m[2024-01-20 12:57:10] __main__ INFO: [0mVal 49
+[32m[2024-01-20 12:57:13] __main__ INFO: [0mEpoch 49 loss 1.5626 acc@1 0.6020 acc@5 0.8642
+[32m[2024-01-20 12:57:13] __main__ INFO: [0mElapsed 3.62
+[32m[2024-01-20 12:57:13] __main__ INFO: [0mTrain 50 19110
+[32m[2024-01-20 12:57:29] __main__ INFO: [0mEpoch 50 Step 100/390 lr 0.100000 loss 0.7640 (0.6987) acc@1 0.7344 (0.7948) acc@5 0.9609 (0.9675)
+[32m[2024-01-20 12:57:45] __main__ INFO: [0mEpoch 50 Step 200/390 lr 0.100000 loss 0.9285 (0.7245) acc@1 0.7344 (0.7850) acc@5 0.9375 (0.9641)
+[32m[2024-01-20 12:58:00] __main__ INFO: [0mEpoch 50 Step 300/390 lr 0.100000 loss 0.8466 (0.7593) acc@1 0.7656 (0.7747) acc@5 0.9609 (0.9605)
+[32m[2024-01-20 12:58:15] __main__ INFO: [0mEpoch 50 Step 390/390 lr 0.100000 loss 0.7635 (0.7681) acc@1 0.7500 (0.7722) acc@5 0.9688 (0.9592)
+[32m[2024-01-20 12:58:15] __main__ INFO: [0mElapsed 61.31
+[32m[2024-01-20 12:58:15] __main__ INFO: [0mVal 50
+[32m[2024-01-20 12:58:18] __main__ INFO: [0mEpoch 50 loss 1.5086 acc@1 0.6095 acc@5 0.8669
+[32m[2024-01-20 12:58:18] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 12:58:18] __main__ INFO: [0mTrain 51 19500
+[32m[2024-01-20 12:58:34] __main__ INFO: [0mEpoch 51 Step 100/390 lr 0.100000 loss 0.9097 (0.6861) acc@1 0.7578 (0.7938) acc@5 0.9453 (0.9671)
+[32m[2024-01-20 12:58:50] __main__ INFO: [0mEpoch 51 Step 200/390 lr 0.100000 loss 0.8120 (0.7325) acc@1 0.7344 (0.7816) acc@5 0.9609 (0.9650)
+[32m[2024-01-20 12:59:05] __main__ INFO: [0mEpoch 51 Step 300/390 lr 0.100000 loss 0.7567 (0.7561) acc@1 0.7578 (0.7753) acc@5 0.9688 (0.9620)
+[32m[2024-01-20 12:59:20] __main__ INFO: [0mEpoch 51 Step 390/390 lr 0.100000 loss 0.7229 (0.7697) acc@1 0.7500 (0.7713) acc@5 0.9766 (0.9606)
+[32m[2024-01-20 12:59:20] __main__ INFO: [0mElapsed 61.43
+[32m[2024-01-20 12:59:20] __main__ INFO: [0mVal 51
+[32m[2024-01-20 12:59:23] __main__ INFO: [0mEpoch 51 loss 1.5858 acc@1 0.5846 acc@5 0.8546
+[32m[2024-01-20 12:59:23] __main__ INFO: [0mElapsed 3.62
+[32m[2024-01-20 12:59:23] __main__ INFO: [0mTrain 52 19890
+[32m[2024-01-20 12:59:39] __main__ INFO: [0mEpoch 52 Step 100/390 lr 0.100000 loss 0.8730 (0.7032) acc@1 0.7734 (0.7896) acc@5 0.9375 (0.9659)
+[32m[2024-01-20 12:59:54] __main__ INFO: [0mEpoch 52 Step 200/390 lr 0.100000 loss 0.6394 (0.7326) acc@1 0.8281 (0.7811) acc@5 0.9688 (0.9643)
+[32m[2024-01-20 13:00:10] __main__ INFO: [0mEpoch 52 Step 300/390 lr 0.100000 loss 0.8915 (0.7513) acc@1 0.7500 (0.7767) acc@5 0.9453 (0.9627)
+[32m[2024-01-20 13:00:24] __main__ INFO: [0mEpoch 52 Step 390/390 lr 0.100000 loss 0.9462 (0.7658) acc@1 0.8047 (0.7719) acc@5 0.9219 (0.9599)
+[32m[2024-01-20 13:00:24] __main__ INFO: [0mElapsed 61.30
+[32m[2024-01-20 13:00:24] __main__ INFO: [0mVal 52
+[32m[2024-01-20 13:00:28] __main__ INFO: [0mEpoch 52 loss 1.5484 acc@1 0.6005 acc@5 0.8601
+[32m[2024-01-20 13:00:28] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 13:00:28] __main__ INFO: [0mTrain 53 20280
+[32m[2024-01-20 13:00:44] __main__ INFO: [0mEpoch 53 Step 100/390 lr 0.100000 loss 0.9525 (0.6804) acc@1 0.7578 (0.7979) acc@5 0.9453 (0.9691)
+[32m[2024-01-20 13:00:59] __main__ INFO: [0mEpoch 53 Step 200/390 lr 0.100000 loss 0.8706 (0.7249) acc@1 0.7109 (0.7836) acc@5 0.9453 (0.9650)
+[32m[2024-01-20 13:01:15] __main__ INFO: [0mEpoch 53 Step 300/390 lr 0.100000 loss 0.7159 (0.7453) acc@1 0.7969 (0.7767) acc@5 0.9688 (0.9629)
+[32m[2024-01-20 13:01:29] __main__ INFO: [0mEpoch 53 Step 390/390 lr 0.100000 loss 0.9255 (0.7669) acc@1 0.7500 (0.7703) acc@5 0.9219 (0.9611)
+[32m[2024-01-20 13:01:29] __main__ INFO: [0mElapsed 61.34
+[32m[2024-01-20 13:01:29] __main__ INFO: [0mVal 53
+[32m[2024-01-20 13:01:33] __main__ INFO: [0mEpoch 53 loss 1.7072 acc@1 0.5770 acc@5 0.8544
+[32m[2024-01-20 13:01:33] __main__ INFO: [0mElapsed 3.61
+[32m[2024-01-20 13:01:33] __main__ INFO: [0mTrain 54 20670
+[32m[2024-01-20 13:01:49] __main__ INFO: [0mEpoch 54 Step 100/390 lr 0.100000 loss 0.6664 (0.6971) acc@1 0.7812 (0.7922) acc@5 0.9609 (0.9682)
+[32m[2024-01-20 13:02:04] __main__ INFO: [0mEpoch 54 Step 200/390 lr 0.100000 loss 0.9165 (0.7244) acc@1 0.6641 (0.7842) acc@5 0.9453 (0.9657)
+[32m[2024-01-20 13:02:20] __main__ INFO: [0mEpoch 54 Step 300/390 lr 0.100000 loss 1.0040 (0.7512) acc@1 0.7109 (0.7763) acc@5 0.9453 (0.9631)
+[32m[2024-01-20 13:02:34] __main__ INFO: [0mEpoch 54 Step 390/390 lr 0.100000 loss 0.8414 (0.7637) acc@1 0.6953 (0.7732) acc@5 0.9531 (0.9617)
+[32m[2024-01-20 13:02:34] __main__ INFO: [0mElapsed 61.33
+[32m[2024-01-20 13:02:34] __main__ INFO: [0mVal 54
+[32m[2024-01-20 13:02:38] __main__ INFO: [0mEpoch 54 loss 1.5442 acc@1 0.5919 acc@5 0.8664
+[32m[2024-01-20 13:02:38] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 13:02:38] __main__ INFO: [0mTrain 55 21060
+[32m[2024-01-20 13:02:54] __main__ INFO: [0mEpoch 55 Step 100/390 lr 0.100000 loss 0.5981 (0.6828) acc@1 0.8281 (0.7963) acc@5 0.9688 (0.9685)
+[32m[2024-01-20 13:03:09] __main__ INFO: [0mEpoch 55 Step 200/390 lr 0.100000 loss 0.7353 (0.7209) acc@1 0.7734 (0.7875) acc@5 0.9609 (0.9641)
+[32m[2024-01-20 13:03:25] __main__ INFO: [0mEpoch 55 Step 300/390 lr 0.100000 loss 0.9241 (0.7436) acc@1 0.7734 (0.7801) acc@5 0.9219 (0.9612)
+[32m[2024-01-20 13:03:39] __main__ INFO: [0mEpoch 55 Step 390/390 lr 0.100000 loss 0.9960 (0.7607) acc@1 0.7188 (0.7758) acc@5 0.9453 (0.9593)
+[32m[2024-01-20 13:03:39] __main__ INFO: [0mElapsed 61.24
+[32m[2024-01-20 13:03:39] __main__ INFO: [0mVal 55
+[32m[2024-01-20 13:03:43] __main__ INFO: [0mEpoch 55 loss 1.4221 acc@1 0.6240 acc@5 0.8823
+[32m[2024-01-20 13:03:43] __main__ INFO: [0mElapsed 3.56
+[32m[2024-01-20 13:03:43] __main__ INFO: [0mTrain 56 21450
+[32m[2024-01-20 13:03:59] __main__ INFO: [0mEpoch 56 Step 100/390 lr 0.100000 loss 0.7953 (0.6919) acc@1 0.7578 (0.7960) acc@5 0.9453 (0.9673)
+[32m[2024-01-20 13:04:14] __main__ INFO: [0mEpoch 56 Step 200/390 lr 0.100000 loss 0.6640 (0.7128) acc@1 0.7969 (0.7888) acc@5 0.9688 (0.9663)
+[32m[2024-01-20 13:04:30] __main__ INFO: [0mEpoch 56 Step 300/390 lr 0.100000 loss 0.5114 (0.7430) acc@1 0.8828 (0.7797) acc@5 0.9766 (0.9622)
+[32m[2024-01-20 13:04:44] __main__ INFO: [0mEpoch 56 Step 390/390 lr 0.100000 loss 0.7014 (0.7625) acc@1 0.7812 (0.7735) acc@5 0.9531 (0.9608)
+[32m[2024-01-20 13:04:44] __main__ INFO: [0mElapsed 61.37
+[32m[2024-01-20 13:04:44] __main__ INFO: [0mVal 56
+[32m[2024-01-20 13:04:48] __main__ INFO: [0mEpoch 56 loss 1.3426 acc@1 0.6375 acc@5 0.8901
+[32m[2024-01-20 13:04:48] __main__ INFO: [0mElapsed 3.58
+[32m[2024-01-20 13:04:48] __main__ INFO: [0mTrain 57 21840
+[32m[2024-01-20 13:05:04] __main__ INFO: [0mEpoch 57 Step 100/390 lr 0.100000 loss 0.6222 (0.6666) acc@1 0.8203 (0.8013) acc@5 0.9766 (0.9700)
+[32m[2024-01-20 13:05:19] __main__ INFO: [0mEpoch 57 Step 200/390 lr 0.100000 loss 0.8481 (0.7077) acc@1 0.7500 (0.7881) acc@5 0.9375 (0.9669)
+[32m[2024-01-20 13:05:35] __main__ INFO: [0mEpoch 57 Step 300/390 lr 0.100000 loss 0.6847 (0.7307) acc@1 0.7734 (0.7816) acc@5 0.9766 (0.9647)
+[32m[2024-01-20 13:05:49] __main__ INFO: [0mEpoch 57 Step 390/390 lr 0.100000 loss 0.9796 (0.7498) acc@1 0.7109 (0.7763) acc@5 0.9453 (0.9626)
+[32m[2024-01-20 13:05:49] __main__ INFO: [0mElapsed 61.37
+[32m[2024-01-20 13:05:49] __main__ INFO: [0mVal 57
+[32m[2024-01-20 13:05:53] __main__ INFO: [0mEpoch 57 loss 1.6579 acc@1 0.5884 acc@5 0.8597
+[32m[2024-01-20 13:05:53] __main__ INFO: [0mElapsed 3.58
+[32m[2024-01-20 13:05:53] __main__ INFO: [0mTrain 58 22230
+[32m[2024-01-20 13:06:09] __main__ INFO: [0mEpoch 58 Step 100/390 lr 0.100000 loss 0.7379 (0.6661) acc@1 0.7656 (0.8032) acc@5 0.9609 (0.9691)
+[32m[2024-01-20 13:06:24] __main__ INFO: [0mEpoch 58 Step 200/390 lr 0.100000 loss 0.6761 (0.7094) acc@1 0.8047 (0.7895) acc@5 0.9609 (0.9656)
+[32m[2024-01-20 13:06:40] __main__ INFO: [0mEpoch 58 Step 300/390 lr 0.100000 loss 0.5748 (0.7375) acc@1 0.8125 (0.7811) acc@5 0.9844 (0.9637)
+[32m[2024-01-20 13:06:54] __main__ INFO: [0mEpoch 58 Step 390/390 lr 0.100000 loss 0.5481 (0.7580) acc@1 0.8438 (0.7741) acc@5 0.9844 (0.9614)
+[32m[2024-01-20 13:06:54] __main__ INFO: [0mElapsed 61.33
+[32m[2024-01-20 13:06:54] __main__ INFO: [0mVal 58
+[32m[2024-01-20 13:06:58] __main__ INFO: [0mEpoch 58 loss 1.5667 acc@1 0.6101 acc@5 0.8574
+[32m[2024-01-20 13:06:58] __main__ INFO: [0mElapsed 3.57
+[32m[2024-01-20 13:06:58] __main__ INFO: [0mTrain 59 22620
+[32m[2024-01-20 13:07:14] __main__ INFO: [0mEpoch 59 Step 100/390 lr 0.100000 loss 0.6182 (0.6679) acc@1 0.8047 (0.8022) acc@5 0.9688 (0.9702)
+[32m[2024-01-20 13:07:29] __main__ INFO: [0mEpoch 59 Step 200/390 lr 0.100000 loss 0.9062 (0.6947) acc@1 0.7266 (0.7938) acc@5 0.9453 (0.9676)
+[32m[2024-01-20 13:07:45] __main__ INFO: [0mEpoch 59 Step 300/390 lr 0.100000 loss 0.7093 (0.7293) acc@1 0.8281 (0.7823) acc@5 0.9766 (0.9636)
+[32m[2024-01-20 13:07:59] __main__ INFO: [0mEpoch 59 Step 390/390 lr 0.100000 loss 0.6980 (0.7513) acc@1 0.8047 (0.7768) acc@5 0.9531 (0.9615)
+[32m[2024-01-20 13:07:59] __main__ INFO: [0mElapsed 61.28
+[32m[2024-01-20 13:07:59] __main__ INFO: [0mVal 59
+[32m[2024-01-20 13:08:02] __main__ INFO: [0mEpoch 59 loss 1.4902 acc@1 0.6207 acc@5 0.8744
+[32m[2024-01-20 13:08:02] __main__ INFO: [0mElapsed 3.56
+[32m[2024-01-20 13:08:02] __main__ INFO: [0mTrain 60 23010
+[32m[2024-01-20 13:08:18] __main__ INFO: [0mEpoch 60 Step 100/390 lr 0.100000 loss 0.5606 (0.6864) acc@1 0.7891 (0.7899) acc@5 0.9766 (0.9675)
+[32m[2024-01-20 13:08:34] __main__ INFO: [0mEpoch 60 Step 200/390 lr 0.100000 loss 0.5633 (0.7104) acc@1 0.8203 (0.7863) acc@5 0.9688 (0.9647)
+[32m[2024-01-20 13:08:49] __main__ INFO: [0mEpoch 60 Step 300/390 lr 0.100000 loss 0.8387 (0.7361) acc@1 0.7188 (0.7799) acc@5 0.9609 (0.9632)
+[32m[2024-01-20 13:09:04] __main__ INFO: [0mEpoch 60 Step 390/390 lr 0.100000 loss 0.8768 (0.7495) acc@1 0.7266 (0.7757) acc@5 0.9609 (0.9622)
+[32m[2024-01-20 13:09:04] __main__ INFO: [0mElapsed 61.27
+[32m[2024-01-20 13:09:04] __main__ INFO: [0mVal 60
+[32m[2024-01-20 13:09:07] __main__ INFO: [0mEpoch 60 loss 1.3857 acc@1 0.6383 acc@5 0.8902
+[32m[2024-01-20 13:09:07] __main__ INFO: [0mElapsed 3.57
+[32m[2024-01-20 13:09:07] __main__ INFO: [0mTrain 61 23400
+[32m[2024-01-20 13:09:23] __main__ INFO: [0mEpoch 61 Step 100/390 lr 0.020000 loss 0.3213 (0.4341) acc@1 0.9062 (0.8741) acc@5 1.0000 (0.9878)
+[32m[2024-01-20 13:09:39] __main__ INFO: [0mEpoch 61 Step 200/390 lr 0.020000 loss 0.3971 (0.3744) acc@1 0.8828 (0.8899) acc@5 0.9922 (0.9898)
+[32m[2024-01-20 13:09:54] __main__ INFO: [0mEpoch 61 Step 300/390 lr 0.020000 loss 0.2234 (0.3437) acc@1 0.9453 (0.8991) acc@5 0.9922 (0.9908)
+[32m[2024-01-20 13:10:09] __main__ INFO: [0mEpoch 61 Step 390/390 lr 0.020000 loss 0.3610 (0.3270) acc@1 0.8828 (0.9041) acc@5 0.9922 (0.9915)
+[32m[2024-01-20 13:10:09] __main__ INFO: [0mElapsed 61.27
+[32m[2024-01-20 13:10:09] __main__ INFO: [0mVal 61
+[32m[2024-01-20 13:10:12] __main__ INFO: [0mEpoch 61 loss 0.8173 acc@1 0.7775 acc@5 0.9489
+[32m[2024-01-20 13:10:12] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 13:10:12] __main__ INFO: [0mTrain 62 23790
+[32m[2024-01-20 13:10:28] __main__ INFO: [0mEpoch 62 Step 100/390 lr 0.020000 loss 0.1797 (0.1859) acc@1 0.9688 (0.9477) acc@5 0.9922 (0.9976)
+[32m[2024-01-20 13:10:43] __main__ INFO: [0mEpoch 62 Step 200/390 lr 0.020000 loss 0.1034 (0.1897) acc@1 0.9766 (0.9457) acc@5 1.0000 (0.9969)
+[32m[2024-01-20 13:10:59] __main__ INFO: [0mEpoch 62 Step 300/390 lr 0.020000 loss 0.2168 (0.1931) acc@1 0.9219 (0.9447) acc@5 1.0000 (0.9966)
+[32m[2024-01-20 13:11:14] __main__ INFO: [0mEpoch 62 Step 390/390 lr 0.020000 loss 0.1794 (0.1924) acc@1 0.9609 (0.9450) acc@5 0.9922 (0.9966)
+[32m[2024-01-20 13:11:14] __main__ INFO: [0mElapsed 61.39
+[32m[2024-01-20 13:11:14] __main__ INFO: [0mVal 62
+[32m[2024-01-20 13:11:17] __main__ INFO: [0mEpoch 62 loss 0.8227 acc@1 0.7819 acc@5 0.9501
+[32m[2024-01-20 13:11:17] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 13:11:17] __main__ INFO: [0mTrain 63 24180
+[32m[2024-01-20 13:11:33] __main__ INFO: [0mEpoch 63 Step 100/390 lr 0.020000 loss 0.1324 (0.1349) acc@1 0.9609 (0.9637) acc@5 1.0000 (0.9987)
+[32m[2024-01-20 13:11:48] __main__ INFO: [0mEpoch 63 Step 200/390 lr 0.020000 loss 0.1164 (0.1377) acc@1 0.9688 (0.9622) acc@5 1.0000 (0.9987)
+[32m[2024-01-20 13:12:04] __main__ INFO: [0mEpoch 63 Step 300/390 lr 0.020000 loss 0.2244 (0.1394) acc@1 0.9609 (0.9613) acc@5 1.0000 (0.9986)
+[32m[2024-01-20 13:12:18] __main__ INFO: [0mEpoch 63 Step 390/390 lr 0.020000 loss 0.2020 (0.1432) acc@1 0.9375 (0.9601) acc@5 0.9922 (0.9986)
+[32m[2024-01-20 13:12:18] __main__ INFO: [0mElapsed 61.32
+[32m[2024-01-20 13:12:18] __main__ INFO: [0mVal 63
+[32m[2024-01-20 13:12:22] __main__ INFO: [0mEpoch 63 loss 0.8659 acc@1 0.7761 acc@5 0.9481
+[32m[2024-01-20 13:12:22] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 13:12:22] __main__ INFO: [0mTrain 64 24570
+[32m[2024-01-20 13:12:38] __main__ INFO: [0mEpoch 64 Step 100/390 lr 0.020000 loss 0.1165 (0.1128) acc@1 0.9688 (0.9709) acc@5 1.0000 (0.9991)
+[32m[2024-01-20 13:12:53] __main__ INFO: [0mEpoch 64 Step 200/390 lr 0.020000 loss 0.1276 (0.1124) acc@1 0.9766 (0.9711) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:13:09] __main__ INFO: [0mEpoch 64 Step 300/390 lr 0.020000 loss 0.0960 (0.1143) acc@1 0.9766 (0.9702) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:13:23] __main__ INFO: [0mEpoch 64 Step 390/390 lr 0.020000 loss 0.1109 (0.1163) acc@1 0.9609 (0.9693) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 13:13:23] __main__ INFO: [0mElapsed 61.34
+[32m[2024-01-20 13:13:23] __main__ INFO: [0mVal 64
+[32m[2024-01-20 13:13:27] __main__ INFO: [0mEpoch 64 loss 0.8551 acc@1 0.7833 acc@5 0.9496
+[32m[2024-01-20 13:13:27] __main__ INFO: [0mElapsed 3.65
+[32m[2024-01-20 13:13:27] __main__ INFO: [0mTrain 65 24960
+[32m[2024-01-20 13:13:43] __main__ INFO: [0mEpoch 65 Step 100/390 lr 0.020000 loss 0.1126 (0.0882) acc@1 0.9609 (0.9784) acc@5 1.0000 (0.9997)
+[32m[2024-01-20 13:13:58] __main__ INFO: [0mEpoch 65 Step 200/390 lr 0.020000 loss 0.0954 (0.0909) acc@1 0.9609 (0.9773) acc@5 1.0000 (0.9996)
+[32m[2024-01-20 13:14:14] __main__ INFO: [0mEpoch 65 Step 300/390 lr 0.020000 loss 0.0879 (0.0966) acc@1 0.9766 (0.9759) acc@5 1.0000 (0.9996)
+[32m[2024-01-20 13:14:28] __main__ INFO: [0mEpoch 65 Step 390/390 lr 0.020000 loss 0.0654 (0.0988) acc@1 0.9844 (0.9752) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 13:14:28] __main__ INFO: [0mElapsed 61.27
+[32m[2024-01-20 13:14:28] __main__ INFO: [0mVal 65
+[32m[2024-01-20 13:14:32] __main__ INFO: [0mEpoch 65 loss 0.8935 acc@1 0.7737 acc@5 0.9458
+[32m[2024-01-20 13:14:32] __main__ INFO: [0mElapsed 3.61
+[32m[2024-01-20 13:14:32] __main__ INFO: [0mTrain 66 25350
+[32m[2024-01-20 13:14:48] __main__ INFO: [0mEpoch 66 Step 100/390 lr 0.020000 loss 0.0692 (0.0797) acc@1 0.9844 (0.9816) acc@5 1.0000 (0.9998)
+[32m[2024-01-20 13:15:03] __main__ INFO: [0mEpoch 66 Step 200/390 lr 0.020000 loss 0.1114 (0.0822) acc@1 0.9922 (0.9805) acc@5 0.9922 (0.9998)
+[32m[2024-01-20 13:15:19] __main__ INFO: [0mEpoch 66 Step 300/390 lr 0.020000 loss 0.1060 (0.0834) acc@1 0.9609 (0.9803) acc@5 1.0000 (0.9998)
+[32m[2024-01-20 13:15:33] __main__ INFO: [0mEpoch 66 Step 390/390 lr 0.020000 loss 0.1021 (0.0858) acc@1 0.9609 (0.9792) acc@5 1.0000 (0.9998)
+[32m[2024-01-20 13:15:33] __main__ INFO: [0mElapsed 61.38
+[32m[2024-01-20 13:15:33] __main__ INFO: [0mVal 66
+[32m[2024-01-20 13:15:37] __main__ INFO: [0mEpoch 66 loss 0.9004 acc@1 0.7784 acc@5 0.9457
+[32m[2024-01-20 13:15:37] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 13:15:37] __main__ INFO: [0mTrain 67 25740
+[32m[2024-01-20 13:15:53] __main__ INFO: [0mEpoch 67 Step 100/390 lr 0.020000 loss 0.0667 (0.0675) acc@1 0.9844 (0.9855) acc@5 1.0000 (0.9999)
+[32m[2024-01-20 13:16:08] __main__ INFO: [0mEpoch 67 Step 200/390 lr 0.020000 loss 0.1105 (0.0684) acc@1 0.9688 (0.9847) acc@5 1.0000 (0.9999)
+[32m[2024-01-20 13:16:24] __main__ INFO: [0mEpoch 67 Step 300/390 lr 0.020000 loss 0.0541 (0.0735) acc@1 0.9922 (0.9829) acc@5 1.0000 (0.9999)
+[32m[2024-01-20 13:16:38] __main__ INFO: [0mEpoch 67 Step 390/390 lr 0.020000 loss 0.0683 (0.0766) acc@1 0.9922 (0.9820) acc@5 1.0000 (0.9999)
+[32m[2024-01-20 13:16:38] __main__ INFO: [0mElapsed 61.37
+[32m[2024-01-20 13:16:38] __main__ INFO: [0mVal 67
+[32m[2024-01-20 13:16:42] __main__ INFO: [0mEpoch 67 loss 0.8963 acc@1 0.7789 acc@5 0.9450
+[32m[2024-01-20 13:16:42] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 13:16:42] __main__ INFO: [0mTrain 68 26130
+[32m[2024-01-20 13:16:58] __main__ INFO: [0mEpoch 68 Step 100/390 lr 0.020000 loss 0.0806 (0.0635) acc@1 0.9766 (0.9859) acc@5 1.0000 (0.9999)
+[32m[2024-01-20 13:17:13] __main__ INFO: [0mEpoch 68 Step 200/390 lr 0.020000 loss 0.0724 (0.0679) acc@1 0.9844 (0.9849) acc@5 1.0000 (0.9999)
+[32m[2024-01-20 13:17:29] __main__ INFO: [0mEpoch 68 Step 300/390 lr 0.020000 loss 0.0873 (0.0746) acc@1 0.9766 (0.9825) acc@5 1.0000 (0.9998)
+[32m[2024-01-20 13:17:43] __main__ INFO: [0mEpoch 68 Step 390/390 lr 0.020000 loss 0.0682 (0.0767) acc@1 0.9922 (0.9819) acc@5 1.0000 (0.9998)
+[32m[2024-01-20 13:17:43] __main__ INFO: [0mElapsed 61.39
+[32m[2024-01-20 13:17:43] __main__ INFO: [0mVal 68
+[32m[2024-01-20 13:17:47] __main__ INFO: [0mEpoch 68 loss 0.9372 acc@1 0.7699 acc@5 0.9416
+[32m[2024-01-20 13:17:47] __main__ INFO: [0mElapsed 3.62
+[32m[2024-01-20 13:17:47] __main__ INFO: [0mTrain 69 26520
+[32m[2024-01-20 13:18:03] __main__ INFO: [0mEpoch 69 Step 100/390 lr 0.020000 loss 0.0391 (0.0653) acc@1 0.9844 (0.9862) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 13:18:18] __main__ INFO: [0mEpoch 69 Step 200/390 lr 0.020000 loss 0.0873 (0.0682) acc@1 0.9766 (0.9846) acc@5 1.0000 (0.9999)
+[32m[2024-01-20 13:18:34] __main__ INFO: [0mEpoch 69 Step 300/390 lr 0.020000 loss 0.0359 (0.0712) acc@1 1.0000 (0.9837) acc@5 1.0000 (0.9999)
+[32m[2024-01-20 13:18:48] __main__ INFO: [0mEpoch 69 Step 390/390 lr 0.020000 loss 0.1445 (0.0740) acc@1 0.9531 (0.9827) acc@5 1.0000 (0.9999)
+[32m[2024-01-20 13:18:49] __main__ INFO: [0mElapsed 61.63
+[32m[2024-01-20 13:18:49] __main__ INFO: [0mVal 69
+[32m[2024-01-20 13:18:52] __main__ INFO: [0mEpoch 69 loss 0.9372 acc@1 0.7713 acc@5 0.9421
+[32m[2024-01-20 13:18:52] __main__ INFO: [0mElapsed 3.64
+[32m[2024-01-20 13:18:52] __main__ INFO: [0mTrain 70 26910
+[32m[2024-01-20 13:19:08] __main__ INFO: [0mEpoch 70 Step 100/390 lr 0.020000 loss 0.1131 (0.0708) acc@1 0.9531 (0.9836) acc@5 1.0000 (0.9998)
+[32m[2024-01-20 13:19:23] __main__ INFO: [0mEpoch 70 Step 200/390 lr 0.020000 loss 0.0685 (0.0713) acc@1 1.0000 (0.9840) acc@5 1.0000 (0.9998)
+[32m[2024-01-20 13:19:39] __main__ INFO: [0mEpoch 70 Step 300/390 lr 0.020000 loss 0.1121 (0.0763) acc@1 0.9609 (0.9825) acc@5 1.0000 (0.9998)
+[32m[2024-01-20 13:19:53] __main__ INFO: [0mEpoch 70 Step 390/390 lr 0.020000 loss 0.1286 (0.0796) acc@1 0.9766 (0.9814) acc@5 1.0000 (0.9998)
+[32m[2024-01-20 13:19:53] __main__ INFO: [0mElapsed 61.29
+[32m[2024-01-20 13:19:53] __main__ INFO: [0mVal 70
+[32m[2024-01-20 13:19:57] __main__ INFO: [0mEpoch 70 loss 0.9258 acc@1 0.7690 acc@5 0.9416
+[32m[2024-01-20 13:19:57] __main__ INFO: [0mElapsed 3.62
+[32m[2024-01-20 13:19:57] __main__ INFO: [0mTrain 71 27300
+[32m[2024-01-20 13:20:13] __main__ INFO: [0mEpoch 71 Step 100/390 lr 0.020000 loss 0.0695 (0.0611) acc@1 0.9609 (0.9866) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 13:20:28] __main__ INFO: [0mEpoch 71 Step 200/390 lr 0.020000 loss 0.0605 (0.0693) acc@1 0.9922 (0.9843) acc@5 1.0000 (0.9999)
+[32m[2024-01-20 13:20:44] __main__ INFO: [0mEpoch 71 Step 300/390 lr 0.020000 loss 0.1028 (0.0722) acc@1 0.9766 (0.9830) acc@5 1.0000 (0.9999)
+[32m[2024-01-20 13:20:58] __main__ INFO: [0mEpoch 71 Step 390/390 lr 0.020000 loss 0.0657 (0.0752) acc@1 0.9844 (0.9824) acc@5 1.0000 (0.9999)
+[32m[2024-01-20 13:20:58] __main__ INFO: [0mElapsed 61.27
+[32m[2024-01-20 13:20:58] __main__ INFO: [0mVal 71
+[32m[2024-01-20 13:21:02] __main__ INFO: [0mEpoch 71 loss 0.9775 acc@1 0.7634 acc@5 0.9379
+[32m[2024-01-20 13:21:02] __main__ INFO: [0mElapsed 3.61
+[32m[2024-01-20 13:21:02] __main__ INFO: [0mTrain 72 27690
+[32m[2024-01-20 13:21:18] __main__ INFO: [0mEpoch 72 Step 100/390 lr 0.020000 loss 0.0629 (0.0667) acc@1 0.9766 (0.9841) acc@5 1.0000 (0.9998)
+[32m[2024-01-20 13:21:33] __main__ INFO: [0mEpoch 72 Step 200/390 lr 0.020000 loss 0.0909 (0.0703) acc@1 0.9766 (0.9834) acc@5 1.0000 (0.9998)
+[32m[2024-01-20 13:21:49] __main__ INFO: [0mEpoch 72 Step 300/390 lr 0.020000 loss 0.0727 (0.0804) acc@1 0.9922 (0.9800) acc@5 1.0000 (0.9998)
+[32m[2024-01-20 13:22:03] __main__ INFO: [0mEpoch 72 Step 390/390 lr 0.020000 loss 0.0916 (0.0847) acc@1 0.9922 (0.9788) acc@5 1.0000 (0.9998)
+[32m[2024-01-20 13:22:03] __main__ INFO: [0mElapsed 61.29
+[32m[2024-01-20 13:22:03] __main__ INFO: [0mVal 72
+[32m[2024-01-20 13:22:07] __main__ INFO: [0mEpoch 72 loss 1.0129 acc@1 0.7573 acc@5 0.9345
+[32m[2024-01-20 13:22:07] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 13:22:07] __main__ INFO: [0mTrain 73 28080
+[32m[2024-01-20 13:22:23] __main__ INFO: [0mEpoch 73 Step 100/390 lr 0.020000 loss 0.1219 (0.0841) acc@1 0.9688 (0.9794) acc@5 1.0000 (0.9998)
+[32m[2024-01-20 13:22:38] __main__ INFO: [0mEpoch 73 Step 200/390 lr 0.020000 loss 0.0914 (0.0847) acc@1 0.9844 (0.9794) acc@5 1.0000 (0.9999)
+[32m[2024-01-20 13:22:54] __main__ INFO: [0mEpoch 73 Step 300/390 lr 0.020000 loss 0.1133 (0.0928) acc@1 0.9688 (0.9767) acc@5 1.0000 (0.9999)
+[32m[2024-01-20 13:23:08] __main__ INFO: [0mEpoch 73 Step 390/390 lr 0.020000 loss 0.1032 (0.0986) acc@1 0.9922 (0.9749) acc@5 1.0000 (0.9999)
+[32m[2024-01-20 13:23:08] __main__ INFO: [0mElapsed 61.61
+[32m[2024-01-20 13:23:08] __main__ INFO: [0mVal 73
+[32m[2024-01-20 13:23:12] __main__ INFO: [0mEpoch 73 loss 1.0693 acc@1 0.7416 acc@5 0.9281
+[32m[2024-01-20 13:23:12] __main__ INFO: [0mElapsed 3.63
+[32m[2024-01-20 13:23:12] __main__ INFO: [0mTrain 74 28470
+[32m[2024-01-20 13:23:28] __main__ INFO: [0mEpoch 74 Step 100/390 lr 0.020000 loss 0.0828 (0.0970) acc@1 0.9844 (0.9759) acc@5 1.0000 (0.9998)
+[32m[2024-01-20 13:23:43] __main__ INFO: [0mEpoch 74 Step 200/390 lr 0.020000 loss 0.1081 (0.1052) acc@1 0.9766 (0.9728) acc@5 1.0000 (0.9998)
+[32m[2024-01-20 13:23:59] __main__ INFO: [0mEpoch 74 Step 300/390 lr 0.020000 loss 0.2020 (0.1090) acc@1 0.9297 (0.9718) acc@5 0.9922 (0.9998)
+[32m[2024-01-20 13:24:13] __main__ INFO: [0mEpoch 74 Step 390/390 lr 0.020000 loss 0.0661 (0.1132) acc@1 0.9844 (0.9708) acc@5 1.0000 (0.9997)
+[32m[2024-01-20 13:24:13] __main__ INFO: [0mElapsed 61.32
+[32m[2024-01-20 13:24:13] __main__ INFO: [0mVal 74
+[32m[2024-01-20 13:24:17] __main__ INFO: [0mEpoch 74 loss 1.0366 acc@1 0.7500 acc@5 0.9289
+[32m[2024-01-20 13:24:17] __main__ INFO: [0mElapsed 3.63
+[32m[2024-01-20 13:24:17] __main__ INFO: [0mTrain 75 28860
+[32m[2024-01-20 13:24:33] __main__ INFO: [0mEpoch 75 Step 100/390 lr 0.020000 loss 0.0748 (0.0885) acc@1 1.0000 (0.9793) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 13:24:48] __main__ INFO: [0mEpoch 75 Step 200/390 lr 0.020000 loss 0.0330 (0.0977) acc@1 1.0000 (0.9760) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 13:25:04] __main__ INFO: [0mEpoch 75 Step 300/390 lr 0.020000 loss 0.1179 (0.1052) acc@1 0.9531 (0.9734) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 13:25:18] __main__ INFO: [0mEpoch 75 Step 390/390 lr 0.020000 loss 0.0995 (0.1124) acc@1 0.9844 (0.9711) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 13:25:18] __main__ INFO: [0mElapsed 61.40
+[32m[2024-01-20 13:25:18] __main__ INFO: [0mVal 75
+[32m[2024-01-20 13:25:22] __main__ INFO: [0mEpoch 75 loss 1.0539 acc@1 0.7380 acc@5 0.9269
+[32m[2024-01-20 13:25:22] __main__ INFO: [0mElapsed 3.61
+[32m[2024-01-20 13:25:22] __main__ INFO: [0mTrain 76 29250
+[32m[2024-01-20 13:25:38] __main__ INFO: [0mEpoch 76 Step 100/390 lr 0.020000 loss 0.0688 (0.1007) acc@1 0.9844 (0.9751) acc@5 1.0000 (0.9997)
+[32m[2024-01-20 13:25:53] __main__ INFO: [0mEpoch 76 Step 200/390 lr 0.020000 loss 0.1549 (0.1086) acc@1 0.9531 (0.9720) acc@5 1.0000 (0.9998)
+[32m[2024-01-20 13:26:09] __main__ INFO: [0mEpoch 76 Step 300/390 lr 0.020000 loss 0.1314 (0.1230) acc@1 0.9453 (0.9668) acc@5 1.0000 (0.9997)
+[32m[2024-01-20 13:26:23] __main__ INFO: [0mEpoch 76 Step 390/390 lr 0.020000 loss 0.1804 (0.1304) acc@1 0.9453 (0.9647) acc@5 1.0000 (0.9996)
+[32m[2024-01-20 13:26:23] __main__ INFO: [0mElapsed 61.40
+[32m[2024-01-20 13:26:23] __main__ INFO: [0mVal 76
+[32m[2024-01-20 13:26:27] __main__ INFO: [0mEpoch 76 loss 1.1466 acc@1 0.7259 acc@5 0.9206
+[32m[2024-01-20 13:26:27] __main__ INFO: [0mElapsed 3.64
+[32m[2024-01-20 13:26:27] __main__ INFO: [0mTrain 77 29640
+[32m[2024-01-20 13:26:43] __main__ INFO: [0mEpoch 77 Step 100/390 lr 0.020000 loss 0.1239 (0.1148) acc@1 0.9766 (0.9695) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 13:26:58] __main__ INFO: [0mEpoch 77 Step 200/390 lr 0.020000 loss 0.0887 (0.1210) acc@1 0.9922 (0.9684) acc@5 1.0000 (0.9996)
+[32m[2024-01-20 13:27:14] __main__ INFO: [0mEpoch 77 Step 300/390 lr 0.020000 loss 0.1684 (0.1266) acc@1 0.9766 (0.9670) acc@5 0.9922 (0.9995)
+[32m[2024-01-20 13:27:28] __main__ INFO: [0mEpoch 77 Step 390/390 lr 0.020000 loss 0.2143 (0.1317) acc@1 0.9297 (0.9649) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 13:27:28] __main__ INFO: [0mElapsed 61.40
+[32m[2024-01-20 13:27:28] __main__ INFO: [0mVal 77
+[32m[2024-01-20 13:27:32] __main__ INFO: [0mEpoch 77 loss 1.1200 acc@1 0.7291 acc@5 0.9252
+[32m[2024-01-20 13:27:32] __main__ INFO: [0mElapsed 3.58
+[32m[2024-01-20 13:27:32] __main__ INFO: [0mTrain 78 30030
+[32m[2024-01-20 13:27:48] __main__ INFO: [0mEpoch 78 Step 100/390 lr 0.020000 loss 0.1462 (0.1170) acc@1 0.9688 (0.9710) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 13:28:03] __main__ INFO: [0mEpoch 78 Step 200/390 lr 0.020000 loss 0.0748 (0.1259) acc@1 0.9844 (0.9670) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:28:19] __main__ INFO: [0mEpoch 78 Step 300/390 lr 0.020000 loss 0.1511 (0.1339) acc@1 0.9688 (0.9646) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 13:28:33] __main__ INFO: [0mEpoch 78 Step 390/390 lr 0.020000 loss 0.1821 (0.1386) acc@1 0.9453 (0.9628) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:28:33] __main__ INFO: [0mElapsed 61.37
+[32m[2024-01-20 13:28:33] __main__ INFO: [0mVal 78
+[32m[2024-01-20 13:28:37] __main__ INFO: [0mEpoch 78 loss 1.1453 acc@1 0.7250 acc@5 0.9220
+[32m[2024-01-20 13:28:37] __main__ INFO: [0mElapsed 3.57
+[32m[2024-01-20 13:28:37] __main__ INFO: [0mTrain 79 30420
+[32m[2024-01-20 13:28:53] __main__ INFO: [0mEpoch 79 Step 100/390 lr 0.020000 loss 0.1904 (0.1346) acc@1 0.9297 (0.9630) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 13:29:08] __main__ INFO: [0mEpoch 79 Step 200/390 lr 0.020000 loss 0.1296 (0.1367) acc@1 0.9688 (0.9629) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 13:29:24] __main__ INFO: [0mEpoch 79 Step 300/390 lr 0.020000 loss 0.2079 (0.1415) acc@1 0.9375 (0.9609) acc@5 0.9922 (0.9993)
+[32m[2024-01-20 13:29:38] __main__ INFO: [0mEpoch 79 Step 390/390 lr 0.020000 loss 0.2209 (0.1505) acc@1 0.9375 (0.9579) acc@5 0.9922 (0.9992)
+[32m[2024-01-20 13:29:38] __main__ INFO: [0mElapsed 61.24
+[32m[2024-01-20 13:29:38] __main__ INFO: [0mVal 79
+[32m[2024-01-20 13:29:42] __main__ INFO: [0mEpoch 79 loss 1.1722 acc@1 0.7136 acc@5 0.9203
+[32m[2024-01-20 13:29:42] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 13:29:42] __main__ INFO: [0mTrain 80 30810
+[32m[2024-01-20 13:29:58] __main__ INFO: [0mEpoch 80 Step 100/390 lr 0.020000 loss 0.2128 (0.1422) acc@1 0.9141 (0.9603) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 13:30:13] __main__ INFO: [0mEpoch 80 Step 200/390 lr 0.020000 loss 0.2785 (0.1446) acc@1 0.9141 (0.9595) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:30:29] __main__ INFO: [0mEpoch 80 Step 300/390 lr 0.020000 loss 0.1178 (0.1540) acc@1 0.9844 (0.9566) acc@5 1.0000 (0.9991)
+[32m[2024-01-20 13:30:43] __main__ INFO: [0mEpoch 80 Step 390/390 lr 0.020000 loss 0.2195 (0.1576) acc@1 0.9219 (0.9556) acc@5 1.0000 (0.9990)
+[32m[2024-01-20 13:30:43] __main__ INFO: [0mElapsed 61.30
+[32m[2024-01-20 13:30:43] __main__ INFO: [0mVal 80
+[32m[2024-01-20 13:30:47] __main__ INFO: [0mEpoch 80 loss 1.1761 acc@1 0.7191 acc@5 0.9209
+[32m[2024-01-20 13:30:47] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 13:30:47] __main__ INFO: [0mTrain 81 31200
+[32m[2024-01-20 13:31:03] __main__ INFO: [0mEpoch 81 Step 100/390 lr 0.020000 loss 0.1086 (0.1234) acc@1 0.9531 (0.9674) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:31:18] __main__ INFO: [0mEpoch 81 Step 200/390 lr 0.020000 loss 0.1194 (0.1295) acc@1 0.9844 (0.9656) acc@5 1.0000 (0.9991)
+[32m[2024-01-20 13:31:34] __main__ INFO: [0mEpoch 81 Step 300/390 lr 0.020000 loss 0.2564 (0.1425) acc@1 0.9531 (0.9607) acc@5 0.9922 (0.9991)
+[32m[2024-01-20 13:31:48] __main__ INFO: [0mEpoch 81 Step 390/390 lr 0.020000 loss 0.2289 (0.1520) acc@1 0.9297 (0.9575) acc@5 1.0000 (0.9990)
+[32m[2024-01-20 13:31:48] __main__ INFO: [0mElapsed 61.28
+[32m[2024-01-20 13:31:48] __main__ INFO: [0mVal 81
+[32m[2024-01-20 13:31:52] __main__ INFO: [0mEpoch 81 loss 1.1301 acc@1 0.7302 acc@5 0.9304
+[32m[2024-01-20 13:31:52] __main__ INFO: [0mElapsed 3.57
+[32m[2024-01-20 13:31:52] __main__ INFO: [0mTrain 82 31590
+[32m[2024-01-20 13:32:08] __main__ INFO: [0mEpoch 82 Step 100/390 lr 0.020000 loss 0.1791 (0.1266) acc@1 0.9453 (0.9665) acc@5 1.0000 (0.9998)
+[32m[2024-01-20 13:32:23] __main__ INFO: [0mEpoch 82 Step 200/390 lr 0.020000 loss 0.3365 (0.1355) acc@1 0.9219 (0.9639) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 13:32:39] __main__ INFO: [0mEpoch 82 Step 300/390 lr 0.020000 loss 0.1926 (0.1432) acc@1 0.9375 (0.9611) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 13:32:53] __main__ INFO: [0mEpoch 82 Step 390/390 lr 0.020000 loss 0.1919 (0.1509) acc@1 0.9297 (0.9583) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 13:32:53] __main__ INFO: [0mElapsed 61.25
+[32m[2024-01-20 13:32:53] __main__ INFO: [0mVal 82
+[32m[2024-01-20 13:32:56] __main__ INFO: [0mEpoch 82 loss 1.1939 acc@1 0.7186 acc@5 0.9172
+[32m[2024-01-20 13:32:56] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 13:32:56] __main__ INFO: [0mTrain 83 31980
+[32m[2024-01-20 13:33:12] __main__ INFO: [0mEpoch 83 Step 100/390 lr 0.020000 loss 0.1112 (0.1228) acc@1 0.9688 (0.9673) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 13:33:28] __main__ INFO: [0mEpoch 83 Step 200/390 lr 0.020000 loss 0.2110 (0.1324) acc@1 0.9531 (0.9636) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 13:33:44] __main__ INFO: [0mEpoch 83 Step 300/390 lr 0.020000 loss 0.1697 (0.1386) acc@1 0.9609 (0.9621) acc@5 0.9922 (0.9993)
+[32m[2024-01-20 13:33:58] __main__ INFO: [0mEpoch 83 Step 390/390 lr 0.020000 loss 0.2205 (0.1470) acc@1 0.9375 (0.9593) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:33:58] __main__ INFO: [0mElapsed 61.40
+[32m[2024-01-20 13:33:58] __main__ INFO: [0mVal 83
+[32m[2024-01-20 13:34:01] __main__ INFO: [0mEpoch 83 loss 1.2300 acc@1 0.7052 acc@5 0.9123
+[32m[2024-01-20 13:34:01] __main__ INFO: [0mElapsed 3.62
+[32m[2024-01-20 13:34:01] __main__ INFO: [0mTrain 84 32370
+[32m[2024-01-20 13:34:17] __main__ INFO: [0mEpoch 84 Step 100/390 lr 0.020000 loss 0.0730 (0.1270) acc@1 0.9922 (0.9663) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 13:34:33] __main__ INFO: [0mEpoch 84 Step 200/390 lr 0.020000 loss 0.0562 (0.1338) acc@1 0.9922 (0.9633) acc@5 1.0000 (0.9990)
+[32m[2024-01-20 13:34:49] __main__ INFO: [0mEpoch 84 Step 300/390 lr 0.020000 loss 0.1644 (0.1373) acc@1 0.9531 (0.9621) acc@5 0.9922 (0.9992)
+[32m[2024-01-20 13:35:03] __main__ INFO: [0mEpoch 84 Step 390/390 lr 0.020000 loss 0.1803 (0.1467) acc@1 0.9609 (0.9587) acc@5 1.0000 (0.9991)
+[32m[2024-01-20 13:35:03] __main__ INFO: [0mElapsed 61.42
+[32m[2024-01-20 13:35:03] __main__ INFO: [0mVal 84
+[32m[2024-01-20 13:35:07] __main__ INFO: [0mEpoch 84 loss 1.2298 acc@1 0.7098 acc@5 0.9134
+[32m[2024-01-20 13:35:07] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 13:35:07] __main__ INFO: [0mTrain 85 32760
+[32m[2024-01-20 13:35:22] __main__ INFO: [0mEpoch 85 Step 100/390 lr 0.020000 loss 0.1494 (0.1284) acc@1 0.9609 (0.9663) acc@5 1.0000 (0.9997)
+[32m[2024-01-20 13:35:38] __main__ INFO: [0mEpoch 85 Step 200/390 lr 0.020000 loss 0.1665 (0.1359) acc@1 0.9688 (0.9632) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:35:54] __main__ INFO: [0mEpoch 85 Step 300/390 lr 0.020000 loss 0.1397 (0.1431) acc@1 0.9531 (0.9608) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 13:36:08] __main__ INFO: [0mEpoch 85 Step 390/390 lr 0.020000 loss 0.1577 (0.1518) acc@1 0.9375 (0.9575) acc@5 1.0000 (0.9991)
+[32m[2024-01-20 13:36:08] __main__ INFO: [0mElapsed 61.27
+[32m[2024-01-20 13:36:08] __main__ INFO: [0mVal 85
+[32m[2024-01-20 13:36:11] __main__ INFO: [0mEpoch 85 loss 1.1651 acc@1 0.7160 acc@5 0.9202
+[32m[2024-01-20 13:36:11] __main__ INFO: [0mElapsed 3.57
+[32m[2024-01-20 13:36:11] __main__ INFO: [0mTrain 86 33150
+[32m[2024-01-20 13:36:27] __main__ INFO: [0mEpoch 86 Step 100/390 lr 0.020000 loss 0.1205 (0.1340) acc@1 0.9766 (0.9654) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 13:36:43] __main__ INFO: [0mEpoch 86 Step 200/390 lr 0.020000 loss 0.1777 (0.1374) acc@1 0.9531 (0.9632) acc@5 0.9922 (0.9994)
+[32m[2024-01-20 13:36:58] __main__ INFO: [0mEpoch 86 Step 300/390 lr 0.020000 loss 0.1324 (0.1432) acc@1 0.9688 (0.9613) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:37:13] __main__ INFO: [0mEpoch 86 Step 390/390 lr 0.020000 loss 0.1801 (0.1482) acc@1 0.9453 (0.9594) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 13:37:13] __main__ INFO: [0mElapsed 61.32
+[32m[2024-01-20 13:37:13] __main__ INFO: [0mVal 86
+[32m[2024-01-20 13:37:16] __main__ INFO: [0mEpoch 86 loss 1.1853 acc@1 0.7238 acc@5 0.9182
+[32m[2024-01-20 13:37:16] __main__ INFO: [0mElapsed 3.64
+[32m[2024-01-20 13:37:16] __main__ INFO: [0mTrain 87 33540
+[32m[2024-01-20 13:37:32] __main__ INFO: [0mEpoch 87 Step 100/390 lr 0.020000 loss 0.1538 (0.1228) acc@1 0.9609 (0.9675) acc@5 0.9922 (0.9996)
+[32m[2024-01-20 13:37:48] __main__ INFO: [0mEpoch 87 Step 200/390 lr 0.020000 loss 0.1394 (0.1168) acc@1 0.9609 (0.9685) acc@5 1.0000 (0.9998)
+[32m[2024-01-20 13:38:03] __main__ INFO: [0mEpoch 87 Step 300/390 lr 0.020000 loss 0.2133 (0.1257) acc@1 0.9297 (0.9656) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 13:38:18] __main__ INFO: [0mEpoch 87 Step 390/390 lr 0.020000 loss 0.1764 (0.1366) acc@1 0.9453 (0.9617) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 13:38:18] __main__ INFO: [0mElapsed 61.33
+[32m[2024-01-20 13:38:18] __main__ INFO: [0mVal 87
+[32m[2024-01-20 13:38:21] __main__ INFO: [0mEpoch 87 loss 1.1379 acc@1 0.7314 acc@5 0.9204
+[32m[2024-01-20 13:38:21] __main__ INFO: [0mElapsed 3.61
+[32m[2024-01-20 13:38:21] __main__ INFO: [0mTrain 88 33930
+[32m[2024-01-20 13:38:37] __main__ INFO: [0mEpoch 88 Step 100/390 lr 0.020000 loss 0.1492 (0.1326) acc@1 0.9531 (0.9637) acc@5 1.0000 (0.9997)
+[32m[2024-01-20 13:38:53] __main__ INFO: [0mEpoch 88 Step 200/390 lr 0.020000 loss 0.1288 (0.1392) acc@1 0.9453 (0.9615) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:39:08] __main__ INFO: [0mEpoch 88 Step 300/390 lr 0.020000 loss 0.1586 (0.1370) acc@1 0.9688 (0.9623) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:39:22] __main__ INFO: [0mEpoch 88 Step 390/390 lr 0.020000 loss 0.1870 (0.1423) acc@1 0.9531 (0.9604) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:39:23] __main__ INFO: [0mElapsed 61.27
+[32m[2024-01-20 13:39:23] __main__ INFO: [0mVal 88
+[32m[2024-01-20 13:39:26] __main__ INFO: [0mEpoch 88 loss 1.2060 acc@1 0.7141 acc@5 0.9193
+[32m[2024-01-20 13:39:26] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 13:39:26] __main__ INFO: [0mTrain 89 34320
+[32m[2024-01-20 13:39:42] __main__ INFO: [0mEpoch 89 Step 100/390 lr 0.020000 loss 0.0985 (0.1244) acc@1 0.9766 (0.9658) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:39:57] __main__ INFO: [0mEpoch 89 Step 200/390 lr 0.020000 loss 0.2906 (0.1207) acc@1 0.9219 (0.9670) acc@5 1.0000 (0.9996)
+[32m[2024-01-20 13:40:13] __main__ INFO: [0mEpoch 89 Step 300/390 lr 0.020000 loss 0.1633 (0.1334) acc@1 0.9531 (0.9629) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 13:40:27] __main__ INFO: [0mEpoch 89 Step 390/390 lr 0.020000 loss 0.1713 (0.1441) acc@1 0.9609 (0.9592) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:40:27] __main__ INFO: [0mElapsed 61.27
+[32m[2024-01-20 13:40:27] __main__ INFO: [0mVal 89
+[32m[2024-01-20 13:40:31] __main__ INFO: [0mEpoch 89 loss 1.2937 acc@1 0.7044 acc@5 0.9120
+[32m[2024-01-20 13:40:31] __main__ INFO: [0mElapsed 3.62
+[32m[2024-01-20 13:40:31] __main__ INFO: [0mTrain 90 34710
+[32m[2024-01-20 13:40:47] __main__ INFO: [0mEpoch 90 Step 100/390 lr 0.020000 loss 0.1416 (0.1183) acc@1 0.9453 (0.9684) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 13:41:02] __main__ INFO: [0mEpoch 90 Step 200/390 lr 0.020000 loss 0.1055 (0.1232) acc@1 0.9844 (0.9669) acc@5 1.0000 (0.9991)
+[32m[2024-01-20 13:41:18] __main__ INFO: [0mEpoch 90 Step 300/390 lr 0.020000 loss 0.1467 (0.1278) acc@1 0.9453 (0.9651) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:41:32] __main__ INFO: [0mEpoch 90 Step 390/390 lr 0.020000 loss 0.1343 (0.1339) acc@1 0.9688 (0.9630) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:41:32] __main__ INFO: [0mElapsed 61.35
+[32m[2024-01-20 13:41:32] __main__ INFO: [0mVal 90
+[32m[2024-01-20 13:41:36] __main__ INFO: [0mEpoch 90 loss 1.1161 acc@1 0.7285 acc@5 0.9239
+[32m[2024-01-20 13:41:36] __main__ INFO: [0mElapsed 3.58
+[32m[2024-01-20 13:41:36] __main__ INFO: [0mTrain 91 35100
+[32m[2024-01-20 13:41:52] __main__ INFO: [0mEpoch 91 Step 100/390 lr 0.020000 loss 0.1444 (0.1269) acc@1 0.9609 (0.9648) acc@5 0.9922 (0.9988)
+[32m[2024-01-20 13:42:07] __main__ INFO: [0mEpoch 91 Step 200/390 lr 0.020000 loss 0.0791 (0.1296) acc@1 0.9766 (0.9643) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 13:42:23] __main__ INFO: [0mEpoch 91 Step 300/390 lr 0.020000 loss 0.3089 (0.1414) acc@1 0.8984 (0.9606) acc@5 1.0000 (0.9990)
+[32m[2024-01-20 13:42:37] __main__ INFO: [0mEpoch 91 Step 390/390 lr 0.020000 loss 0.1463 (0.1484) acc@1 0.9531 (0.9585) acc@5 1.0000 (0.9990)
+[32m[2024-01-20 13:42:37] __main__ INFO: [0mElapsed 61.31
+[32m[2024-01-20 13:42:37] __main__ INFO: [0mVal 91
+[32m[2024-01-20 13:42:41] __main__ INFO: [0mEpoch 91 loss 1.1330 acc@1 0.7278 acc@5 0.9265
+[32m[2024-01-20 13:42:41] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 13:42:41] __main__ INFO: [0mTrain 92 35490
+[32m[2024-01-20 13:42:57] __main__ INFO: [0mEpoch 92 Step 100/390 lr 0.020000 loss 0.1548 (0.1239) acc@1 0.9531 (0.9664) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 13:43:12] __main__ INFO: [0mEpoch 92 Step 200/390 lr 0.020000 loss 0.1610 (0.1269) acc@1 0.9453 (0.9654) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:43:28] __main__ INFO: [0mEpoch 92 Step 300/390 lr 0.020000 loss 0.1219 (0.1324) acc@1 0.9688 (0.9646) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 13:43:42] __main__ INFO: [0mEpoch 92 Step 390/390 lr 0.020000 loss 0.1323 (0.1341) acc@1 0.9609 (0.9640) acc@5 1.0000 (0.9991)
+[32m[2024-01-20 13:43:42] __main__ INFO: [0mElapsed 61.35
+[32m[2024-01-20 13:43:42] __main__ INFO: [0mVal 92
+[32m[2024-01-20 13:43:46] __main__ INFO: [0mEpoch 92 loss 1.1533 acc@1 0.7236 acc@5 0.9211
+[32m[2024-01-20 13:43:46] __main__ INFO: [0mElapsed 3.63
+[32m[2024-01-20 13:43:46] __main__ INFO: [0mTrain 93 35880
+[32m[2024-01-20 13:44:02] __main__ INFO: [0mEpoch 93 Step 100/390 lr 0.020000 loss 0.1322 (0.1108) acc@1 0.9531 (0.9709) acc@5 0.9922 (0.9994)
+[32m[2024-01-20 13:44:17] __main__ INFO: [0mEpoch 93 Step 200/390 lr 0.020000 loss 0.1112 (0.1214) acc@1 0.9766 (0.9675) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 13:44:33] __main__ INFO: [0mEpoch 93 Step 300/390 lr 0.020000 loss 0.2121 (0.1254) acc@1 0.9297 (0.9665) acc@5 0.9844 (0.9992)
+[32m[2024-01-20 13:44:47] __main__ INFO: [0mEpoch 93 Step 390/390 lr 0.020000 loss 0.1722 (0.1312) acc@1 0.9375 (0.9650) acc@5 1.0000 (0.9991)
+[32m[2024-01-20 13:44:47] __main__ INFO: [0mElapsed 61.25
+[32m[2024-01-20 13:44:47] __main__ INFO: [0mVal 93
+[32m[2024-01-20 13:44:51] __main__ INFO: [0mEpoch 93 loss 1.2234 acc@1 0.7215 acc@5 0.9204
+[32m[2024-01-20 13:44:51] __main__ INFO: [0mElapsed 3.63
+[32m[2024-01-20 13:44:51] __main__ INFO: [0mTrain 94 36270
+[32m[2024-01-20 13:45:07] __main__ INFO: [0mEpoch 94 Step 100/390 lr 0.020000 loss 0.1762 (0.1239) acc@1 0.9453 (0.9664) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 13:45:22] __main__ INFO: [0mEpoch 94 Step 200/390 lr 0.020000 loss 0.2564 (0.1239) acc@1 0.9531 (0.9667) acc@5 0.9922 (0.9994)
+[32m[2024-01-20 13:45:38] __main__ INFO: [0mEpoch 94 Step 300/390 lr 0.020000 loss 0.1412 (0.1304) acc@1 0.9688 (0.9642) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 13:45:52] __main__ INFO: [0mEpoch 94 Step 390/390 lr 0.020000 loss 0.1848 (0.1353) acc@1 0.9297 (0.9626) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 13:45:52] __main__ INFO: [0mElapsed 61.42
+[32m[2024-01-20 13:45:52] __main__ INFO: [0mVal 94
+[32m[2024-01-20 13:45:56] __main__ INFO: [0mEpoch 94 loss 1.1550 acc@1 0.7267 acc@5 0.9250
+[32m[2024-01-20 13:45:56] __main__ INFO: [0mElapsed 3.62
+[32m[2024-01-20 13:45:56] __main__ INFO: [0mTrain 95 36660
+[32m[2024-01-20 13:46:12] __main__ INFO: [0mEpoch 95 Step 100/390 lr 0.020000 loss 0.0519 (0.1102) acc@1 0.9922 (0.9700) acc@5 1.0000 (0.9996)
+[32m[2024-01-20 13:46:27] __main__ INFO: [0mEpoch 95 Step 200/390 lr 0.020000 loss 0.0902 (0.1186) acc@1 0.9688 (0.9682) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 13:46:43] __main__ INFO: [0mEpoch 95 Step 300/390 lr 0.020000 loss 0.1155 (0.1286) acc@1 0.9766 (0.9651) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:46:57] __main__ INFO: [0mEpoch 95 Step 390/390 lr 0.020000 loss 0.2246 (0.1358) acc@1 0.9297 (0.9627) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:46:57] __main__ INFO: [0mElapsed 61.21
+[32m[2024-01-20 13:46:57] __main__ INFO: [0mVal 95
+[32m[2024-01-20 13:47:01] __main__ INFO: [0mEpoch 95 loss 1.1824 acc@1 0.7206 acc@5 0.9165
+[32m[2024-01-20 13:47:01] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 13:47:01] __main__ INFO: [0mTrain 96 37050
+[32m[2024-01-20 13:47:17] __main__ INFO: [0mEpoch 96 Step 100/390 lr 0.020000 loss 0.0844 (0.1150) acc@1 0.9766 (0.9699) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 13:47:32] __main__ INFO: [0mEpoch 96 Step 200/390 lr 0.020000 loss 0.0977 (0.1187) acc@1 0.9688 (0.9683) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 13:47:48] __main__ INFO: [0mEpoch 96 Step 300/390 lr 0.020000 loss 0.2715 (0.1289) acc@1 0.8984 (0.9652) acc@5 0.9922 (0.9993)
+[32m[2024-01-20 13:48:02] __main__ INFO: [0mEpoch 96 Step 390/390 lr 0.020000 loss 0.2348 (0.1356) acc@1 0.9297 (0.9628) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:48:02] __main__ INFO: [0mElapsed 61.31
+[32m[2024-01-20 13:48:02] __main__ INFO: [0mVal 96
+[32m[2024-01-20 13:48:06] __main__ INFO: [0mEpoch 96 loss 1.3392 acc@1 0.6943 acc@5 0.9063
+[32m[2024-01-20 13:48:06] __main__ INFO: [0mElapsed 3.61
+[32m[2024-01-20 13:48:06] __main__ INFO: [0mTrain 97 37440
+[32m[2024-01-20 13:48:21] __main__ INFO: [0mEpoch 97 Step 100/390 lr 0.020000 loss 0.0666 (0.1297) acc@1 1.0000 (0.9648) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 13:48:37] __main__ INFO: [0mEpoch 97 Step 200/390 lr 0.020000 loss 0.1159 (0.1334) acc@1 0.9766 (0.9633) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 13:48:53] __main__ INFO: [0mEpoch 97 Step 300/390 lr 0.020000 loss 0.2179 (0.1339) acc@1 0.9219 (0.9635) acc@5 0.9922 (0.9994)
+[32m[2024-01-20 13:49:07] __main__ INFO: [0mEpoch 97 Step 390/390 lr 0.020000 loss 0.1783 (0.1435) acc@1 0.9609 (0.9599) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:49:07] __main__ INFO: [0mElapsed 61.30
+[32m[2024-01-20 13:49:07] __main__ INFO: [0mVal 97
+[32m[2024-01-20 13:49:10] __main__ INFO: [0mEpoch 97 loss 1.1757 acc@1 0.7195 acc@5 0.9176
+[32m[2024-01-20 13:49:10] __main__ INFO: [0mElapsed 3.58
+[32m[2024-01-20 13:49:10] __main__ INFO: [0mTrain 98 37830
+[32m[2024-01-20 13:49:26] __main__ INFO: [0mEpoch 98 Step 100/390 lr 0.020000 loss 0.0599 (0.1171) acc@1 0.9844 (0.9681) acc@5 1.0000 (0.9996)
+[32m[2024-01-20 13:49:41] __main__ INFO: [0mEpoch 98 Step 200/390 lr 0.020000 loss 0.2041 (0.1219) acc@1 0.9531 (0.9672) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:49:57] __main__ INFO: [0mEpoch 98 Step 300/390 lr 0.020000 loss 0.1432 (0.1298) acc@1 0.9609 (0.9647) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 13:50:11] __main__ INFO: [0mEpoch 98 Step 390/390 lr 0.020000 loss 0.1880 (0.1375) acc@1 0.9531 (0.9621) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 13:50:11] __main__ INFO: [0mElapsed 60.94
+[32m[2024-01-20 13:50:11] __main__ INFO: [0mVal 98
+[32m[2024-01-20 13:50:15] __main__ INFO: [0mEpoch 98 loss 1.2436 acc@1 0.7042 acc@5 0.9103
+[32m[2024-01-20 13:50:15] __main__ INFO: [0mElapsed 3.64
+[32m[2024-01-20 13:50:15] __main__ INFO: [0mTrain 99 38220
+[32m[2024-01-20 13:50:31] __main__ INFO: [0mEpoch 99 Step 100/390 lr 0.020000 loss 0.1087 (0.1188) acc@1 0.9688 (0.9677) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 13:50:46] __main__ INFO: [0mEpoch 99 Step 200/390 lr 0.020000 loss 0.1018 (0.1204) acc@1 0.9844 (0.9678) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:51:02] __main__ INFO: [0mEpoch 99 Step 300/390 lr 0.020000 loss 0.2225 (0.1258) acc@1 0.9297 (0.9662) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 13:51:16] __main__ INFO: [0mEpoch 99 Step 390/390 lr 0.020000 loss 0.2326 (0.1297) acc@1 0.9297 (0.9649) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 13:51:16] __main__ INFO: [0mElapsed 61.20
+[32m[2024-01-20 13:51:16] __main__ INFO: [0mVal 99
+[32m[2024-01-20 13:51:20] __main__ INFO: [0mEpoch 99 loss 1.2088 acc@1 0.7143 acc@5 0.9188
+[32m[2024-01-20 13:51:20] __main__ INFO: [0mElapsed 3.62
+[32m[2024-01-20 13:51:20] __main__ INFO: [0mTrain 100 38610
+[32m[2024-01-20 13:51:36] __main__ INFO: [0mEpoch 100 Step 100/390 lr 0.020000 loss 0.1332 (0.1283) acc@1 0.9609 (0.9658) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 13:51:51] __main__ INFO: [0mEpoch 100 Step 200/390 lr 0.020000 loss 0.2486 (0.1297) acc@1 0.9297 (0.9646) acc@5 0.9922 (0.9994)
+[32m[2024-01-20 13:52:07] __main__ INFO: [0mEpoch 100 Step 300/390 lr 0.020000 loss 0.1914 (0.1309) acc@1 0.9531 (0.9649) acc@5 0.9922 (0.9993)
+[32m[2024-01-20 13:52:21] __main__ INFO: [0mEpoch 100 Step 390/390 lr 0.020000 loss 0.1427 (0.1328) acc@1 0.9766 (0.9641) acc@5 1.0000 (0.9991)
+[32m[2024-01-20 13:52:21] __main__ INFO: [0mElapsed 61.41
+[32m[2024-01-20 13:52:21] __main__ INFO: [0mVal 100
+[32m[2024-01-20 13:52:25] __main__ INFO: [0mEpoch 100 loss 1.2753 acc@1 0.7118 acc@5 0.9169
+[32m[2024-01-20 13:52:25] __main__ INFO: [0mElapsed 3.68
+[32m[2024-01-20 13:52:25] fvcore.common.checkpoint INFO: [0mSaving checkpoint to experiments/cifar100/wrn/exp00/checkpoint_00100.pth
+[32m[2024-01-20 13:52:25] __main__ INFO: [0mTrain 101 39000
+[32m[2024-01-20 13:52:41] __main__ INFO: [0mEpoch 101 Step 100/390 lr 0.020000 loss 0.0973 (0.1244) acc@1 0.9844 (0.9660) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 13:52:57] __main__ INFO: [0mEpoch 101 Step 200/390 lr 0.020000 loss 0.1456 (0.1306) acc@1 0.9531 (0.9643) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:53:12] __main__ INFO: [0mEpoch 101 Step 300/390 lr 0.020000 loss 0.1548 (0.1342) acc@1 0.9766 (0.9635) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:53:27] __main__ INFO: [0mEpoch 101 Step 390/390 lr 0.020000 loss 0.2323 (0.1396) acc@1 0.9219 (0.9619) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 13:53:27] __main__ INFO: [0mElapsed 61.37
+[32m[2024-01-20 13:53:27] __main__ INFO: [0mVal 101
+[32m[2024-01-20 13:53:30] __main__ INFO: [0mEpoch 101 loss 1.2588 acc@1 0.7152 acc@5 0.9101
+[32m[2024-01-20 13:53:30] __main__ INFO: [0mElapsed 3.65
+[32m[2024-01-20 13:53:30] __main__ INFO: [0mTrain 102 39390
+[32m[2024-01-20 13:53:46] __main__ INFO: [0mEpoch 102 Step 100/390 lr 0.020000 loss 0.1190 (0.1106) acc@1 0.9766 (0.9711) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 13:54:02] __main__ INFO: [0mEpoch 102 Step 200/390 lr 0.020000 loss 0.1523 (0.1205) acc@1 0.9766 (0.9679) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:54:18] __main__ INFO: [0mEpoch 102 Step 300/390 lr 0.020000 loss 0.1611 (0.1243) acc@1 0.9609 (0.9667) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:54:32] __main__ INFO: [0mEpoch 102 Step 390/390 lr 0.020000 loss 0.1638 (0.1310) acc@1 0.9375 (0.9639) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 13:54:32] __main__ INFO: [0mElapsed 61.40
+[32m[2024-01-20 13:54:32] __main__ INFO: [0mVal 102
+[32m[2024-01-20 13:54:35] __main__ INFO: [0mEpoch 102 loss 1.1944 acc@1 0.7175 acc@5 0.9165
+[32m[2024-01-20 13:54:35] __main__ INFO: [0mElapsed 3.63
+[32m[2024-01-20 13:54:35] __main__ INFO: [0mTrain 103 39780
+[32m[2024-01-20 13:54:51] __main__ INFO: [0mEpoch 103 Step 100/390 lr 0.020000 loss 0.1137 (0.1114) acc@1 0.9766 (0.9721) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:55:07] __main__ INFO: [0mEpoch 103 Step 200/390 lr 0.020000 loss 0.0824 (0.1077) acc@1 0.9766 (0.9723) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:55:22] __main__ INFO: [0mEpoch 103 Step 300/390 lr 0.020000 loss 0.0899 (0.1130) acc@1 0.9922 (0.9706) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:55:37] __main__ INFO: [0mEpoch 103 Step 390/390 lr 0.020000 loss 0.1821 (0.1199) acc@1 0.9453 (0.9685) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:55:37] __main__ INFO: [0mElapsed 61.34
+[32m[2024-01-20 13:55:37] __main__ INFO: [0mVal 103
+[32m[2024-01-20 13:55:40] __main__ INFO: [0mEpoch 103 loss 1.2418 acc@1 0.7141 acc@5 0.9116
+[32m[2024-01-20 13:55:40] __main__ INFO: [0mElapsed 3.61
+[32m[2024-01-20 13:55:40] __main__ INFO: [0mTrain 104 40170
+[32m[2024-01-20 13:55:56] __main__ INFO: [0mEpoch 104 Step 100/390 lr 0.020000 loss 0.0810 (0.1052) acc@1 0.9766 (0.9726) acc@5 1.0000 (0.9996)
+[32m[2024-01-20 13:56:12] __main__ INFO: [0mEpoch 104 Step 200/390 lr 0.020000 loss 0.0743 (0.1118) acc@1 0.9844 (0.9703) acc@5 1.0000 (0.9996)
+[32m[2024-01-20 13:56:27] __main__ INFO: [0mEpoch 104 Step 300/390 lr 0.020000 loss 0.1551 (0.1215) acc@1 0.9609 (0.9671) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 13:56:41] __main__ INFO: [0mEpoch 104 Step 390/390 lr 0.020000 loss 0.1841 (0.1276) acc@1 0.9219 (0.9651) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 13:56:42] __main__ INFO: [0mElapsed 61.20
+[32m[2024-01-20 13:56:42] __main__ INFO: [0mVal 104
+[32m[2024-01-20 13:56:45] __main__ INFO: [0mEpoch 104 loss 1.2611 acc@1 0.7124 acc@5 0.9177
+[32m[2024-01-20 13:56:45] __main__ INFO: [0mElapsed 3.58
+[32m[2024-01-20 13:56:45] __main__ INFO: [0mTrain 105 40560
+[32m[2024-01-20 13:57:01] __main__ INFO: [0mEpoch 105 Step 100/390 lr 0.020000 loss 0.0895 (0.1103) acc@1 0.9922 (0.9718) acc@5 1.0000 (0.9996)
+[32m[2024-01-20 13:57:16] __main__ INFO: [0mEpoch 105 Step 200/390 lr 0.020000 loss 0.0579 (0.1122) acc@1 0.9922 (0.9704) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 13:57:32] __main__ INFO: [0mEpoch 105 Step 300/390 lr 0.020000 loss 0.1047 (0.1173) acc@1 0.9766 (0.9688) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 13:57:46] __main__ INFO: [0mEpoch 105 Step 390/390 lr 0.020000 loss 0.1585 (0.1252) acc@1 0.9688 (0.9660) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:57:46] __main__ INFO: [0mElapsed 61.33
+[32m[2024-01-20 13:57:46] __main__ INFO: [0mVal 105
+[32m[2024-01-20 13:57:50] __main__ INFO: [0mEpoch 105 loss 1.2221 acc@1 0.7157 acc@5 0.9160
+[32m[2024-01-20 13:57:50] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 13:57:50] __main__ INFO: [0mTrain 106 40950
+[32m[2024-01-20 13:58:06] __main__ INFO: [0mEpoch 106 Step 100/390 lr 0.020000 loss 0.1564 (0.1083) acc@1 0.9609 (0.9704) acc@5 1.0000 (0.9991)
+[32m[2024-01-20 13:58:21] __main__ INFO: [0mEpoch 106 Step 200/390 lr 0.020000 loss 0.1229 (0.1191) acc@1 0.9609 (0.9678) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 13:58:37] __main__ INFO: [0mEpoch 106 Step 300/390 lr 0.020000 loss 0.2217 (0.1277) acc@1 0.9375 (0.9652) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 13:58:51] __main__ INFO: [0mEpoch 106 Step 390/390 lr 0.020000 loss 0.2209 (0.1343) acc@1 0.9609 (0.9636) acc@5 1.0000 (0.9991)
+[32m[2024-01-20 13:58:51] __main__ INFO: [0mElapsed 61.33
+[32m[2024-01-20 13:58:51] __main__ INFO: [0mVal 106
+[32m[2024-01-20 13:58:55] __main__ INFO: [0mEpoch 106 loss 1.1811 acc@1 0.7188 acc@5 0.9164
+[32m[2024-01-20 13:58:55] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 13:58:55] __main__ INFO: [0mTrain 107 41340
+[32m[2024-01-20 13:59:11] __main__ INFO: [0mEpoch 107 Step 100/390 lr 0.020000 loss 0.0775 (0.1034) acc@1 0.9922 (0.9735) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 13:59:26] __main__ INFO: [0mEpoch 107 Step 200/390 lr 0.020000 loss 0.0995 (0.1117) acc@1 0.9688 (0.9696) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 13:59:42] __main__ INFO: [0mEpoch 107 Step 300/390 lr 0.020000 loss 0.1108 (0.1195) acc@1 0.9766 (0.9673) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 13:59:56] __main__ INFO: [0mEpoch 107 Step 390/390 lr 0.020000 loss 0.1450 (0.1267) acc@1 0.9609 (0.9650) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 13:59:56] __main__ INFO: [0mElapsed 61.14
+[32m[2024-01-20 13:59:56] __main__ INFO: [0mVal 107
+[32m[2024-01-20 14:00:00] __main__ INFO: [0mEpoch 107 loss 1.1889 acc@1 0.7215 acc@5 0.9180
+[32m[2024-01-20 14:00:00] __main__ INFO: [0mElapsed 3.64
+[32m[2024-01-20 14:00:00] __main__ INFO: [0mTrain 108 41730
+[32m[2024-01-20 14:00:16] __main__ INFO: [0mEpoch 108 Step 100/390 lr 0.020000 loss 0.1569 (0.1142) acc@1 0.9531 (0.9680) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 14:00:31] __main__ INFO: [0mEpoch 108 Step 200/390 lr 0.020000 loss 0.1337 (0.1156) acc@1 0.9688 (0.9687) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 14:00:47] __main__ INFO: [0mEpoch 108 Step 300/390 lr 0.020000 loss 0.1021 (0.1210) acc@1 0.9766 (0.9670) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 14:01:01] __main__ INFO: [0mEpoch 108 Step 390/390 lr 0.020000 loss 0.1331 (0.1302) acc@1 0.9609 (0.9641) acc@5 1.0000 (0.9991)
+[32m[2024-01-20 14:01:01] __main__ INFO: [0mElapsed 61.29
+[32m[2024-01-20 14:01:01] __main__ INFO: [0mVal 108
+[32m[2024-01-20 14:01:05] __main__ INFO: [0mEpoch 108 loss 1.3095 acc@1 0.6968 acc@5 0.9055
+[32m[2024-01-20 14:01:05] __main__ INFO: [0mElapsed 3.58
+[32m[2024-01-20 14:01:05] __main__ INFO: [0mTrain 109 42120
+[32m[2024-01-20 14:01:21] __main__ INFO: [0mEpoch 109 Step 100/390 lr 0.020000 loss 0.1103 (0.1321) acc@1 0.9609 (0.9635) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 14:01:36] __main__ INFO: [0mEpoch 109 Step 200/390 lr 0.020000 loss 0.1533 (0.1297) acc@1 0.9688 (0.9650) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 14:01:51] __main__ INFO: [0mEpoch 109 Step 300/390 lr 0.020000 loss 0.1215 (0.1349) acc@1 0.9609 (0.9632) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 14:02:06] __main__ INFO: [0mEpoch 109 Step 390/390 lr 0.020000 loss 0.0708 (0.1365) acc@1 0.9844 (0.9630) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 14:02:06] __main__ INFO: [0mElapsed 60.98
+[32m[2024-01-20 14:02:06] __main__ INFO: [0mVal 109
+[32m[2024-01-20 14:02:09] __main__ INFO: [0mEpoch 109 loss 1.2187 acc@1 0.7193 acc@5 0.9109
+[32m[2024-01-20 14:02:09] __main__ INFO: [0mElapsed 3.62
+[32m[2024-01-20 14:02:09] __main__ INFO: [0mTrain 110 42510
+[32m[2024-01-20 14:02:25] __main__ INFO: [0mEpoch 110 Step 100/390 lr 0.020000 loss 0.1804 (0.1271) acc@1 0.9609 (0.9673) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 14:02:40] __main__ INFO: [0mEpoch 110 Step 200/390 lr 0.020000 loss 0.1186 (0.1298) acc@1 0.9609 (0.9657) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 14:02:56] __main__ INFO: [0mEpoch 110 Step 300/390 lr 0.020000 loss 0.1871 (0.1339) acc@1 0.9531 (0.9642) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 14:03:10] __main__ INFO: [0mEpoch 110 Step 390/390 lr 0.020000 loss 0.1656 (0.1398) acc@1 0.9531 (0.9621) acc@5 1.0000 (0.9991)
+[32m[2024-01-20 14:03:11] __main__ INFO: [0mElapsed 61.28
+[32m[2024-01-20 14:03:11] __main__ INFO: [0mVal 110
+[32m[2024-01-20 14:03:14] __main__ INFO: [0mEpoch 110 loss 1.2293 acc@1 0.7173 acc@5 0.9148
+[32m[2024-01-20 14:03:14] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 14:03:14] __main__ INFO: [0mTrain 111 42900
+[32m[2024-01-20 14:03:30] __main__ INFO: [0mEpoch 111 Step 100/390 lr 0.020000 loss 0.1214 (0.1067) acc@1 0.9531 (0.9703) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 14:03:45] __main__ INFO: [0mEpoch 111 Step 200/390 lr 0.020000 loss 0.0981 (0.1131) acc@1 0.9609 (0.9691) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 14:04:01] __main__ INFO: [0mEpoch 111 Step 300/390 lr 0.020000 loss 0.1487 (0.1200) acc@1 0.9453 (0.9674) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 14:04:15] __main__ INFO: [0mEpoch 111 Step 390/390 lr 0.020000 loss 0.1452 (0.1291) acc@1 0.9844 (0.9649) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 14:04:16] __main__ INFO: [0mElapsed 61.40
+[32m[2024-01-20 14:04:16] __main__ INFO: [0mVal 111
+[32m[2024-01-20 14:04:19] __main__ INFO: [0mEpoch 111 loss 1.1611 acc@1 0.7275 acc@5 0.9183
+[32m[2024-01-20 14:04:19] __main__ INFO: [0mElapsed 3.66
+[32m[2024-01-20 14:04:19] __main__ INFO: [0mTrain 112 43290
+[32m[2024-01-20 14:04:35] __main__ INFO: [0mEpoch 112 Step 100/390 lr 0.020000 loss 0.1000 (0.1219) acc@1 0.9609 (0.9667) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 14:04:50] __main__ INFO: [0mEpoch 112 Step 200/390 lr 0.020000 loss 0.1053 (0.1167) acc@1 0.9766 (0.9685) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 14:05:06] __main__ INFO: [0mEpoch 112 Step 300/390 lr 0.020000 loss 0.1120 (0.1188) acc@1 0.9688 (0.9679) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 14:05:20] __main__ INFO: [0mEpoch 112 Step 390/390 lr 0.020000 loss 0.1637 (0.1276) acc@1 0.9531 (0.9653) acc@5 0.9922 (0.9994)
+[32m[2024-01-20 14:05:20] __main__ INFO: [0mElapsed 61.29
+[32m[2024-01-20 14:05:20] __main__ INFO: [0mVal 112
+[32m[2024-01-20 14:05:24] __main__ INFO: [0mEpoch 112 loss 1.2314 acc@1 0.7171 acc@5 0.9176
+[32m[2024-01-20 14:05:24] __main__ INFO: [0mElapsed 3.65
+[32m[2024-01-20 14:05:24] __main__ INFO: [0mTrain 113 43680
+[32m[2024-01-20 14:05:40] __main__ INFO: [0mEpoch 113 Step 100/390 lr 0.020000 loss 0.1343 (0.1181) acc@1 0.9766 (0.9693) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 14:05:55] __main__ INFO: [0mEpoch 113 Step 200/390 lr 0.020000 loss 0.1169 (0.1252) acc@1 0.9688 (0.9671) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 14:06:11] __main__ INFO: [0mEpoch 113 Step 300/390 lr 0.020000 loss 0.1748 (0.1274) acc@1 0.9531 (0.9659) acc@5 0.9922 (0.9993)
+[32m[2024-01-20 14:06:26] __main__ INFO: [0mEpoch 113 Step 390/390 lr 0.020000 loss 0.1818 (0.1334) acc@1 0.9531 (0.9635) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 14:06:26] __main__ INFO: [0mElapsed 61.46
+[32m[2024-01-20 14:06:26] __main__ INFO: [0mVal 113
+[32m[2024-01-20 14:06:29] __main__ INFO: [0mEpoch 113 loss 1.2977 acc@1 0.7003 acc@5 0.9118
+[32m[2024-01-20 14:06:29] __main__ INFO: [0mElapsed 3.71
+[32m[2024-01-20 14:06:29] __main__ INFO: [0mTrain 114 44070
+[32m[2024-01-20 14:06:45] __main__ INFO: [0mEpoch 114 Step 100/390 lr 0.020000 loss 0.1137 (0.1055) acc@1 0.9688 (0.9739) acc@5 1.0000 (0.9996)
+[32m[2024-01-20 14:07:01] __main__ INFO: [0mEpoch 114 Step 200/390 lr 0.020000 loss 0.1634 (0.1042) acc@1 0.9453 (0.9729) acc@5 1.0000 (0.9997)
+[32m[2024-01-20 14:07:17] __main__ INFO: [0mEpoch 114 Step 300/390 lr 0.020000 loss 0.1433 (0.1108) acc@1 0.9609 (0.9703) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 14:07:31] __main__ INFO: [0mEpoch 114 Step 390/390 lr 0.020000 loss 0.1777 (0.1159) acc@1 0.9375 (0.9683) acc@5 0.9922 (0.9993)
+[32m[2024-01-20 14:07:31] __main__ INFO: [0mElapsed 61.50
+[32m[2024-01-20 14:07:31] __main__ INFO: [0mVal 114
+[32m[2024-01-20 14:07:34] __main__ INFO: [0mEpoch 114 loss 1.2406 acc@1 0.7197 acc@5 0.9151
+[32m[2024-01-20 14:07:34] __main__ INFO: [0mElapsed 3.61
+[32m[2024-01-20 14:07:34] __main__ INFO: [0mTrain 115 44460
+[32m[2024-01-20 14:07:50] __main__ INFO: [0mEpoch 115 Step 100/390 lr 0.020000 loss 0.1028 (0.1018) acc@1 0.9688 (0.9730) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 14:08:06] __main__ INFO: [0mEpoch 115 Step 200/390 lr 0.020000 loss 0.1197 (0.1095) acc@1 0.9766 (0.9708) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 14:08:21] __main__ INFO: [0mEpoch 115 Step 300/390 lr 0.020000 loss 0.1657 (0.1123) acc@1 0.9531 (0.9704) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 14:08:36] __main__ INFO: [0mEpoch 115 Step 390/390 lr 0.020000 loss 0.1637 (0.1203) acc@1 0.9688 (0.9677) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 14:08:36] __main__ INFO: [0mElapsed 61.39
+[32m[2024-01-20 14:08:36] __main__ INFO: [0mVal 115
+[32m[2024-01-20 14:08:39] __main__ INFO: [0mEpoch 115 loss 1.2823 acc@1 0.7036 acc@5 0.9103
+[32m[2024-01-20 14:08:39] __main__ INFO: [0mElapsed 3.68
+[32m[2024-01-20 14:08:39] __main__ INFO: [0mTrain 116 44850
+[32m[2024-01-20 14:08:56] __main__ INFO: [0mEpoch 116 Step 100/390 lr 0.020000 loss 0.0866 (0.1245) acc@1 0.9844 (0.9645) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 14:09:11] __main__ INFO: [0mEpoch 116 Step 200/390 lr 0.020000 loss 0.0879 (0.1199) acc@1 0.9844 (0.9663) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 14:09:27] __main__ INFO: [0mEpoch 116 Step 300/390 lr 0.020000 loss 0.1032 (0.1233) acc@1 0.9688 (0.9661) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 14:09:41] __main__ INFO: [0mEpoch 116 Step 390/390 lr 0.020000 loss 0.1032 (0.1266) acc@1 0.9766 (0.9651) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 14:09:41] __main__ INFO: [0mElapsed 61.32
+[32m[2024-01-20 14:09:41] __main__ INFO: [0mVal 116
+[32m[2024-01-20 14:09:44] __main__ INFO: [0mEpoch 116 loss 1.1598 acc@1 0.7254 acc@5 0.9181
+[32m[2024-01-20 14:09:44] __main__ INFO: [0mElapsed 3.64
+[32m[2024-01-20 14:09:44] __main__ INFO: [0mTrain 117 45240
+[32m[2024-01-20 14:10:00] __main__ INFO: [0mEpoch 117 Step 100/390 lr 0.020000 loss 0.1288 (0.1077) acc@1 0.9844 (0.9728) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 14:10:16] __main__ INFO: [0mEpoch 117 Step 200/390 lr 0.020000 loss 0.0936 (0.1158) acc@1 0.9844 (0.9695) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 14:10:32] __main__ INFO: [0mEpoch 117 Step 300/390 lr 0.020000 loss 0.1898 (0.1272) acc@1 0.9375 (0.9659) acc@5 1.0000 (0.9991)
+[32m[2024-01-20 14:10:46] __main__ INFO: [0mEpoch 117 Step 390/390 lr 0.020000 loss 0.2067 (0.1331) acc@1 0.9375 (0.9636) acc@5 1.0000 (0.9991)
+[32m[2024-01-20 14:10:46] __main__ INFO: [0mElapsed 61.57
+[32m[2024-01-20 14:10:46] __main__ INFO: [0mVal 117
+[32m[2024-01-20 14:10:50] __main__ INFO: [0mEpoch 117 loss 1.2880 acc@1 0.7015 acc@5 0.9069
+[32m[2024-01-20 14:10:50] __main__ INFO: [0mElapsed 3.64
+[32m[2024-01-20 14:10:50] __main__ INFO: [0mTrain 118 45630
+[32m[2024-01-20 14:11:06] __main__ INFO: [0mEpoch 118 Step 100/390 lr 0.020000 loss 0.1353 (0.1164) acc@1 0.9531 (0.9674) acc@5 1.0000 (0.9998)
+[32m[2024-01-20 14:11:21] __main__ INFO: [0mEpoch 118 Step 200/390 lr 0.020000 loss 0.1294 (0.1199) acc@1 0.9688 (0.9664) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 14:11:37] __main__ INFO: [0mEpoch 118 Step 300/390 lr 0.020000 loss 0.1287 (0.1240) acc@1 0.9688 (0.9663) acc@5 1.0000 (0.9994)
+[32m[2024-01-20 14:11:51] __main__ INFO: [0mEpoch 118 Step 390/390 lr 0.020000 loss 0.1089 (0.1249) acc@1 0.9688 (0.9659) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 14:11:51] __main__ INFO: [0mElapsed 61.41
+[32m[2024-01-20 14:11:51] __main__ INFO: [0mVal 118
+[32m[2024-01-20 14:11:55] __main__ INFO: [0mEpoch 118 loss 1.1304 acc@1 0.7285 acc@5 0.9215
+[32m[2024-01-20 14:11:55] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 14:11:55] __main__ INFO: [0mTrain 119 46020
+[32m[2024-01-20 14:12:11] __main__ INFO: [0mEpoch 119 Step 100/390 lr 0.020000 loss 0.1228 (0.1025) acc@1 0.9766 (0.9746) acc@5 1.0000 (0.9997)
+[32m[2024-01-20 14:12:26] __main__ INFO: [0mEpoch 119 Step 200/390 lr 0.020000 loss 0.1116 (0.1093) acc@1 0.9609 (0.9716) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 14:12:41] __main__ INFO: [0mEpoch 119 Step 300/390 lr 0.020000 loss 0.0909 (0.1130) acc@1 0.9766 (0.9701) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 14:12:56] __main__ INFO: [0mEpoch 119 Step 390/390 lr 0.020000 loss 0.2430 (0.1183) acc@1 0.9062 (0.9681) acc@5 0.9922 (0.9995)
+[32m[2024-01-20 14:12:56] __main__ INFO: [0mElapsed 61.03
+[32m[2024-01-20 14:12:56] __main__ INFO: [0mVal 119
+[32m[2024-01-20 14:12:59] __main__ INFO: [0mEpoch 119 loss 1.2398 acc@1 0.7201 acc@5 0.9155
+[32m[2024-01-20 14:12:59] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 14:12:59] __main__ INFO: [0mTrain 120 46410
+[32m[2024-01-20 14:13:15] __main__ INFO: [0mEpoch 120 Step 100/390 lr 0.020000 loss 0.0943 (0.1146) acc@1 0.9766 (0.9705) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 14:13:31] __main__ INFO: [0mEpoch 120 Step 200/390 lr 0.020000 loss 0.1093 (0.1254) acc@1 0.9766 (0.9673) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 14:13:46] __main__ INFO: [0mEpoch 120 Step 300/390 lr 0.020000 loss 0.1573 (0.1286) acc@1 0.9609 (0.9657) acc@5 1.0000 (0.9993)
+[32m[2024-01-20 14:14:01] __main__ INFO: [0mEpoch 120 Step 390/390 lr 0.020000 loss 0.2045 (0.1318) acc@1 0.9375 (0.9646) acc@5 1.0000 (0.9992)
+[32m[2024-01-20 14:14:01] __main__ INFO: [0mElapsed 61.41
+[32m[2024-01-20 14:14:01] __main__ INFO: [0mVal 120
+[32m[2024-01-20 14:14:04] __main__ INFO: [0mEpoch 120 loss 1.2427 acc@1 0.7157 acc@5 0.9148
+[32m[2024-01-20 14:14:04] __main__ INFO: [0mElapsed 3.61
+[32m[2024-01-20 14:14:04] __main__ INFO: [0mTrain 121 46800
+[32m[2024-01-20 14:14:20] __main__ INFO: [0mEpoch 121 Step 100/390 lr 0.004000 loss 0.0336 (0.0600) acc@1 1.0000 (0.9864) acc@5 1.0000 (0.9995)
+[32m[2024-01-20 14:14:36] __main__ INFO: [0mEpoch 121 Step 200/390 lr 0.004000 loss 0.0101 (0.0463) acc@1 1.0000 (0.9903) acc@5 1.0000 (0.9998)
+[32m[2024-01-20 14:14:51] __main__ INFO: [0mEpoch 121 Step 300/390 lr 0.004000 loss 0.0123 (0.0400) acc@1 1.0000 (0.9918) acc@5 1.0000 (0.9998)
+[32m[2024-01-20 14:15:06] __main__ INFO: [0mEpoch 121 Step 390/390 lr 0.004000 loss 0.0197 (0.0364) acc@1 1.0000 (0.9929) acc@5 1.0000 (0.9999)
+[32m[2024-01-20 14:15:06] __main__ INFO: [0mElapsed 61.41
+[32m[2024-01-20 14:15:06] __main__ INFO: [0mVal 121
+[32m[2024-01-20 14:15:09] __main__ INFO: [0mEpoch 121 loss 0.8635 acc@1 0.7930 acc@5 0.9475
+[32m[2024-01-20 14:15:09] __main__ INFO: [0mElapsed 3.67
+[32m[2024-01-20 14:15:09] __main__ INFO: [0mTrain 122 47190
+[32m[2024-01-20 14:15:25] __main__ INFO: [0mEpoch 122 Step 100/390 lr 0.004000 loss 0.0057 (0.0168) acc@1 1.0000 (0.9977) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:15:41] __main__ INFO: [0mEpoch 122 Step 200/390 lr 0.004000 loss 0.0144 (0.0158) acc@1 1.0000 (0.9981) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:15:56] __main__ INFO: [0mEpoch 122 Step 300/390 lr 0.004000 loss 0.0063 (0.0152) acc@1 1.0000 (0.9981) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:16:11] __main__ INFO: [0mEpoch 122 Step 390/390 lr 0.004000 loss 0.0174 (0.0150) acc@1 1.0000 (0.9982) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:16:11] __main__ INFO: [0mElapsed 61.19
+[32m[2024-01-20 14:16:11] __main__ INFO: [0mVal 122
+[32m[2024-01-20 14:16:14] __main__ INFO: [0mEpoch 122 loss 0.8458 acc@1 0.7971 acc@5 0.9488
+[32m[2024-01-20 14:16:14] __main__ INFO: [0mElapsed 3.61
+[32m[2024-01-20 14:16:14] __main__ INFO: [0mTrain 123 47580
+[32m[2024-01-20 14:16:30] __main__ INFO: [0mEpoch 123 Step 100/390 lr 0.004000 loss 0.0138 (0.0115) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:16:45] __main__ INFO: [0mEpoch 123 Step 200/390 lr 0.004000 loss 0.0092 (0.0111) acc@1 1.0000 (0.9990) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:17:01] __main__ INFO: [0mEpoch 123 Step 300/390 lr 0.004000 loss 0.0094 (0.0111) acc@1 1.0000 (0.9989) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:17:15] __main__ INFO: [0mEpoch 123 Step 390/390 lr 0.004000 loss 0.0056 (0.0111) acc@1 1.0000 (0.9989) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:17:15] __main__ INFO: [0mElapsed 61.20
+[32m[2024-01-20 14:17:15] __main__ INFO: [0mVal 123
+[32m[2024-01-20 14:17:19] __main__ INFO: [0mEpoch 123 loss 0.8479 acc@1 0.7966 acc@5 0.9482
+[32m[2024-01-20 14:17:19] __main__ INFO: [0mElapsed 3.62
+[32m[2024-01-20 14:17:19] __main__ INFO: [0mTrain 124 47970
+[32m[2024-01-20 14:17:35] __main__ INFO: [0mEpoch 124 Step 100/390 lr 0.004000 loss 0.0105 (0.0092) acc@1 1.0000 (0.9991) acc@5 1.0000 (0.9999)
+[32m[2024-01-20 14:17:50] __main__ INFO: [0mEpoch 124 Step 200/390 lr 0.004000 loss 0.0119 (0.0093) acc@1 1.0000 (0.9992) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:18:06] __main__ INFO: [0mEpoch 124 Step 300/390 lr 0.004000 loss 0.0082 (0.0092) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:18:20] __main__ INFO: [0mEpoch 124 Step 390/390 lr 0.004000 loss 0.0051 (0.0092) acc@1 1.0000 (0.9991) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:18:20] __main__ INFO: [0mElapsed 61.00
+[32m[2024-01-20 14:18:20] __main__ INFO: [0mVal 124
+[32m[2024-01-20 14:18:24] __main__ INFO: [0mEpoch 124 loss 0.8384 acc@1 0.7982 acc@5 0.9487
+[32m[2024-01-20 14:18:24] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 14:18:24] __main__ INFO: [0mTrain 125 48360
+[32m[2024-01-20 14:18:40] __main__ INFO: [0mEpoch 125 Step 100/390 lr 0.004000 loss 0.0040 (0.0077) acc@1 1.0000 (0.9993) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:18:55] __main__ INFO: [0mEpoch 125 Step 200/390 lr 0.004000 loss 0.0043 (0.0079) acc@1 1.0000 (0.9993) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:19:11] __main__ INFO: [0mEpoch 125 Step 300/390 lr 0.004000 loss 0.0093 (0.0079) acc@1 1.0000 (0.9993) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:19:25] __main__ INFO: [0mEpoch 125 Step 390/390 lr 0.004000 loss 0.0057 (0.0080) acc@1 1.0000 (0.9993) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:19:25] __main__ INFO: [0mElapsed 61.28
+[32m[2024-01-20 14:19:25] __main__ INFO: [0mVal 125
+[32m[2024-01-20 14:19:29] __main__ INFO: [0mEpoch 125 loss 0.8391 acc@1 0.7977 acc@5 0.9486
+[32m[2024-01-20 14:19:29] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 14:19:29] __main__ INFO: [0mTrain 126 48750
+[32m[2024-01-20 14:19:44] __main__ INFO: [0mEpoch 126 Step 100/390 lr 0.004000 loss 0.0234 (0.0074) acc@1 0.9922 (0.9992) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:20:00] __main__ INFO: [0mEpoch 126 Step 200/390 lr 0.004000 loss 0.0050 (0.0071) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:20:16] __main__ INFO: [0mEpoch 126 Step 300/390 lr 0.004000 loss 0.0057 (0.0070) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:20:30] __main__ INFO: [0mEpoch 126 Step 390/390 lr 0.004000 loss 0.0053 (0.0073) acc@1 1.0000 (0.9994) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:20:30] __main__ INFO: [0mElapsed 61.29
+[32m[2024-01-20 14:20:30] __main__ INFO: [0mVal 126
+[32m[2024-01-20 14:20:33] __main__ INFO: [0mEpoch 126 loss 0.8244 acc@1 0.8005 acc@5 0.9509
+[32m[2024-01-20 14:20:33] __main__ INFO: [0mElapsed 3.63
+[32m[2024-01-20 14:20:33] __main__ INFO: [0mTrain 127 49140
+[32m[2024-01-20 14:20:49] __main__ INFO: [0mEpoch 127 Step 100/390 lr 0.004000 loss 0.0067 (0.0071) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:21:05] __main__ INFO: [0mEpoch 127 Step 200/390 lr 0.004000 loss 0.0086 (0.0070) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:21:20] __main__ INFO: [0mEpoch 127 Step 300/390 lr 0.004000 loss 0.0084 (0.0070) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:21:35] __main__ INFO: [0mEpoch 127 Step 390/390 lr 0.004000 loss 0.0052 (0.0070) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:21:35] __main__ INFO: [0mElapsed 61.30
+[32m[2024-01-20 14:21:35] __main__ INFO: [0mVal 127
+[32m[2024-01-20 14:21:38] __main__ INFO: [0mEpoch 127 loss 0.8277 acc@1 0.8006 acc@5 0.9488
+[32m[2024-01-20 14:21:38] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 14:21:38] __main__ INFO: [0mTrain 128 49530
+[32m[2024-01-20 14:21:54] __main__ INFO: [0mEpoch 128 Step 100/390 lr 0.004000 loss 0.0053 (0.0067) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:22:10] __main__ INFO: [0mEpoch 128 Step 200/390 lr 0.004000 loss 0.0058 (0.0069) acc@1 1.0000 (0.9994) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:22:25] __main__ INFO: [0mEpoch 128 Step 300/390 lr 0.004000 loss 0.0185 (0.0070) acc@1 0.9922 (0.9994) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:22:40] __main__ INFO: [0mEpoch 128 Step 390/390 lr 0.004000 loss 0.0129 (0.0070) acc@1 1.0000 (0.9994) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:22:40] __main__ INFO: [0mElapsed 61.22
+[32m[2024-01-20 14:22:40] __main__ INFO: [0mVal 128
+[32m[2024-01-20 14:22:43] __main__ INFO: [0mEpoch 128 loss 0.8230 acc@1 0.7997 acc@5 0.9497
+[32m[2024-01-20 14:22:43] __main__ INFO: [0mElapsed 3.64
+[32m[2024-01-20 14:22:43] __main__ INFO: [0mTrain 129 49920
+[32m[2024-01-20 14:22:59] __main__ INFO: [0mEpoch 129 Step 100/390 lr 0.004000 loss 0.0030 (0.0063) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:23:14] __main__ INFO: [0mEpoch 129 Step 200/390 lr 0.004000 loss 0.0054 (0.0062) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:23:30] __main__ INFO: [0mEpoch 129 Step 300/390 lr 0.004000 loss 0.0054 (0.0063) acc@1 1.0000 (0.9994) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:23:44] __main__ INFO: [0mEpoch 129 Step 390/390 lr 0.004000 loss 0.0035 (0.0065) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:23:44] __main__ INFO: [0mElapsed 61.17
+[32m[2024-01-20 14:23:44] __main__ INFO: [0mVal 129
+[32m[2024-01-20 14:23:48] __main__ INFO: [0mEpoch 129 loss 0.8192 acc@1 0.8010 acc@5 0.9502
+[32m[2024-01-20 14:23:48] __main__ INFO: [0mElapsed 3.66
+[32m[2024-01-20 14:23:48] __main__ INFO: [0mTrain 130 50310
+[32m[2024-01-20 14:24:04] __main__ INFO: [0mEpoch 130 Step 100/390 lr 0.004000 loss 0.0037 (0.0066) acc@1 1.0000 (0.9993) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:24:19] __main__ INFO: [0mEpoch 130 Step 200/390 lr 0.004000 loss 0.0050 (0.0063) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:24:35] __main__ INFO: [0mEpoch 130 Step 300/390 lr 0.004000 loss 0.0035 (0.0065) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:24:49] __main__ INFO: [0mEpoch 130 Step 390/390 lr 0.004000 loss 0.0073 (0.0064) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:24:49] __main__ INFO: [0mElapsed 61.19
+[32m[2024-01-20 14:24:49] __main__ INFO: [0mVal 130
+[32m[2024-01-20 14:24:53] __main__ INFO: [0mEpoch 130 loss 0.8143 acc@1 0.8003 acc@5 0.9490
+[32m[2024-01-20 14:24:53] __main__ INFO: [0mElapsed 3.63
+[32m[2024-01-20 14:24:53] __main__ INFO: [0mTrain 131 50700
+[32m[2024-01-20 14:25:09] __main__ INFO: [0mEpoch 131 Step 100/390 lr 0.004000 loss 0.0029 (0.0056) acc@1 1.0000 (1.0000) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:25:24] __main__ INFO: [0mEpoch 131 Step 200/390 lr 0.004000 loss 0.0043 (0.0062) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:25:40] __main__ INFO: [0mEpoch 131 Step 300/390 lr 0.004000 loss 0.0066 (0.0063) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:25:54] __main__ INFO: [0mEpoch 131 Step 390/390 lr 0.004000 loss 0.0067 (0.0063) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:25:54] __main__ INFO: [0mElapsed 61.48
+[32m[2024-01-20 14:25:54] __main__ INFO: [0mVal 131
+[32m[2024-01-20 14:25:58] __main__ INFO: [0mEpoch 131 loss 0.8113 acc@1 0.8031 acc@5 0.9501
+[32m[2024-01-20 14:25:58] __main__ INFO: [0mElapsed 3.64
+[32m[2024-01-20 14:25:58] __main__ INFO: [0mTrain 132 51090
+[32m[2024-01-20 14:26:14] __main__ INFO: [0mEpoch 132 Step 100/390 lr 0.004000 loss 0.0059 (0.0054) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:26:29] __main__ INFO: [0mEpoch 132 Step 200/390 lr 0.004000 loss 0.0034 (0.0059) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:26:45] __main__ INFO: [0mEpoch 132 Step 300/390 lr 0.004000 loss 0.0043 (0.0058) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:26:59] __main__ INFO: [0mEpoch 132 Step 390/390 lr 0.004000 loss 0.0032 (0.0061) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:26:59] __main__ INFO: [0mElapsed 61.40
+[32m[2024-01-20 14:26:59] __main__ INFO: [0mVal 132
+[32m[2024-01-20 14:27:03] __main__ INFO: [0mEpoch 132 loss 0.8095 acc@1 0.8033 acc@5 0.9507
+[32m[2024-01-20 14:27:03] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 14:27:03] __main__ INFO: [0mTrain 133 51480
+[32m[2024-01-20 14:27:19] __main__ INFO: [0mEpoch 133 Step 100/390 lr 0.004000 loss 0.0046 (0.0059) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:27:34] __main__ INFO: [0mEpoch 133 Step 200/390 lr 0.004000 loss 0.0044 (0.0058) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:27:50] __main__ INFO: [0mEpoch 133 Step 300/390 lr 0.004000 loss 0.0067 (0.0059) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:28:04] __main__ INFO: [0mEpoch 133 Step 390/390 lr 0.004000 loss 0.0038 (0.0059) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:28:04] __main__ INFO: [0mElapsed 61.25
+[32m[2024-01-20 14:28:04] __main__ INFO: [0mVal 133
+[32m[2024-01-20 14:28:08] __main__ INFO: [0mEpoch 133 loss 0.8074 acc@1 0.8017 acc@5 0.9501
+[32m[2024-01-20 14:28:08] __main__ INFO: [0mElapsed 3.73
+[32m[2024-01-20 14:28:08] __main__ INFO: [0mTrain 134 51870
+[32m[2024-01-20 14:28:24] __main__ INFO: [0mEpoch 134 Step 100/390 lr 0.004000 loss 0.0055 (0.0057) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:28:39] __main__ INFO: [0mEpoch 134 Step 200/390 lr 0.004000 loss 0.0143 (0.0061) acc@1 0.9922 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:28:55] __main__ INFO: [0mEpoch 134 Step 300/390 lr 0.004000 loss 0.0048 (0.0061) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:29:09] __main__ INFO: [0mEpoch 134 Step 390/390 lr 0.004000 loss 0.0133 (0.0061) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:29:09] __main__ INFO: [0mElapsed 61.22
+[32m[2024-01-20 14:29:09] __main__ INFO: [0mVal 134
+[32m[2024-01-20 14:29:13] __main__ INFO: [0mEpoch 134 loss 0.8003 acc@1 0.8047 acc@5 0.9517
+[32m[2024-01-20 14:29:13] __main__ INFO: [0mElapsed 3.64
+[32m[2024-01-20 14:29:13] __main__ INFO: [0mTrain 135 52260
+[32m[2024-01-20 14:29:29] __main__ INFO: [0mEpoch 135 Step 100/390 lr 0.004000 loss 0.0144 (0.0063) acc@1 0.9922 (0.9992) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:29:44] __main__ INFO: [0mEpoch 135 Step 200/390 lr 0.004000 loss 0.0047 (0.0060) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:30:00] __main__ INFO: [0mEpoch 135 Step 300/390 lr 0.004000 loss 0.0048 (0.0061) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:30:14] __main__ INFO: [0mEpoch 135 Step 390/390 lr 0.004000 loss 0.0047 (0.0061) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:30:14] __main__ INFO: [0mElapsed 61.41
+[32m[2024-01-20 14:30:14] __main__ INFO: [0mVal 135
+[32m[2024-01-20 14:30:18] __main__ INFO: [0mEpoch 135 loss 0.7961 acc@1 0.8045 acc@5 0.9514
+[32m[2024-01-20 14:30:18] __main__ INFO: [0mElapsed 3.67
+[32m[2024-01-20 14:30:18] __main__ INFO: [0mTrain 136 52650
+[32m[2024-01-20 14:30:34] __main__ INFO: [0mEpoch 136 Step 100/390 lr 0.004000 loss 0.0037 (0.0059) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:30:49] __main__ INFO: [0mEpoch 136 Step 200/390 lr 0.004000 loss 0.0070 (0.0059) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:31:05] __main__ INFO: [0mEpoch 136 Step 300/390 lr 0.004000 loss 0.0042 (0.0063) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:31:19] __main__ INFO: [0mEpoch 136 Step 390/390 lr 0.004000 loss 0.0132 (0.0062) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:31:19] __main__ INFO: [0mElapsed 61.33
+[32m[2024-01-20 14:31:19] __main__ INFO: [0mVal 136
+[32m[2024-01-20 14:31:23] __main__ INFO: [0mEpoch 136 loss 0.8017 acc@1 0.8048 acc@5 0.9502
+[32m[2024-01-20 14:31:23] __main__ INFO: [0mElapsed 3.63
+[32m[2024-01-20 14:31:23] __main__ INFO: [0mTrain 137 53040
+[32m[2024-01-20 14:31:39] __main__ INFO: [0mEpoch 137 Step 100/390 lr 0.004000 loss 0.0043 (0.0055) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:31:54] __main__ INFO: [0mEpoch 137 Step 200/390 lr 0.004000 loss 0.0059 (0.0057) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:32:10] __main__ INFO: [0mEpoch 137 Step 300/390 lr 0.004000 loss 0.0064 (0.0059) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:32:24] __main__ INFO: [0mEpoch 137 Step 390/390 lr 0.004000 loss 0.0043 (0.0060) acc@1 1.0000 (0.9994) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:32:24] __main__ INFO: [0mElapsed 61.23
+[32m[2024-01-20 14:32:24] __main__ INFO: [0mVal 137
+[32m[2024-01-20 14:32:28] __main__ INFO: [0mEpoch 137 loss 0.7955 acc@1 0.8037 acc@5 0.9513
+[32m[2024-01-20 14:32:28] __main__ INFO: [0mElapsed 3.62
+[32m[2024-01-20 14:32:28] __main__ INFO: [0mTrain 138 53430
+[32m[2024-01-20 14:32:44] __main__ INFO: [0mEpoch 138 Step 100/390 lr 0.004000 loss 0.0200 (0.0056) acc@1 0.9922 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:32:59] __main__ INFO: [0mEpoch 138 Step 200/390 lr 0.004000 loss 0.0095 (0.0062) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:33:15] __main__ INFO: [0mEpoch 138 Step 300/390 lr 0.004000 loss 0.0030 (0.0062) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:33:29] __main__ INFO: [0mEpoch 138 Step 390/390 lr 0.004000 loss 0.0058 (0.0062) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:33:29] __main__ INFO: [0mElapsed 61.19
+[32m[2024-01-20 14:33:29] __main__ INFO: [0mVal 138
+[32m[2024-01-20 14:33:33] __main__ INFO: [0mEpoch 138 loss 0.7894 acc@1 0.8040 acc@5 0.9507
+[32m[2024-01-20 14:33:33] __main__ INFO: [0mElapsed 3.64
+[32m[2024-01-20 14:33:33] __main__ INFO: [0mTrain 139 53820
+[32m[2024-01-20 14:33:49] __main__ INFO: [0mEpoch 139 Step 100/390 lr 0.004000 loss 0.0040 (0.0059) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:34:04] __main__ INFO: [0mEpoch 139 Step 200/390 lr 0.004000 loss 0.0047 (0.0060) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:34:19] __main__ INFO: [0mEpoch 139 Step 300/390 lr 0.004000 loss 0.0062 (0.0060) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:34:34] __main__ INFO: [0mEpoch 139 Step 390/390 lr 0.004000 loss 0.0076 (0.0063) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:34:34] __main__ INFO: [0mElapsed 61.20
+[32m[2024-01-20 14:34:34] __main__ INFO: [0mVal 139
+[32m[2024-01-20 14:34:37] __main__ INFO: [0mEpoch 139 loss 0.7889 acc@1 0.8053 acc@5 0.9514
+[32m[2024-01-20 14:34:37] __main__ INFO: [0mElapsed 3.62
+[32m[2024-01-20 14:34:37] __main__ INFO: [0mTrain 140 54210
+[32m[2024-01-20 14:34:53] __main__ INFO: [0mEpoch 140 Step 100/390 lr 0.004000 loss 0.0042 (0.0061) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:35:09] __main__ INFO: [0mEpoch 140 Step 200/390 lr 0.004000 loss 0.0115 (0.0059) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:35:24] __main__ INFO: [0mEpoch 140 Step 300/390 lr 0.004000 loss 0.0063 (0.0059) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:35:39] __main__ INFO: [0mEpoch 140 Step 390/390 lr 0.004000 loss 0.0069 (0.0060) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:35:39] __main__ INFO: [0mElapsed 61.21
+[32m[2024-01-20 14:35:39] __main__ INFO: [0mVal 140
+[32m[2024-01-20 14:35:42] __main__ INFO: [0mEpoch 140 loss 0.7887 acc@1 0.8040 acc@5 0.9514
+[32m[2024-01-20 14:35:42] __main__ INFO: [0mElapsed 3.58
+[32m[2024-01-20 14:35:42] __main__ INFO: [0mTrain 141 54600
+[32m[2024-01-20 14:35:58] __main__ INFO: [0mEpoch 141 Step 100/390 lr 0.004000 loss 0.0037 (0.0062) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:36:13] __main__ INFO: [0mEpoch 141 Step 200/390 lr 0.004000 loss 0.0044 (0.0064) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:36:29] __main__ INFO: [0mEpoch 141 Step 300/390 lr 0.004000 loss 0.0071 (0.0063) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:36:43] __main__ INFO: [0mEpoch 141 Step 390/390 lr 0.004000 loss 0.0045 (0.0063) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:36:43] __main__ INFO: [0mElapsed 61.17
+[32m[2024-01-20 14:36:43] __main__ INFO: [0mVal 141
+[32m[2024-01-20 14:36:47] __main__ INFO: [0mEpoch 141 loss 0.7899 acc@1 0.8052 acc@5 0.9524
+[32m[2024-01-20 14:36:47] __main__ INFO: [0mElapsed 3.64
+[32m[2024-01-20 14:36:47] __main__ INFO: [0mTrain 142 54990
+[32m[2024-01-20 14:37:03] __main__ INFO: [0mEpoch 142 Step 100/390 lr 0.004000 loss 0.0047 (0.0062) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:37:18] __main__ INFO: [0mEpoch 142 Step 200/390 lr 0.004000 loss 0.0046 (0.0059) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:37:34] __main__ INFO: [0mEpoch 142 Step 300/390 lr 0.004000 loss 0.0064 (0.0059) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:37:48] __main__ INFO: [0mEpoch 142 Step 390/390 lr 0.004000 loss 0.0049 (0.0060) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:37:48] __main__ INFO: [0mElapsed 61.19
+[32m[2024-01-20 14:37:48] __main__ INFO: [0mVal 142
+[32m[2024-01-20 14:37:52] __main__ INFO: [0mEpoch 142 loss 0.7845 acc@1 0.8074 acc@5 0.9511
+[32m[2024-01-20 14:37:52] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 14:37:52] __main__ INFO: [0mTrain 143 55380
+[32m[2024-01-20 14:38:08] __main__ INFO: [0mEpoch 143 Step 100/390 lr 0.004000 loss 0.0043 (0.0066) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:38:23] __main__ INFO: [0mEpoch 143 Step 200/390 lr 0.004000 loss 0.0057 (0.0065) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:38:39] __main__ INFO: [0mEpoch 143 Step 300/390 lr 0.004000 loss 0.0071 (0.0065) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:38:53] __main__ INFO: [0mEpoch 143 Step 390/390 lr 0.004000 loss 0.0047 (0.0065) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:38:53] __main__ INFO: [0mElapsed 61.15
+[32m[2024-01-20 14:38:53] __main__ INFO: [0mVal 143
+[32m[2024-01-20 14:38:57] __main__ INFO: [0mEpoch 143 loss 0.7803 acc@1 0.8052 acc@5 0.9519
+[32m[2024-01-20 14:38:57] __main__ INFO: [0mElapsed 3.66
+[32m[2024-01-20 14:38:57] __main__ INFO: [0mTrain 144 55770
+[32m[2024-01-20 14:39:13] __main__ INFO: [0mEpoch 144 Step 100/390 lr 0.004000 loss 0.0043 (0.0064) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:39:28] __main__ INFO: [0mEpoch 144 Step 200/390 lr 0.004000 loss 0.0042 (0.0061) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:39:44] __main__ INFO: [0mEpoch 144 Step 300/390 lr 0.004000 loss 0.0076 (0.0066) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:39:58] __main__ INFO: [0mEpoch 144 Step 390/390 lr 0.004000 loss 0.0048 (0.0066) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:39:58] __main__ INFO: [0mElapsed 61.21
+[32m[2024-01-20 14:39:58] __main__ INFO: [0mVal 144
+[32m[2024-01-20 14:40:01] __main__ INFO: [0mEpoch 144 loss 0.7811 acc@1 0.8066 acc@5 0.9517
+[32m[2024-01-20 14:40:01] __main__ INFO: [0mElapsed 3.63
+[32m[2024-01-20 14:40:01] __main__ INFO: [0mTrain 145 56160
+[32m[2024-01-20 14:40:17] __main__ INFO: [0mEpoch 145 Step 100/390 lr 0.004000 loss 0.0257 (0.0061) acc@1 0.9922 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:40:33] __main__ INFO: [0mEpoch 145 Step 200/390 lr 0.004000 loss 0.0041 (0.0062) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:40:48] __main__ INFO: [0mEpoch 145 Step 300/390 lr 0.004000 loss 0.0059 (0.0063) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:41:03] __main__ INFO: [0mEpoch 145 Step 390/390 lr 0.004000 loss 0.0057 (0.0063) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:41:03] __main__ INFO: [0mElapsed 61.23
+[32m[2024-01-20 14:41:03] __main__ INFO: [0mVal 145
+[32m[2024-01-20 14:41:06] __main__ INFO: [0mEpoch 145 loss 0.7746 acc@1 0.8069 acc@5 0.9515
+[32m[2024-01-20 14:41:06] __main__ INFO: [0mElapsed 3.63
+[32m[2024-01-20 14:41:06] __main__ INFO: [0mTrain 146 56550
+[32m[2024-01-20 14:41:22] __main__ INFO: [0mEpoch 146 Step 100/390 lr 0.004000 loss 0.0099 (0.0063) acc@1 1.0000 (0.9999) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:41:38] __main__ INFO: [0mEpoch 146 Step 200/390 lr 0.004000 loss 0.0061 (0.0064) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:41:53] __main__ INFO: [0mEpoch 146 Step 300/390 lr 0.004000 loss 0.0064 (0.0064) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:42:08] __main__ INFO: [0mEpoch 146 Step 390/390 lr 0.004000 loss 0.0057 (0.0065) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:42:08] __main__ INFO: [0mElapsed 61.30
+[32m[2024-01-20 14:42:08] __main__ INFO: [0mVal 146
+[32m[2024-01-20 14:42:11] __main__ INFO: [0mEpoch 146 loss 0.7849 acc@1 0.8075 acc@5 0.9521
+[32m[2024-01-20 14:42:11] __main__ INFO: [0mElapsed 3.58
+[32m[2024-01-20 14:42:11] __main__ INFO: [0mTrain 147 56940
+[32m[2024-01-20 14:42:27] __main__ INFO: [0mEpoch 147 Step 100/390 lr 0.004000 loss 0.0071 (0.0065) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:42:42] __main__ INFO: [0mEpoch 147 Step 200/390 lr 0.004000 loss 0.0036 (0.0064) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:42:58] __main__ INFO: [0mEpoch 147 Step 300/390 lr 0.004000 loss 0.0223 (0.0065) acc@1 0.9922 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:43:12] __main__ INFO: [0mEpoch 147 Step 390/390 lr 0.004000 loss 0.0051 (0.0066) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:43:12] __main__ INFO: [0mElapsed 61.16
+[32m[2024-01-20 14:43:12] __main__ INFO: [0mVal 147
+[32m[2024-01-20 14:43:16] __main__ INFO: [0mEpoch 147 loss 0.7717 acc@1 0.8069 acc@5 0.9523
+[32m[2024-01-20 14:43:16] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 14:43:16] __main__ INFO: [0mTrain 148 57330
+[32m[2024-01-20 14:43:32] __main__ INFO: [0mEpoch 148 Step 100/390 lr 0.004000 loss 0.0055 (0.0064) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:43:47] __main__ INFO: [0mEpoch 148 Step 200/390 lr 0.004000 loss 0.0411 (0.0068) acc@1 0.9922 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:44:03] __main__ INFO: [0mEpoch 148 Step 300/390 lr 0.004000 loss 0.0042 (0.0068) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:44:17] __main__ INFO: [0mEpoch 148 Step 390/390 lr 0.004000 loss 0.0096 (0.0068) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:44:17] __main__ INFO: [0mElapsed 61.31
+[32m[2024-01-20 14:44:17] __main__ INFO: [0mVal 148
+[32m[2024-01-20 14:44:21] __main__ INFO: [0mEpoch 148 loss 0.7769 acc@1 0.8061 acc@5 0.9529
+[32m[2024-01-20 14:44:21] __main__ INFO: [0mElapsed 3.65
+[32m[2024-01-20 14:44:21] __main__ INFO: [0mTrain 149 57720
+[32m[2024-01-20 14:44:37] __main__ INFO: [0mEpoch 149 Step 100/390 lr 0.004000 loss 0.0052 (0.0063) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:44:52] __main__ INFO: [0mEpoch 149 Step 200/390 lr 0.004000 loss 0.0054 (0.0066) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:45:08] __main__ INFO: [0mEpoch 149 Step 300/390 lr 0.004000 loss 0.0039 (0.0067) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:45:22] __main__ INFO: [0mEpoch 149 Step 390/390 lr 0.004000 loss 0.0054 (0.0068) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:45:22] __main__ INFO: [0mElapsed 61.20
+[32m[2024-01-20 14:45:22] __main__ INFO: [0mVal 149
+[32m[2024-01-20 14:45:26] __main__ INFO: [0mEpoch 149 loss 0.7741 acc@1 0.8079 acc@5 0.9515
+[32m[2024-01-20 14:45:26] __main__ INFO: [0mElapsed 3.58
+[32m[2024-01-20 14:45:26] __main__ INFO: [0mTrain 150 58110
+[32m[2024-01-20 14:45:42] __main__ INFO: [0mEpoch 150 Step 100/390 lr 0.004000 loss 0.0073 (0.0064) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:45:57] __main__ INFO: [0mEpoch 150 Step 200/390 lr 0.004000 loss 0.0061 (0.0066) acc@1 1.0000 (0.9999) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:46:13] __main__ INFO: [0mEpoch 150 Step 300/390 lr 0.004000 loss 0.0032 (0.0067) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:46:27] __main__ INFO: [0mEpoch 150 Step 390/390 lr 0.004000 loss 0.0062 (0.0069) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:46:27] __main__ INFO: [0mElapsed 61.27
+[32m[2024-01-20 14:46:27] __main__ INFO: [0mVal 150
+[32m[2024-01-20 14:46:31] __main__ INFO: [0mEpoch 150 loss 0.7770 acc@1 0.8058 acc@5 0.9526
+[32m[2024-01-20 14:46:31] __main__ INFO: [0mElapsed 3.68
+[32m[2024-01-20 14:46:31] __main__ INFO: [0mTrain 151 58500
+[32m[2024-01-20 14:46:47] __main__ INFO: [0mEpoch 151 Step 100/390 lr 0.004000 loss 0.0062 (0.0069) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:47:02] __main__ INFO: [0mEpoch 151 Step 200/390 lr 0.004000 loss 0.0065 (0.0070) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:47:18] __main__ INFO: [0mEpoch 151 Step 300/390 lr 0.004000 loss 0.0094 (0.0070) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:47:32] __main__ INFO: [0mEpoch 151 Step 390/390 lr 0.004000 loss 0.0082 (0.0069) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:47:32] __main__ INFO: [0mElapsed 61.19
+[32m[2024-01-20 14:47:32] __main__ INFO: [0mVal 151
+[32m[2024-01-20 14:47:35] __main__ INFO: [0mEpoch 151 loss 0.7707 acc@1 0.8049 acc@5 0.9526
+[32m[2024-01-20 14:47:35] __main__ INFO: [0mElapsed 3.61
+[32m[2024-01-20 14:47:35] __main__ INFO: [0mTrain 152 58890
+[32m[2024-01-20 14:47:51] __main__ INFO: [0mEpoch 152 Step 100/390 lr 0.004000 loss 0.0060 (0.0066) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:48:07] __main__ INFO: [0mEpoch 152 Step 200/390 lr 0.004000 loss 0.0035 (0.0066) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:48:22] __main__ INFO: [0mEpoch 152 Step 300/390 lr 0.004000 loss 0.0058 (0.0065) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:48:37] __main__ INFO: [0mEpoch 152 Step 390/390 lr 0.004000 loss 0.0057 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:48:37] __main__ INFO: [0mElapsed 61.23
+[32m[2024-01-20 14:48:37] __main__ INFO: [0mVal 152
+[32m[2024-01-20 14:48:40] __main__ INFO: [0mEpoch 152 loss 0.7741 acc@1 0.8074 acc@5 0.9525
+[32m[2024-01-20 14:48:40] __main__ INFO: [0mElapsed 3.66
+[32m[2024-01-20 14:48:40] __main__ INFO: [0mTrain 153 59280
+[32m[2024-01-20 14:48:56] __main__ INFO: [0mEpoch 153 Step 100/390 lr 0.004000 loss 0.0105 (0.0064) acc@1 1.0000 (0.9999) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:49:12] __main__ INFO: [0mEpoch 153 Step 200/390 lr 0.004000 loss 0.0063 (0.0071) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:49:27] __main__ INFO: [0mEpoch 153 Step 300/390 lr 0.004000 loss 0.0094 (0.0071) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:49:42] __main__ INFO: [0mEpoch 153 Step 390/390 lr 0.004000 loss 0.0118 (0.0069) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:49:42] __main__ INFO: [0mElapsed 61.39
+[32m[2024-01-20 14:49:42] __main__ INFO: [0mVal 153
+[32m[2024-01-20 14:49:45] __main__ INFO: [0mEpoch 153 loss 0.7705 acc@1 0.8047 acc@5 0.9529
+[32m[2024-01-20 14:49:45] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 14:49:45] __main__ INFO: [0mTrain 154 59670
+[32m[2024-01-20 14:50:01] __main__ INFO: [0mEpoch 154 Step 100/390 lr 0.004000 loss 0.0057 (0.0068) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:50:17] __main__ INFO: [0mEpoch 154 Step 200/390 lr 0.004000 loss 0.0054 (0.0067) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:50:32] __main__ INFO: [0mEpoch 154 Step 300/390 lr 0.004000 loss 0.0133 (0.0071) acc@1 0.9922 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:50:47] __main__ INFO: [0mEpoch 154 Step 390/390 lr 0.004000 loss 0.0075 (0.0071) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:50:47] __main__ INFO: [0mElapsed 61.43
+[32m[2024-01-20 14:50:47] __main__ INFO: [0mVal 154
+[32m[2024-01-20 14:50:50] __main__ INFO: [0mEpoch 154 loss 0.7782 acc@1 0.8060 acc@5 0.9534
+[32m[2024-01-20 14:50:50] __main__ INFO: [0mElapsed 3.64
+[32m[2024-01-20 14:50:50] __main__ INFO: [0mTrain 155 60060
+[32m[2024-01-20 14:51:06] __main__ INFO: [0mEpoch 155 Step 100/390 lr 0.004000 loss 0.0067 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:51:22] __main__ INFO: [0mEpoch 155 Step 200/390 lr 0.004000 loss 0.0049 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:51:37] __main__ INFO: [0mEpoch 155 Step 300/390 lr 0.004000 loss 0.0072 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:51:52] __main__ INFO: [0mEpoch 155 Step 390/390 lr 0.004000 loss 0.0061 (0.0071) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:51:52] __main__ INFO: [0mElapsed 61.31
+[32m[2024-01-20 14:51:52] __main__ INFO: [0mVal 155
+[32m[2024-01-20 14:51:55] __main__ INFO: [0mEpoch 155 loss 0.7716 acc@1 0.8069 acc@5 0.9535
+[32m[2024-01-20 14:51:55] __main__ INFO: [0mElapsed 3.63
+[32m[2024-01-20 14:51:55] __main__ INFO: [0mTrain 156 60450
+[32m[2024-01-20 14:52:11] __main__ INFO: [0mEpoch 156 Step 100/390 lr 0.004000 loss 0.0045 (0.0071) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:52:27] __main__ INFO: [0mEpoch 156 Step 200/390 lr 0.004000 loss 0.0065 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:52:42] __main__ INFO: [0mEpoch 156 Step 300/390 lr 0.004000 loss 0.0064 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:52:57] __main__ INFO: [0mEpoch 156 Step 390/390 lr 0.004000 loss 0.0173 (0.0071) acc@1 0.9922 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:52:57] __main__ INFO: [0mElapsed 61.36
+[32m[2024-01-20 14:52:57] __main__ INFO: [0mVal 156
+[32m[2024-01-20 14:53:00] __main__ INFO: [0mEpoch 156 loss 0.7704 acc@1 0.8083 acc@5 0.9544
+[32m[2024-01-20 14:53:00] __main__ INFO: [0mElapsed 3.67
+[32m[2024-01-20 14:53:00] __main__ INFO: [0mTrain 157 60840
+[32m[2024-01-20 14:53:16] __main__ INFO: [0mEpoch 157 Step 100/390 lr 0.004000 loss 0.0051 (0.0074) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:53:32] __main__ INFO: [0mEpoch 157 Step 200/390 lr 0.004000 loss 0.0075 (0.0073) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:53:47] __main__ INFO: [0mEpoch 157 Step 300/390 lr 0.004000 loss 0.0047 (0.0075) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:54:02] __main__ INFO: [0mEpoch 157 Step 390/390 lr 0.004000 loss 0.0058 (0.0075) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:54:02] __main__ INFO: [0mElapsed 61.40
+[32m[2024-01-20 14:54:02] __main__ INFO: [0mVal 157
+[32m[2024-01-20 14:54:05] __main__ INFO: [0mEpoch 157 loss 0.7702 acc@1 0.8079 acc@5 0.9539
+[32m[2024-01-20 14:54:05] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 14:54:05] __main__ INFO: [0mTrain 158 61230
+[32m[2024-01-20 14:54:21] __main__ INFO: [0mEpoch 158 Step 100/390 lr 0.004000 loss 0.0051 (0.0072) acc@1 1.0000 (0.9999) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:54:37] __main__ INFO: [0mEpoch 158 Step 200/390 lr 0.004000 loss 0.0086 (0.0078) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:54:52] __main__ INFO: [0mEpoch 158 Step 300/390 lr 0.004000 loss 0.0168 (0.0078) acc@1 0.9922 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:55:07] __main__ INFO: [0mEpoch 158 Step 390/390 lr 0.004000 loss 0.0088 (0.0078) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:55:07] __main__ INFO: [0mElapsed 61.33
+[32m[2024-01-20 14:55:07] __main__ INFO: [0mVal 158
+[32m[2024-01-20 14:55:10] __main__ INFO: [0mEpoch 158 loss 0.7704 acc@1 0.8083 acc@5 0.9530
+[32m[2024-01-20 14:55:10] __main__ INFO: [0mElapsed 3.69
+[32m[2024-01-20 14:55:10] __main__ INFO: [0mTrain 159 61620
+[32m[2024-01-20 14:55:26] __main__ INFO: [0mEpoch 159 Step 100/390 lr 0.004000 loss 0.0127 (0.0068) acc@1 1.0000 (0.9999) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:55:42] __main__ INFO: [0mEpoch 159 Step 200/390 lr 0.004000 loss 0.0074 (0.0070) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:55:57] __main__ INFO: [0mEpoch 159 Step 300/390 lr 0.004000 loss 0.0093 (0.0072) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:56:12] __main__ INFO: [0mEpoch 159 Step 390/390 lr 0.004000 loss 0.0050 (0.0073) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:56:12] __main__ INFO: [0mElapsed 61.25
+[32m[2024-01-20 14:56:12] __main__ INFO: [0mVal 159
+[32m[2024-01-20 14:56:15] __main__ INFO: [0mEpoch 159 loss 0.7725 acc@1 0.8074 acc@5 0.9539
+[32m[2024-01-20 14:56:15] __main__ INFO: [0mElapsed 3.64
+[32m[2024-01-20 14:56:15] __main__ INFO: [0mTrain 160 62010
+[32m[2024-01-20 14:56:31] __main__ INFO: [0mEpoch 160 Step 100/390 lr 0.004000 loss 0.0069 (0.0075) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:56:46] __main__ INFO: [0mEpoch 160 Step 200/390 lr 0.004000 loss 0.0052 (0.0074) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:57:02] __main__ INFO: [0mEpoch 160 Step 300/390 lr 0.004000 loss 0.0393 (0.0075) acc@1 0.9922 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:57:16] __main__ INFO: [0mEpoch 160 Step 390/390 lr 0.004000 loss 0.0094 (0.0075) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:57:16] __main__ INFO: [0mElapsed 61.21
+[32m[2024-01-20 14:57:16] __main__ INFO: [0mVal 160
+[32m[2024-01-20 14:57:20] __main__ INFO: [0mEpoch 160 loss 0.7714 acc@1 0.8076 acc@5 0.9544
+[32m[2024-01-20 14:57:20] __main__ INFO: [0mElapsed 3.61
+[32m[2024-01-20 14:57:20] __main__ INFO: [0mTrain 161 62400
+[32m[2024-01-20 14:57:36] __main__ INFO: [0mEpoch 161 Step 100/390 lr 0.000800 loss 0.0063 (0.0077) acc@1 1.0000 (0.9995) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:57:51] __main__ INFO: [0mEpoch 161 Step 200/390 lr 0.000800 loss 0.0065 (0.0074) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:58:07] __main__ INFO: [0mEpoch 161 Step 300/390 lr 0.000800 loss 0.0063 (0.0073) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:58:21] __main__ INFO: [0mEpoch 161 Step 390/390 lr 0.000800 loss 0.0056 (0.0073) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:58:21] __main__ INFO: [0mElapsed 61.43
+[32m[2024-01-20 14:58:21] __main__ INFO: [0mVal 161
+[32m[2024-01-20 14:58:25] __main__ INFO: [0mEpoch 161 loss 0.7670 acc@1 0.8079 acc@5 0.9536
+[32m[2024-01-20 14:58:25] __main__ INFO: [0mElapsed 3.61
+[32m[2024-01-20 14:58:25] __main__ INFO: [0mTrain 162 62790
+[32m[2024-01-20 14:58:41] __main__ INFO: [0mEpoch 162 Step 100/390 lr 0.000800 loss 0.0112 (0.0067) acc@1 1.0000 (0.9999) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:58:56] __main__ INFO: [0mEpoch 162 Step 200/390 lr 0.000800 loss 0.0063 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:59:12] __main__ INFO: [0mEpoch 162 Step 300/390 lr 0.000800 loss 0.0051 (0.0071) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:59:26] __main__ INFO: [0mEpoch 162 Step 390/390 lr 0.000800 loss 0.0065 (0.0070) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 14:59:26] __main__ INFO: [0mElapsed 61.31
+[32m[2024-01-20 14:59:26] __main__ INFO: [0mVal 162
+[32m[2024-01-20 14:59:30] __main__ INFO: [0mEpoch 162 loss 0.7672 acc@1 0.8095 acc@5 0.9540
+[32m[2024-01-20 14:59:30] __main__ INFO: [0mElapsed 3.58
+[32m[2024-01-20 14:59:30] __main__ INFO: [0mTrain 163 63180
+[32m[2024-01-20 14:59:46] __main__ INFO: [0mEpoch 163 Step 100/390 lr 0.000800 loss 0.0052 (0.0072) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:00:01] __main__ INFO: [0mEpoch 163 Step 200/390 lr 0.000800 loss 0.0062 (0.0072) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:00:17] __main__ INFO: [0mEpoch 163 Step 300/390 lr 0.000800 loss 0.0073 (0.0072) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:00:31] __main__ INFO: [0mEpoch 163 Step 390/390 lr 0.000800 loss 0.0052 (0.0072) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:00:31] __main__ INFO: [0mElapsed 61.28
+[32m[2024-01-20 15:00:31] __main__ INFO: [0mVal 163
+[32m[2024-01-20 15:00:35] __main__ INFO: [0mEpoch 163 loss 0.7664 acc@1 0.8090 acc@5 0.9535
+[32m[2024-01-20 15:00:35] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 15:00:35] __main__ INFO: [0mTrain 164 63570
+[32m[2024-01-20 15:00:51] __main__ INFO: [0mEpoch 164 Step 100/390 lr 0.000800 loss 0.0075 (0.0069) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:01:06] __main__ INFO: [0mEpoch 164 Step 200/390 lr 0.000800 loss 0.0053 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:01:22] __main__ INFO: [0mEpoch 164 Step 300/390 lr 0.000800 loss 0.0106 (0.0070) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:01:36] __main__ INFO: [0mEpoch 164 Step 390/390 lr 0.000800 loss 0.0041 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:01:36] __main__ INFO: [0mElapsed 61.17
+[32m[2024-01-20 15:01:36] __main__ INFO: [0mVal 164
+[32m[2024-01-20 15:01:40] __main__ INFO: [0mEpoch 164 loss 0.7665 acc@1 0.8087 acc@5 0.9530
+[32m[2024-01-20 15:01:40] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 15:01:40] __main__ INFO: [0mTrain 165 63960
+[32m[2024-01-20 15:01:56] __main__ INFO: [0mEpoch 165 Step 100/390 lr 0.000800 loss 0.0080 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:02:11] __main__ INFO: [0mEpoch 165 Step 200/390 lr 0.000800 loss 0.0059 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:02:27] __main__ INFO: [0mEpoch 165 Step 300/390 lr 0.000800 loss 0.0092 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:02:41] __main__ INFO: [0mEpoch 165 Step 390/390 lr 0.000800 loss 0.0076 (0.0069) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:02:41] __main__ INFO: [0mElapsed 61.29
+[32m[2024-01-20 15:02:41] __main__ INFO: [0mVal 165
+[32m[2024-01-20 15:02:45] __main__ INFO: [0mEpoch 165 loss 0.7657 acc@1 0.8082 acc@5 0.9537
+[32m[2024-01-20 15:02:45] __main__ INFO: [0mElapsed 3.58
+[32m[2024-01-20 15:02:45] __main__ INFO: [0mTrain 166 64350
+[32m[2024-01-20 15:03:00] __main__ INFO: [0mEpoch 166 Step 100/390 lr 0.000800 loss 0.0063 (0.0070) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:03:16] __main__ INFO: [0mEpoch 166 Step 200/390 lr 0.000800 loss 0.0056 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:03:31] __main__ INFO: [0mEpoch 166 Step 300/390 lr 0.000800 loss 0.0071 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:03:46] __main__ INFO: [0mEpoch 166 Step 390/390 lr 0.000800 loss 0.0052 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:03:46] __main__ INFO: [0mElapsed 61.18
+[32m[2024-01-20 15:03:46] __main__ INFO: [0mVal 166
+[32m[2024-01-20 15:03:49] __main__ INFO: [0mEpoch 166 loss 0.7679 acc@1 0.8096 acc@5 0.9526
+[32m[2024-01-20 15:03:49] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 15:03:49] __main__ INFO: [0mTrain 167 64740
+[32m[2024-01-20 15:04:05] __main__ INFO: [0mEpoch 167 Step 100/390 lr 0.000800 loss 0.0046 (0.0070) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:04:21] __main__ INFO: [0mEpoch 167 Step 200/390 lr 0.000800 loss 0.0054 (0.0071) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:04:36] __main__ INFO: [0mEpoch 167 Step 300/390 lr 0.000800 loss 0.0069 (0.0071) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:04:51] __main__ INFO: [0mEpoch 167 Step 390/390 lr 0.000800 loss 0.0056 (0.0070) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:04:51] __main__ INFO: [0mElapsed 61.32
+[32m[2024-01-20 15:04:51] __main__ INFO: [0mVal 167
+[32m[2024-01-20 15:04:54] __main__ INFO: [0mEpoch 167 loss 0.7678 acc@1 0.8081 acc@5 0.9526
+[32m[2024-01-20 15:04:54] __main__ INFO: [0mElapsed 3.58
+[32m[2024-01-20 15:04:54] __main__ INFO: [0mTrain 168 65130
+[32m[2024-01-20 15:05:10] __main__ INFO: [0mEpoch 168 Step 100/390 lr 0.000800 loss 0.0206 (0.0070) acc@1 0.9922 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:05:25] __main__ INFO: [0mEpoch 168 Step 200/390 lr 0.000800 loss 0.0114 (0.0069) acc@1 0.9922 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:05:41] __main__ INFO: [0mEpoch 168 Step 300/390 lr 0.000800 loss 0.0126 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:05:55] __main__ INFO: [0mEpoch 168 Step 390/390 lr 0.000800 loss 0.0060 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:05:55] __main__ INFO: [0mElapsed 61.27
+[32m[2024-01-20 15:05:55] __main__ INFO: [0mVal 168
+[32m[2024-01-20 15:05:59] __main__ INFO: [0mEpoch 168 loss 0.7692 acc@1 0.8090 acc@5 0.9529
+[32m[2024-01-20 15:05:59] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 15:05:59] __main__ INFO: [0mTrain 169 65520
+[32m[2024-01-20 15:06:15] __main__ INFO: [0mEpoch 169 Step 100/390 lr 0.000800 loss 0.0049 (0.0070) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:06:30] __main__ INFO: [0mEpoch 169 Step 200/390 lr 0.000800 loss 0.0062 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:06:46] __main__ INFO: [0mEpoch 169 Step 300/390 lr 0.000800 loss 0.0056 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:07:00] __main__ INFO: [0mEpoch 169 Step 390/390 lr 0.000800 loss 0.0068 (0.0070) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:07:00] __main__ INFO: [0mElapsed 61.31
+[32m[2024-01-20 15:07:00] __main__ INFO: [0mVal 169
+[32m[2024-01-20 15:07:04] __main__ INFO: [0mEpoch 169 loss 0.7699 acc@1 0.8084 acc@5 0.9532
+[32m[2024-01-20 15:07:04] __main__ INFO: [0mElapsed 3.66
+[32m[2024-01-20 15:07:04] __main__ INFO: [0mTrain 170 65910
+[32m[2024-01-20 15:07:20] __main__ INFO: [0mEpoch 170 Step 100/390 lr 0.000800 loss 0.0095 (0.0071) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:07:35] __main__ INFO: [0mEpoch 170 Step 200/390 lr 0.000800 loss 0.0059 (0.0070) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:07:51] __main__ INFO: [0mEpoch 170 Step 300/390 lr 0.000800 loss 0.0062 (0.0071) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:08:05] __main__ INFO: [0mEpoch 170 Step 390/390 lr 0.000800 loss 0.0068 (0.0070) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:08:05] __main__ INFO: [0mElapsed 61.25
+[32m[2024-01-20 15:08:05] __main__ INFO: [0mVal 170
+[32m[2024-01-20 15:08:09] __main__ INFO: [0mEpoch 170 loss 0.7688 acc@1 0.8090 acc@5 0.9535
+[32m[2024-01-20 15:08:09] __main__ INFO: [0mElapsed 3.58
+[32m[2024-01-20 15:08:09] __main__ INFO: [0mTrain 171 66300
+[32m[2024-01-20 15:08:25] __main__ INFO: [0mEpoch 171 Step 100/390 lr 0.000800 loss 0.0076 (0.0067) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:08:40] __main__ INFO: [0mEpoch 171 Step 200/390 lr 0.000800 loss 0.0056 (0.0070) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:08:56] __main__ INFO: [0mEpoch 171 Step 300/390 lr 0.000800 loss 0.0060 (0.0069) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:09:10] __main__ INFO: [0mEpoch 171 Step 390/390 lr 0.000800 loss 0.0081 (0.0069) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:09:10] __main__ INFO: [0mElapsed 61.24
+[32m[2024-01-20 15:09:10] __main__ INFO: [0mVal 171
+[32m[2024-01-20 15:09:14] __main__ INFO: [0mEpoch 171 loss 0.7693 acc@1 0.8093 acc@5 0.9528
+[32m[2024-01-20 15:09:14] __main__ INFO: [0mElapsed 3.63
+[32m[2024-01-20 15:09:14] __main__ INFO: [0mTrain 172 66690
+[32m[2024-01-20 15:09:30] __main__ INFO: [0mEpoch 172 Step 100/390 lr 0.000800 loss 0.0055 (0.0068) acc@1 1.0000 (0.9999) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:09:45] __main__ INFO: [0mEpoch 172 Step 200/390 lr 0.000800 loss 0.0049 (0.0068) acc@1 1.0000 (0.9999) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:10:01] __main__ INFO: [0mEpoch 172 Step 300/390 lr 0.000800 loss 0.0064 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:10:15] __main__ INFO: [0mEpoch 172 Step 390/390 lr 0.000800 loss 0.0065 (0.0070) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:10:15] __main__ INFO: [0mElapsed 61.32
+[32m[2024-01-20 15:10:15] __main__ INFO: [0mVal 172
+[32m[2024-01-20 15:10:19] __main__ INFO: [0mEpoch 172 loss 0.7709 acc@1 0.8104 acc@5 0.9531
+[32m[2024-01-20 15:10:19] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 15:10:19] __main__ INFO: [0mTrain 173 67080
+[32m[2024-01-20 15:10:35] __main__ INFO: [0mEpoch 173 Step 100/390 lr 0.000800 loss 0.0063 (0.0069) acc@1 1.0000 (0.9999) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:10:50] __main__ INFO: [0mEpoch 173 Step 200/390 lr 0.000800 loss 0.0070 (0.0072) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:11:06] __main__ INFO: [0mEpoch 173 Step 300/390 lr 0.000800 loss 0.0060 (0.0071) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:11:20] __main__ INFO: [0mEpoch 173 Step 390/390 lr 0.000800 loss 0.0059 (0.0070) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:11:20] __main__ INFO: [0mElapsed 61.51
+[32m[2024-01-20 15:11:20] __main__ INFO: [0mVal 173
+[32m[2024-01-20 15:11:24] __main__ INFO: [0mEpoch 173 loss 0.7681 acc@1 0.8100 acc@5 0.9526
+[32m[2024-01-20 15:11:24] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 15:11:24] __main__ INFO: [0mTrain 174 67470
+[32m[2024-01-20 15:11:40] __main__ INFO: [0mEpoch 174 Step 100/390 lr 0.000800 loss 0.0040 (0.0066) acc@1 1.0000 (0.9999) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:11:55] __main__ INFO: [0mEpoch 174 Step 200/390 lr 0.000800 loss 0.0053 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:12:11] __main__ INFO: [0mEpoch 174 Step 300/390 lr 0.000800 loss 0.0060 (0.0067) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:12:25] __main__ INFO: [0mEpoch 174 Step 390/390 lr 0.000800 loss 0.0063 (0.0067) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:12:25] __main__ INFO: [0mElapsed 61.34
+[32m[2024-01-20 15:12:25] __main__ INFO: [0mVal 174
+[32m[2024-01-20 15:12:29] __main__ INFO: [0mEpoch 174 loss 0.7663 acc@1 0.8086 acc@5 0.9536
+[32m[2024-01-20 15:12:29] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 15:12:29] __main__ INFO: [0mTrain 175 67860
+[32m[2024-01-20 15:12:45] __main__ INFO: [0mEpoch 175 Step 100/390 lr 0.000800 loss 0.0081 (0.0070) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:13:00] __main__ INFO: [0mEpoch 175 Step 200/390 lr 0.000800 loss 0.0056 (0.0071) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:13:16] __main__ INFO: [0mEpoch 175 Step 300/390 lr 0.000800 loss 0.0067 (0.0071) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:13:30] __main__ INFO: [0mEpoch 175 Step 390/390 lr 0.000800 loss 0.0097 (0.0070) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:13:30] __main__ INFO: [0mElapsed 61.23
+[32m[2024-01-20 15:13:30] __main__ INFO: [0mVal 175
+[32m[2024-01-20 15:13:34] __main__ INFO: [0mEpoch 175 loss 0.7685 acc@1 0.8090 acc@5 0.9520
+[32m[2024-01-20 15:13:34] __main__ INFO: [0mElapsed 3.57
+[32m[2024-01-20 15:13:34] __main__ INFO: [0mTrain 176 68250
+[32m[2024-01-20 15:13:50] __main__ INFO: [0mEpoch 176 Step 100/390 lr 0.000800 loss 0.0047 (0.0067) acc@1 1.0000 (0.9999) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:14:05] __main__ INFO: [0mEpoch 176 Step 200/390 lr 0.000800 loss 0.0076 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:14:21] __main__ INFO: [0mEpoch 176 Step 300/390 lr 0.000800 loss 0.0052 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:14:35] __main__ INFO: [0mEpoch 176 Step 390/390 lr 0.000800 loss 0.0081 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:14:35] __main__ INFO: [0mElapsed 61.28
+[32m[2024-01-20 15:14:35] __main__ INFO: [0mVal 176
+[32m[2024-01-20 15:14:38] __main__ INFO: [0mEpoch 176 loss 0.7716 acc@1 0.8085 acc@5 0.9527
+[32m[2024-01-20 15:14:38] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 15:14:38] __main__ INFO: [0mTrain 177 68640
+[32m[2024-01-20 15:14:54] __main__ INFO: [0mEpoch 177 Step 100/390 lr 0.000800 loss 0.0052 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:15:10] __main__ INFO: [0mEpoch 177 Step 200/390 lr 0.000800 loss 0.0079 (0.0070) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:15:25] __main__ INFO: [0mEpoch 177 Step 300/390 lr 0.000800 loss 0.0072 (0.0070) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:15:40] __main__ INFO: [0mEpoch 177 Step 390/390 lr 0.000800 loss 0.0065 (0.0070) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:15:40] __main__ INFO: [0mElapsed 61.25
+[32m[2024-01-20 15:15:40] __main__ INFO: [0mVal 177
+[32m[2024-01-20 15:15:43] __main__ INFO: [0mEpoch 177 loss 0.7681 acc@1 0.8098 acc@5 0.9529
+[32m[2024-01-20 15:15:43] __main__ INFO: [0mElapsed 3.63
+[32m[2024-01-20 15:15:43] __main__ INFO: [0mTrain 178 69030
+[32m[2024-01-20 15:15:59] __main__ INFO: [0mEpoch 178 Step 100/390 lr 0.000800 loss 0.0080 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:16:15] __main__ INFO: [0mEpoch 178 Step 200/390 lr 0.000800 loss 0.0056 (0.0067) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:16:30] __main__ INFO: [0mEpoch 178 Step 300/390 lr 0.000800 loss 0.0095 (0.0067) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:16:45] __main__ INFO: [0mEpoch 178 Step 390/390 lr 0.000800 loss 0.0051 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:16:45] __main__ INFO: [0mElapsed 61.31
+[32m[2024-01-20 15:16:45] __main__ INFO: [0mVal 178
+[32m[2024-01-20 15:16:48] __main__ INFO: [0mEpoch 178 loss 0.7717 acc@1 0.8098 acc@5 0.9527
+[32m[2024-01-20 15:16:48] __main__ INFO: [0mElapsed 3.58
+[32m[2024-01-20 15:16:48] __main__ INFO: [0mTrain 179 69420
+[32m[2024-01-20 15:17:04] __main__ INFO: [0mEpoch 179 Step 100/390 lr 0.000800 loss 0.0063 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:17:20] __main__ INFO: [0mEpoch 179 Step 200/390 lr 0.000800 loss 0.0081 (0.0069) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:17:35] __main__ INFO: [0mEpoch 179 Step 300/390 lr 0.000800 loss 0.0057 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:17:50] __main__ INFO: [0mEpoch 179 Step 390/390 lr 0.000800 loss 0.0053 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:17:50] __main__ INFO: [0mElapsed 61.37
+[32m[2024-01-20 15:17:50] __main__ INFO: [0mVal 179
+[32m[2024-01-20 15:17:53] __main__ INFO: [0mEpoch 179 loss 0.7694 acc@1 0.8098 acc@5 0.9528
+[32m[2024-01-20 15:17:53] __main__ INFO: [0mElapsed 3.61
+[32m[2024-01-20 15:17:53] __main__ INFO: [0mTrain 180 69810
+[32m[2024-01-20 15:18:09] __main__ INFO: [0mEpoch 180 Step 100/390 lr 0.000800 loss 0.0071 (0.0067) acc@1 1.0000 (1.0000) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:18:24] __main__ INFO: [0mEpoch 180 Step 200/390 lr 0.000800 loss 0.0120 (0.0069) acc@1 1.0000 (0.9999) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:18:40] __main__ INFO: [0mEpoch 180 Step 300/390 lr 0.000800 loss 0.0106 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:18:54] __main__ INFO: [0mEpoch 180 Step 390/390 lr 0.000800 loss 0.0051 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:18:55] __main__ INFO: [0mElapsed 61.32
+[32m[2024-01-20 15:18:55] __main__ INFO: [0mVal 180
+[32m[2024-01-20 15:18:58] __main__ INFO: [0mEpoch 180 loss 0.7678 acc@1 0.8106 acc@5 0.9541
+[32m[2024-01-20 15:18:58] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 15:18:58] __main__ INFO: [0mTrain 181 70200
+[32m[2024-01-20 15:19:14] __main__ INFO: [0mEpoch 181 Step 100/390 lr 0.000800 loss 0.0089 (0.0071) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:19:29] __main__ INFO: [0mEpoch 181 Step 200/390 lr 0.000800 loss 0.0066 (0.0071) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:19:45] __main__ INFO: [0mEpoch 181 Step 300/390 lr 0.000800 loss 0.0060 (0.0070) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:19:59] __main__ INFO: [0mEpoch 181 Step 390/390 lr 0.000800 loss 0.0064 (0.0069) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:19:59] __main__ INFO: [0mElapsed 61.39
+[32m[2024-01-20 15:19:59] __main__ INFO: [0mVal 181
+[32m[2024-01-20 15:20:03] __main__ INFO: [0mEpoch 181 loss 0.7691 acc@1 0.8090 acc@5 0.9535
+[32m[2024-01-20 15:20:03] __main__ INFO: [0mElapsed 3.58
+[32m[2024-01-20 15:20:03] __main__ INFO: [0mTrain 182 70590
+[32m[2024-01-20 15:20:19] __main__ INFO: [0mEpoch 182 Step 100/390 lr 0.000800 loss 0.0059 (0.0064) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:20:34] __main__ INFO: [0mEpoch 182 Step 200/390 lr 0.000800 loss 0.0044 (0.0067) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:20:50] __main__ INFO: [0mEpoch 182 Step 300/390 lr 0.000800 loss 0.0057 (0.0068) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:21:04] __main__ INFO: [0mEpoch 182 Step 390/390 lr 0.000800 loss 0.0095 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:21:04] __main__ INFO: [0mElapsed 61.33
+[32m[2024-01-20 15:21:04] __main__ INFO: [0mVal 182
+[32m[2024-01-20 15:21:08] __main__ INFO: [0mEpoch 182 loss 0.7682 acc@1 0.8116 acc@5 0.9536
+[32m[2024-01-20 15:21:08] __main__ INFO: [0mElapsed 3.64
+[32m[2024-01-20 15:21:08] __main__ INFO: [0mTrain 183 70980
+[32m[2024-01-20 15:21:24] __main__ INFO: [0mEpoch 183 Step 100/390 lr 0.000800 loss 0.0048 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:21:39] __main__ INFO: [0mEpoch 183 Step 200/390 lr 0.000800 loss 0.0063 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:21:55] __main__ INFO: [0mEpoch 183 Step 300/390 lr 0.000800 loss 0.0054 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:22:09] __main__ INFO: [0mEpoch 183 Step 390/390 lr 0.000800 loss 0.0098 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:22:09] __main__ INFO: [0mElapsed 61.19
+[32m[2024-01-20 15:22:09] __main__ INFO: [0mVal 183
+[32m[2024-01-20 15:22:13] __main__ INFO: [0mEpoch 183 loss 0.7664 acc@1 0.8118 acc@5 0.9534
+[32m[2024-01-20 15:22:13] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 15:22:13] __main__ INFO: [0mTrain 184 71370
+[32m[2024-01-20 15:22:29] __main__ INFO: [0mEpoch 184 Step 100/390 lr 0.000800 loss 0.0078 (0.0069) acc@1 1.0000 (1.0000) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:22:44] __main__ INFO: [0mEpoch 184 Step 200/390 lr 0.000800 loss 0.0046 (0.0069) acc@1 1.0000 (0.9999) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:23:00] __main__ INFO: [0mEpoch 184 Step 300/390 lr 0.000800 loss 0.0064 (0.0069) acc@1 1.0000 (0.9999) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:23:14] __main__ INFO: [0mEpoch 184 Step 390/390 lr 0.000800 loss 0.0064 (0.0069) acc@1 1.0000 (0.9999) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:23:14] __main__ INFO: [0mElapsed 61.15
+[32m[2024-01-20 15:23:14] __main__ INFO: [0mVal 184
+[32m[2024-01-20 15:23:18] __main__ INFO: [0mEpoch 184 loss 0.7693 acc@1 0.8107 acc@5 0.9532
+[32m[2024-01-20 15:23:18] __main__ INFO: [0mElapsed 3.57
+[32m[2024-01-20 15:23:18] __main__ INFO: [0mTrain 185 71760
+[32m[2024-01-20 15:23:34] __main__ INFO: [0mEpoch 185 Step 100/390 lr 0.000800 loss 0.0235 (0.0073) acc@1 0.9844 (0.9994) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:23:49] __main__ INFO: [0mEpoch 185 Step 200/390 lr 0.000800 loss 0.0087 (0.0070) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:24:05] __main__ INFO: [0mEpoch 185 Step 300/390 lr 0.000800 loss 0.0057 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:24:19] __main__ INFO: [0mEpoch 185 Step 390/390 lr 0.000800 loss 0.0047 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:24:19] __main__ INFO: [0mElapsed 61.31
+[32m[2024-01-20 15:24:19] __main__ INFO: [0mVal 185
+[32m[2024-01-20 15:24:22] __main__ INFO: [0mEpoch 185 loss 0.7690 acc@1 0.8105 acc@5 0.9538
+[32m[2024-01-20 15:24:22] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 15:24:22] __main__ INFO: [0mTrain 186 72150
+[32m[2024-01-20 15:24:38] __main__ INFO: [0mEpoch 186 Step 100/390 lr 0.000800 loss 0.0050 (0.0067) acc@1 1.0000 (0.9999) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:24:54] __main__ INFO: [0mEpoch 186 Step 200/390 lr 0.000800 loss 0.0068 (0.0069) acc@1 1.0000 (0.9999) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:25:10] __main__ INFO: [0mEpoch 186 Step 300/390 lr 0.000800 loss 0.0117 (0.0071) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:25:24] __main__ INFO: [0mEpoch 186 Step 390/390 lr 0.000800 loss 0.0038 (0.0072) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:25:24] __main__ INFO: [0mElapsed 61.35
+[32m[2024-01-20 15:25:24] __main__ INFO: [0mVal 186
+[32m[2024-01-20 15:25:27] __main__ INFO: [0mEpoch 186 loss 0.7666 acc@1 0.8101 acc@5 0.9546
+[32m[2024-01-20 15:25:27] __main__ INFO: [0mElapsed 3.64
+[32m[2024-01-20 15:25:27] __main__ INFO: [0mTrain 187 72540
+[32m[2024-01-20 15:25:43] __main__ INFO: [0mEpoch 187 Step 100/390 lr 0.000800 loss 0.0072 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:25:59] __main__ INFO: [0mEpoch 187 Step 200/390 lr 0.000800 loss 0.0088 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:26:14] __main__ INFO: [0mEpoch 187 Step 300/390 lr 0.000800 loss 0.0065 (0.0067) acc@1 1.0000 (0.9999) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:26:29] __main__ INFO: [0mEpoch 187 Step 390/390 lr 0.000800 loss 0.0071 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:26:29] __main__ INFO: [0mElapsed 61.26
+[32m[2024-01-20 15:26:29] __main__ INFO: [0mVal 187
+[32m[2024-01-20 15:26:32] __main__ INFO: [0mEpoch 187 loss 0.7670 acc@1 0.8114 acc@5 0.9525
+[32m[2024-01-20 15:26:32] __main__ INFO: [0mElapsed 3.58
+[32m[2024-01-20 15:26:32] __main__ INFO: [0mTrain 188 72930
+[32m[2024-01-20 15:26:48] __main__ INFO: [0mEpoch 188 Step 100/390 lr 0.000800 loss 0.0056 (0.0067) acc@1 1.0000 (0.9996) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:27:04] __main__ INFO: [0mEpoch 188 Step 200/390 lr 0.000800 loss 0.0070 (0.0067) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:27:19] __main__ INFO: [0mEpoch 188 Step 300/390 lr 0.000800 loss 0.0062 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:27:34] __main__ INFO: [0mEpoch 188 Step 390/390 lr 0.000800 loss 0.0045 (0.0069) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:27:34] __main__ INFO: [0mElapsed 61.27
+[32m[2024-01-20 15:27:34] __main__ INFO: [0mVal 188
+[32m[2024-01-20 15:27:37] __main__ INFO: [0mEpoch 188 loss 0.7728 acc@1 0.8096 acc@5 0.9528
+[32m[2024-01-20 15:27:37] __main__ INFO: [0mElapsed 3.61
+[32m[2024-01-20 15:27:37] __main__ INFO: [0mTrain 189 73320
+[32m[2024-01-20 15:27:53] __main__ INFO: [0mEpoch 189 Step 100/390 lr 0.000800 loss 0.0083 (0.0070) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:28:08] __main__ INFO: [0mEpoch 189 Step 200/390 lr 0.000800 loss 0.0151 (0.0069) acc@1 0.9922 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:28:24] __main__ INFO: [0mEpoch 189 Step 300/390 lr 0.000800 loss 0.0052 (0.0069) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:28:38] __main__ INFO: [0mEpoch 189 Step 390/390 lr 0.000800 loss 0.0057 (0.0069) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:28:39] __main__ INFO: [0mElapsed 61.34
+[32m[2024-01-20 15:28:39] __main__ INFO: [0mVal 189
+[32m[2024-01-20 15:28:42] __main__ INFO: [0mEpoch 189 loss 0.7690 acc@1 0.8098 acc@5 0.9539
+[32m[2024-01-20 15:28:42] __main__ INFO: [0mElapsed 3.63
+[32m[2024-01-20 15:28:42] __main__ INFO: [0mTrain 190 73710
+[32m[2024-01-20 15:28:58] __main__ INFO: [0mEpoch 190 Step 100/390 lr 0.000800 loss 0.0084 (0.0068) acc@1 1.0000 (0.9999) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:29:13] __main__ INFO: [0mEpoch 190 Step 200/390 lr 0.000800 loss 0.0087 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:29:29] __main__ INFO: [0mEpoch 190 Step 300/390 lr 0.000800 loss 0.0095 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:29:43] __main__ INFO: [0mEpoch 190 Step 390/390 lr 0.000800 loss 0.0093 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:29:43] __main__ INFO: [0mElapsed 61.28
+[32m[2024-01-20 15:29:43] __main__ INFO: [0mVal 190
+[32m[2024-01-20 15:29:47] __main__ INFO: [0mEpoch 190 loss 0.7696 acc@1 0.8106 acc@5 0.9537
+[32m[2024-01-20 15:29:47] __main__ INFO: [0mElapsed 3.63
+[32m[2024-01-20 15:29:47] __main__ INFO: [0mTrain 191 74100
+[32m[2024-01-20 15:30:03] __main__ INFO: [0mEpoch 191 Step 100/390 lr 0.000800 loss 0.0044 (0.0067) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:30:18] __main__ INFO: [0mEpoch 191 Step 200/390 lr 0.000800 loss 0.0086 (0.0070) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:30:34] __main__ INFO: [0mEpoch 191 Step 300/390 lr 0.000800 loss 0.0082 (0.0069) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:30:48] __main__ INFO: [0mEpoch 191 Step 390/390 lr 0.000800 loss 0.0041 (0.0069) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:30:48] __main__ INFO: [0mElapsed 61.29
+[32m[2024-01-20 15:30:48] __main__ INFO: [0mVal 191
+[32m[2024-01-20 15:30:52] __main__ INFO: [0mEpoch 191 loss 0.7677 acc@1 0.8104 acc@5 0.9541
+[32m[2024-01-20 15:30:52] __main__ INFO: [0mElapsed 3.59
+[32m[2024-01-20 15:30:52] __main__ INFO: [0mTrain 192 74490
+[32m[2024-01-20 15:31:08] __main__ INFO: [0mEpoch 192 Step 100/390 lr 0.000800 loss 0.0067 (0.0068) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:31:23] __main__ INFO: [0mEpoch 192 Step 200/390 lr 0.000800 loss 0.0067 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:31:39] __main__ INFO: [0mEpoch 192 Step 300/390 lr 0.000800 loss 0.0062 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:31:53] __main__ INFO: [0mEpoch 192 Step 390/390 lr 0.000800 loss 0.0060 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:31:53] __main__ INFO: [0mElapsed 61.24
+[32m[2024-01-20 15:31:53] __main__ INFO: [0mVal 192
+[32m[2024-01-20 15:31:57] __main__ INFO: [0mEpoch 192 loss 0.7699 acc@1 0.8106 acc@5 0.9533
+[32m[2024-01-20 15:31:57] __main__ INFO: [0mElapsed 3.64
+[32m[2024-01-20 15:31:57] __main__ INFO: [0mTrain 193 74880
+[32m[2024-01-20 15:32:13] __main__ INFO: [0mEpoch 193 Step 100/390 lr 0.000800 loss 0.0086 (0.0067) acc@1 1.0000 (1.0000) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:32:28] __main__ INFO: [0mEpoch 193 Step 200/390 lr 0.000800 loss 0.0082 (0.0069) acc@1 1.0000 (0.9999) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:32:44] __main__ INFO: [0mEpoch 193 Step 300/390 lr 0.000800 loss 0.0168 (0.0070) acc@1 0.9922 (0.9999) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:32:58] __main__ INFO: [0mEpoch 193 Step 390/390 lr 0.000800 loss 0.0062 (0.0071) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:32:58] __main__ INFO: [0mElapsed 61.35
+[32m[2024-01-20 15:32:58] __main__ INFO: [0mVal 193
+[32m[2024-01-20 15:33:02] __main__ INFO: [0mEpoch 193 loss 0.7692 acc@1 0.8103 acc@5 0.9534
+[32m[2024-01-20 15:33:02] __main__ INFO: [0mElapsed 3.58
+[32m[2024-01-20 15:33:02] __main__ INFO: [0mTrain 194 75270
+[32m[2024-01-20 15:33:17] __main__ INFO: [0mEpoch 194 Step 100/390 lr 0.000800 loss 0.0056 (0.0071) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:33:33] __main__ INFO: [0mEpoch 194 Step 200/390 lr 0.000800 loss 0.0093 (0.0070) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:33:49] __main__ INFO: [0mEpoch 194 Step 300/390 lr 0.000800 loss 0.0066 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:34:03] __main__ INFO: [0mEpoch 194 Step 390/390 lr 0.000800 loss 0.0089 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:34:03] __main__ INFO: [0mElapsed 61.23
+[32m[2024-01-20 15:34:03] __main__ INFO: [0mVal 194
+[32m[2024-01-20 15:34:07] __main__ INFO: [0mEpoch 194 loss 0.7682 acc@1 0.8098 acc@5 0.9527
+[32m[2024-01-20 15:34:07] __main__ INFO: [0mElapsed 3.61
+[32m[2024-01-20 15:34:07] __main__ INFO: [0mTrain 195 75660
+[32m[2024-01-20 15:34:22] __main__ INFO: [0mEpoch 195 Step 100/390 lr 0.000800 loss 0.0063 (0.0068) acc@1 1.0000 (1.0000) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:34:38] __main__ INFO: [0mEpoch 195 Step 200/390 lr 0.000800 loss 0.0083 (0.0067) acc@1 1.0000 (1.0000) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:34:53] __main__ INFO: [0mEpoch 195 Step 300/390 lr 0.000800 loss 0.0103 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:35:08] __main__ INFO: [0mEpoch 195 Step 390/390 lr 0.000800 loss 0.0201 (0.0069) acc@1 0.9922 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:35:08] __main__ INFO: [0mElapsed 61.14
+[32m[2024-01-20 15:35:08] __main__ INFO: [0mVal 195
+[32m[2024-01-20 15:35:11] __main__ INFO: [0mEpoch 195 loss 0.7687 acc@1 0.8105 acc@5 0.9534
+[32m[2024-01-20 15:35:11] __main__ INFO: [0mElapsed 3.61
+[32m[2024-01-20 15:35:11] __main__ INFO: [0mTrain 196 76050
+[32m[2024-01-20 15:35:27] __main__ INFO: [0mEpoch 196 Step 100/390 lr 0.000800 loss 0.0094 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:35:43] __main__ INFO: [0mEpoch 196 Step 200/390 lr 0.000800 loss 0.0065 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:35:58] __main__ INFO: [0mEpoch 196 Step 300/390 lr 0.000800 loss 0.0061 (0.0069) acc@1 1.0000 (0.9999) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:36:13] __main__ INFO: [0mEpoch 196 Step 390/390 lr 0.000800 loss 0.0050 (0.0070) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:36:13] __main__ INFO: [0mElapsed 61.22
+[32m[2024-01-20 15:36:13] __main__ INFO: [0mVal 196
+[32m[2024-01-20 15:36:16] __main__ INFO: [0mEpoch 196 loss 0.7704 acc@1 0.8096 acc@5 0.9528
+[32m[2024-01-20 15:36:16] __main__ INFO: [0mElapsed 3.62
+[32m[2024-01-20 15:36:16] __main__ INFO: [0mTrain 197 76440
+[32m[2024-01-20 15:36:32] __main__ INFO: [0mEpoch 197 Step 100/390 lr 0.000800 loss 0.0047 (0.0065) acc@1 1.0000 (1.0000) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:36:47] __main__ INFO: [0mEpoch 197 Step 200/390 lr 0.000800 loss 0.0058 (0.0069) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:37:03] __main__ INFO: [0mEpoch 197 Step 300/390 lr 0.000800 loss 0.0055 (0.0070) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:37:17] __main__ INFO: [0mEpoch 197 Step 390/390 lr 0.000800 loss 0.0079 (0.0070) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:37:18] __main__ INFO: [0mElapsed 61.32
+[32m[2024-01-20 15:37:18] __main__ INFO: [0mVal 197
+[32m[2024-01-20 15:37:21] __main__ INFO: [0mEpoch 197 loss 0.7707 acc@1 0.8107 acc@5 0.9536
+[32m[2024-01-20 15:37:21] __main__ INFO: [0mElapsed 3.60
+[32m[2024-01-20 15:37:21] __main__ INFO: [0mTrain 198 76830
+[32m[2024-01-20 15:37:37] __main__ INFO: [0mEpoch 198 Step 100/390 lr 0.000800 loss 0.0063 (0.0070) acc@1 1.0000 (0.9999) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:37:46] __main__ INFO: [0mEpoch 198 Step 200/390 lr 0.000800 loss 0.0046 (0.0070) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:37:53] __main__ INFO: [0mEpoch 198 Step 300/390 lr 0.000800 loss 0.0062 (0.0071) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:38:00] __main__ INFO: [0mEpoch 198 Step 390/390 lr 0.000800 loss 0.0063 (0.0070) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:38:00] __main__ INFO: [0mElapsed 38.43
+[32m[2024-01-20 15:38:00] __main__ INFO: [0mVal 198
+[32m[2024-01-20 15:38:01] __main__ INFO: [0mEpoch 198 loss 0.7710 acc@1 0.8109 acc@5 0.9530
+[32m[2024-01-20 15:38:01] __main__ INFO: [0mElapsed 1.73
+[32m[2024-01-20 15:38:01] __main__ INFO: [0mTrain 199 77220
+[32m[2024-01-20 15:38:09] __main__ INFO: [0mEpoch 199 Step 100/390 lr 0.000800 loss 0.0058 (0.0074) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:38:16] __main__ INFO: [0mEpoch 199 Step 200/390 lr 0.000800 loss 0.0094 (0.0072) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:38:23] __main__ INFO: [0mEpoch 199 Step 300/390 lr 0.000800 loss 0.0062 (0.0072) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:38:30] __main__ INFO: [0mEpoch 199 Step 390/390 lr 0.000800 loss 0.0072 (0.0071) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:38:30] __main__ INFO: [0mElapsed 28.55
+[32m[2024-01-20 15:38:30] __main__ INFO: [0mVal 199
+[32m[2024-01-20 15:38:32] __main__ INFO: [0mEpoch 199 loss 0.7731 acc@1 0.8093 acc@5 0.9528
+[32m[2024-01-20 15:38:32] __main__ INFO: [0mElapsed 1.77
+[32m[2024-01-20 15:38:32] __main__ INFO: [0mTrain 200 77610
+[32m[2024-01-20 15:38:39] __main__ INFO: [0mEpoch 200 Step 100/390 lr 0.000800 loss 0.0065 (0.0070) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:38:46] __main__ INFO: [0mEpoch 200 Step 200/390 lr 0.000800 loss 0.0071 (0.0071) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:38:54] __main__ INFO: [0mEpoch 200 Step 300/390 lr 0.000800 loss 0.0047 (0.0070) acc@1 1.0000 (0.9998) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:39:00] __main__ INFO: [0mEpoch 200 Step 390/390 lr 0.000800 loss 0.0088 (0.0071) acc@1 1.0000 (0.9997) acc@5 1.0000 (1.0000)
+[32m[2024-01-20 15:39:00] __main__ INFO: [0mElapsed 28.56
+[32m[2024-01-20 15:39:00] __main__ INFO: [0mVal 200
+[32m[2024-01-20 15:39:02] __main__ INFO: [0mEpoch 200 loss 0.7723 acc@1 0.8086 acc@5 0.9532
+[32m[2024-01-20 15:39:02] __main__ INFO: [0mElapsed 1.76
+[32m[2024-01-20 15:39:02] fvcore.common.checkpoint INFO: [0mSaving checkpoint to experiments/cifar100/wrn/exp00/checkpoint_00200.pth

@@ -1,0 +1,17 @@
+device: cuda:3
+defense:
+  TRADES: True
+attack:
+  epsilon: 1275.0
+  p: l2
+dataset:
+  name: CIFAR100
+  dataset_dir: ~/.torch/datasets/CIFAR100
+  n_classes: 100
+model:
+  name: resnet
+train:
+  checkpoint: ./experiments/cifar100/resnet/exp00/checkpoint_00160.pth
+  output_dir: experiments/AT_cifar100/resnet_l2/exp00
+  checkpoint_period: 100
+  use_tensorboard: True
