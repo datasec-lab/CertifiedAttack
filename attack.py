@@ -73,6 +73,7 @@ def evaluate(config, attack, model, test_loader, loss_func, logger):
 
             loss_meter.update(loss_, num)
             correct_meter.update(correct_, 1)
+            print(f"acc:{correct_meter.sum}")
 
         accuracy = correct_meter.sum / len(test_loader.dataset)
 

@@ -1,3 +1,5 @@
+import os
+
 import torch
 from scipy.stats import norm, binom_test
 import numpy as np
@@ -93,6 +95,8 @@ class CertifiedAttack(object):
         self.success_list=[]
         self.certified_success=[]
         self.empirical_distance=[]
+        self.mean_distance=[]
+        self.RPQ_nums=[]
         self.rand_sigma=rand_sigma
         self.post_sigma=post_sigma
         self.post_noise=0
@@ -103,15 +107,18 @@ class CertifiedAttack(object):
         self.blacklight_cover=[]
         self.blacklight_query_to_detect=0
         self.blacklight_query_to_detect_list=[]
+        self.RAND_noise=0
     def result(self):
         result={
             'average_num_queries':np.mean(self.query_list),
             'failure_rate':1-np.sum(self.success_list)/len(self.success_list),
             'certified_acc':np.sum(self.certified_success)/len(self.certified_success),
+            'mean_distance':np.mean(self.mean_distance),
             'distance':np.mean(self.empirical_distance),
             'blacklight_detection_rate':self.blacklight_detection/len(self.query_list) if self.blacklight else None,
             'blacklight_coverage':np.mean(self.blacklight_cover) if self.blacklight else None,
-            'blacklight_query_to_detect': np.mean(self.blacklight_query_to_detect_list) if self.blacklight else None
+            'blacklight_query_to_detect': np.mean(self.blacklight_query_to_detect_list) if self.blacklight else None,
+            'RPQ': np.mean(self.RPQ_nums)
         }
         return result
     def initial_adv(self, x,y,x_adv=None,step_size = 3/255, eps=18/255):
@@ -189,6 +196,16 @@ class CertifiedAttack(object):
                     #the denoise require input with range (-1,1), change to (0,1) in the next version
                     noisy_input=denoise(noise,batch,self.pdf_args[1],self.diffusion)
                 logits=self.base_classifier(noisy_input+self.rand_sigma * torch.randn_like(noisy_input))
+
+                # import matplotlib.pyplot as plt
+                # plt.figure()
+                # plt.imshow(noisy_input[0].cpu().permute(1, 2, 0))
+                # plt.axis('off')
+                # if not os.path.exists('./paper_utils/visualization/sample'):
+                #     os.mkdir('./paper_utils/visualization/sample')
+                # img_index=len(os.listdir('./paper_utils/visualization/sample/'))
+                # plt.savefig('./paper_utils/visualization/sample/{}.png'.format(img_index), dpi=1000)
+
                 predictions = (logits+self.post_sigma*torch.randn_like(logits)).argmax(1)
                 if pos_samples.shape[0]<1000:
                     pos_samples= torch.cat([pos_samples,noisy_input[predictions==y]],0)
@@ -261,18 +278,6 @@ class CertifiedAttack(object):
         if delta_scaled=='failure':
             return 'failure'
         # print(delta_scaled)
-        x_adv=x_adv+delta_scaled.view(x_adv.shape)
-        x_adv.data.clamp_(0.0, 1.0)
-        return x_adv
-
-    def simple_move(self,x,x_adv,p_adv):
-        E = (x - x_adv).reshape(self.input_size)
-        E = E / torch.linalg.norm(E, ord=self.norm)
-        delta = E
-        epsilons = self.noise_sampling(self.N,self.pdf_args)
-        delta_scaled=self.scale_optimization_binary(delta.view(-1),p_adv,epsilons,self.pdf_args)
-        if delta_scaled=='failure':
-            return 'failure'
         x_adv=x_adv+delta_scaled.view(x_adv.shape)
         x_adv.data.clamp_(0.0, 1.0)
         return x_adv
@@ -353,8 +358,6 @@ class CertifiedAttack(object):
             last_distance=torch.linalg.norm((x_adv-x).reshape(self.input_size),ord=self.norm)
             if self.shifting=='geo':
                 x_adv=self.certify_move(x,x_adv,p_adv,pos_samples)
-            elif self.shifting=='direct':
-                x_adv=self.simple_move(x,x_adv,p_adv)
             else:
                 print('undefined shifting method: {}'.format(self.shifting))
             if x_adv=='failure':
@@ -382,8 +385,6 @@ class CertifiedAttack(object):
     def adv_certify(self, x,y,model):
         self.base_classifier=model
 
-
-
         x = x.to(self.device)
         ############# initialization ###############
         x_adv,query_count,p_adv,pos_samples=self.localization(x,y)
@@ -408,6 +409,8 @@ class CertifiedAttack(object):
         if adv_center is not None:
             if query<self.max_query:
                 self.certified_success.append(1)
+                self.mean_distance.append(torch.linalg.norm((adv_center-x).reshape(self.input_size),ord=self.norm).cpu().data)
+                self.RPQ_nums.append(certify_query)
             while query<self.max_query:
                 noise=self.noise_sampling(1,self.pdf_args).float().view(adv_center.shape)
                 noisy_input = torch.clip(adv_center + noise, 0.0, 1.0)
@@ -431,6 +434,18 @@ class CertifiedAttack(object):
                     self.success_list.append(1)
                     self.empirical_distance.append(torch.linalg.norm((noisy_input-x).reshape(self.input_size),ord=self.norm).cpu().data)
                     print(self.result())
+                    # import matplotlib.pyplot as plt
+                    # plt.figure()
+                    # plt.imshow(noisy_input[0].cpu().permute(1, 2, 0))
+                    # plt.axis('off')
+                    # plt.savefig('./paper_utils/visualization/sample/final.png', dpi=1000)
+                    # plt.figure()
+                    # plt.imshow(x[0].cpu().permute(1, 2, 0))
+                    # plt.axis('off')
+                    # sample_index = len(os.listdir('./paper_utils/visualization/'))
+                    # plt.savefig('./paper_utils/visualization/sample/ori.png', dpi=1000)
+                    # sample_index = len(os.listdir('./paper_utils/visualization/'))
+                    # os.rename('./paper_utils/visualization/sample','./paper_utils/visualization/sample{}'.format(sample_index))
                     return noisy_input+self.RAND_noise
         self.certified_success.append(0)
         self.success_list.append(0)

@@ -1,6 +1,6 @@
-# CertifiableBlackboxAttack
+# Certifiable Black-box Attack
 
-This is the official implementation of the paper "certified attack".
+This is the official implementation of the paper "Certifiable Black-Box Attacks with Randomized Adversarial Examples: Breaking Defenses with Provable Confidence".
 
 #### This project includes the ready-to-run models/attacks/defenses and the corresponding tutorials:
 
@@ -49,3 +49,55 @@ This is the official implementation of the paper "certified attack".
    ```
 
 ##### Run the code
+
+Note: All the experimental settings used in the paper are stored in './configs',  you can also customize your config files in './configs' to meet your requirements. The default configuration for all the attacks/defenses and models are stored in './pytorch_image_classification/config/defaults.py'.
+
+
+
+**Example 1**: Run the Certifiable Attack against VGG model on CIFAR10
+
+```
+python attack.py --config "./configs/attack/cifar10/untargeted/unrestricted/vgg_CertifiedAttack.yaml" device cuda:0
+```
+
+**Example 2**: Run the Certifiable Attack against ResNet model on CIFAR100 under Blacklight
+
+```
+python attack.py --config "./configs/attack/cifar100_blacklight/untargeted/unrestricted/resnet_CertifiedAttack.yaml" device cuda:0
+```
+
+**Example 3**: Run the Certifiable Attack against ResNet model on ImageNet under RAND Pre-processing defense
+
+```
+python attack.py --config "./configs/attack/imagenet_RAND/untargeted/unrestricted/resnet_CertifiedAttack.yaml" device cuda:0
+```
+
+**Example 4**: Run the Certifiable Attack against WRN model on CIFAR10 under RAND Post-processing defense
+
+```
+python attack.py --config "./configs/attack/cifar10_post_RAND/untargeted/unrestricted/wrn_CertifiedAttack.yaml" device cuda:0
+```
+
+**Example 5**: Run the Certified Attack against Adversarial Trained VGG model on CIFAR10
+
+```
+python attack.py --config "./configs/attack/cifar10_AT/untargeted/unrestricted/resnet_CertifiedAttack_l2.yaml" device cuda:0
+```
+
+**Example 6**: Train the ResNext model on CIFAR10
+
+```
+python train.py --config "./configs/cifar10/resnext.yaml"
+```
+
+**Example 7**: Evaluate the trained VGG model on CIFAR10
+
+```
+python evaluate.py --config "./configs/evaluate/vgg.yaml"
+```
+
+**Example 8**: Train the ResNet model on CIFAR100 using Adversarial Training
+
+```
+python train.py --config "./configs/AT/cifar100/resnet_linf.yaml" device "cuda:2"
+```

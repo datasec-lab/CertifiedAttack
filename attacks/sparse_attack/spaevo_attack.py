@@ -311,8 +311,12 @@ class SpaEvoAtt():
                     worst_idx = rank[-1].item()
 
                     # ====== record ======
-                    D[nqry] = l0(self.modify(pop[best_idx],oimg,timg),oimg)
-                    nqry += 1 
+                    try:
+                        D[nqry] = l0(self.modify(pop[best_idx],oimg,timg),oimg)
+                        nqry += 1
+                    except:
+                        print(nqry,len(D))
+
                     # ====================
                     
                     if nqry % 5000 == 0:

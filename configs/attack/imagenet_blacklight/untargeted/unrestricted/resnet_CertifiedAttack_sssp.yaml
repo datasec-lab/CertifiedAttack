@@ -18,7 +18,7 @@ dataset:
   name: ImageNet
   normalize: false
 defense:
-  blacklight: true
+  blacklight: false
   sigma: 0.0
 device: cuda:0
 model:

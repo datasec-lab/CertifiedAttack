@@ -56,7 +56,6 @@ def evaluate(config, model, test_loader, loss_func, logger):
         for data, targets in tqdm.tqdm(test_loader):
             data = data.to(device)
             targets = targets.to(device)
-
             outputs = model(data)
             loss = loss_func(outputs, targets)
 

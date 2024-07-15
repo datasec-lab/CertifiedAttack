@@ -7,10 +7,10 @@ attack:
   name: CertifiedAttack
   epsilon: 0.0
   p: unrestricted
-  max_loss_queries: 10000
+  max_loss_queries: 100000
   test_sample: 1000
   CertifiedAttack:
-    initialization: bin_search
+    initialization: smt_ssp
     shifting: geo
     pdf_args: [-1,0.25]
     p: 0.90
@@ -18,8 +18,8 @@ attack:
     MonteNum: 1000
     query_batch: 1000
 test:
-  checkpoint: 'experiments/cifar10/vgg/exp00/checkpoint_00160.pth'
-  output_dir: 'experiments/attack/cifar10/untargeted/unrestricted/decision/vgg/CA/'
+  checkpoint: 'experiments/cifar10/resnet/exp00/checkpoint_00160.pth'
+  output_dir: 'experiments/attack/CA_ablation/CA_sssp'
   batch_size: 1
   dataloader:
     num_workers: 2
@@ -29,12 +29,12 @@ dataset:
   normalize: False
 model:
   type: cifar
-  name: vgg
+  name: resnet
   init_mode: kaiming_fan_out
-  vgg:
-    n_channels: [64, 128, 256, 512, 512]
-    n_layers: [2, 2, 3, 3, 3]
-    use_bn: True
+  resnet:
+    depth: 110
+    initial_channels: 16
+    block_type: basic
   normalize_layer: True
 
 
